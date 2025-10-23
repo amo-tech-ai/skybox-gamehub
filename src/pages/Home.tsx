@@ -3,9 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Trophy, Tv, Users, Clock, ArrowUp } from "lucide-react";
 import EventCard from "@/components/events/EventCard";
 import CountdownTimer from "@/components/events/CountdownTimer";
+import LiveNowBanner from "@/components/home/LiveNowBanner";
+import PromoBanner from "@/components/home/PromoBanner";
+import TestimonialSlider from "@/components/home/TestimonialSlider";
+import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
 import { events } from "@/data/events";
 import heroImage from "@/assets/hero-world-series.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
+import foodSpread from "@/assets/food-spread.jpg";
+import sportsNFL from "@/assets/sports-nfl-action.jpg";
+import sportsSoccer from "@/assets/sports-soccer-messi.jpg";
+import sportsMLB from "@/assets/sports-mlb-dodgers.jpg";
 import { useState, useEffect } from "react";
 
 const Home = () => {
@@ -33,6 +41,9 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Live Now Banner */}
+      <LiveNowBanner />
+      
       {/* Hero Section */}
       <section className="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
         <div 
@@ -77,10 +88,18 @@ const Home = () => {
                   Chat on WhatsApp
                 </Button>
               </a>
+              <Link to="/vip">
+                <Button size="lg" variant="secondary" className="text-lg px-8 ripple">
+                  View VIP Rooftop Lounge
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Promo Banner */}
+      <PromoBanner />
 
       {/* Upcoming Events */}
       <section className="py-16 bg-background">
@@ -123,9 +142,9 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="stagger-item relative overflow-hidden rounded-lg group">
+            <Link to="/sports" className="stagger-item relative overflow-hidden rounded-lg group">
               <img 
-                src={heroImage} 
+                src={sportsMLB} 
                 alt="MLB" 
                 className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
               />
@@ -135,11 +154,11 @@ const Home = () => {
                   <p className="text-sm text-white/80">Watch every pitch live</p>
                 </div>
               </div>
-            </div>
+            </Link>
 
-            <div className="stagger-item relative overflow-hidden rounded-lg group">
+            <Link to="/sports" className="stagger-item relative overflow-hidden rounded-lg group">
               <img 
-                src="/src/assets/sports-nfl-action.jpg" 
+                src={sportsNFL} 
                 alt="NFL" 
                 className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
               />
@@ -149,11 +168,11 @@ const Home = () => {
                   <p className="text-sm text-white/80">Every touchdown matters</p>
                 </div>
               </div>
-            </div>
+            </Link>
 
-            <div className="stagger-item relative overflow-hidden rounded-lg group">
+            <Link to="/sports" className="stagger-item relative overflow-hidden rounded-lg group">
               <img 
-                src="/src/assets/sports-soccer-messi.jpg" 
+                src={sportsSoccer} 
                 alt="Soccer" 
                 className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
               />
@@ -163,7 +182,7 @@ const Home = () => {
                   <p className="text-sm text-white/80">The beautiful game</p>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="text-center">
@@ -176,7 +195,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Watch at Skybox */}
+      {/* Why Watch at Skybox - With Photos */}
       <section className="py-16 bg-dark-section text-dark-foreground">
         <div className="container px-4">
           <div className="text-center mb-12">
@@ -184,46 +203,41 @@ const Home = () => {
             <p className="text-xl text-muted-foreground">The ultimate sports viewing experience in Medellín</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
-                <Tv size={32} className="text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Giant Screens</h3>
-              <p className="text-muted-foreground">
-                Multiple massive HD screens ensure you don't miss a single play from any seat
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="stagger-item">
+              <FeaturePhotoCard 
+                title="Massive HD Screens"
+                description="Multiple giant screens ensure you catch every play from any angle"
+                image={venueImage}
+              />
             </div>
+            <div className="stagger-item">
+              <FeaturePhotoCard 
+                title="Signature Cocktails"
+                description="Craft drinks and ice-cold beers that elevate every game"
+                image={foodSpread}
+              />
+            </div>
+            <div className="stagger-item">
+              <FeaturePhotoCard 
+                title="City Views"
+                description="Stunning rooftop views of Medellín's skyline"
+                image={venueImage}
+              />
+            </div>
+            <div className="stagger-item">
+              <FeaturePhotoCard 
+                title="Unmatched Atmosphere"
+                description="Electric energy with passionate fans and live commentary"
+                image={sportsNFL}
+              />
+            </div>
+          </div>
 
-            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
-                <Trophy size={32} className="text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Signature Bar</h3>
-              <p className="text-muted-foreground">
-                Craft cocktails, ice-cold beer, and game-day specials that score every time
-              </p>
-            </div>
-
-            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
-                <Users size={32} className="text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Rooftop Vibes</h3>
-              <p className="text-muted-foreground">
-                Stunning city views combined with championship atmosphere create unforgettable moments
-              </p>
-            </div>
-
-            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
-                <Clock size={32} className="text-primary" />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Epic Game Days</h3>
-              <p className="text-muted-foreground">
-                Every game is an event with live commentary, fan competitions, and non-stop energy
-              </p>
-            </div>
+          {/* Testimonials */}
+          <div className="mt-16">
+            <h3 className="text-3xl font-bold text-center mb-8">What Our Guests Say</h3>
+            <TestimonialSlider />
           </div>
         </div>
       </section>
@@ -264,6 +278,11 @@ const Home = () => {
                 <Link to="/reserve">
                   <Button size="lg" className="gradient-primary hover-lift">
                     Reserve Table
+                  </Button>
+                </Link>
+                <Link to="/vip">
+                  <Button size="lg" variant="secondary">
+                    Book VIP Rooftop Experience
                   </Button>
                 </Link>
                 <a href="https://wa.me/573047862834" target="_blank" rel="noopener noreferrer">
