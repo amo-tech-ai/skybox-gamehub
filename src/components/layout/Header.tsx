@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import skyboxLogo from "@/assets/skybox-logo-new.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,12 +23,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">S</span>
-            </div>
-            <span className="text-2xl font-bold tracking-tight">SKYBOX</span>
-          </div>
+          <img src={skyboxLogo} alt="Skybox Medellín" className="h-12 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
@@ -44,7 +40,7 @@ const Header = () => {
             </Link>
           ))}
           <Link to="/reserve">
-            <Button className="gradient-primary hover-lift">Reserve Table</Button>
+            <Button className="bg-accent hover:bg-accent/90">Reserve Table</Button>
           </Link>
         </nav>
 
@@ -75,7 +71,7 @@ const Header = () => {
               </Link>
             ))}
             <Link to="/reserve" onClick={() => setIsMenuOpen(false)}>
-              <Button className="w-full gradient-primary">Reserve Table</Button>
+              <Button className="w-full bg-accent hover:bg-accent/90">Reserve Table</Button>
             </Link>
           </nav>
         </div>

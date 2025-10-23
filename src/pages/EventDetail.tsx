@@ -1,10 +1,26 @@
 import { useParams, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Calendar, MapPin, ArrowLeft } from "lucide-react";
 import { events } from "@/data/events";
+import { Button } from "@/components/ui/button";
+import { Calendar, Clock, MapPin, Gift, Utensils } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
-import foodImage from "@/assets/food-spread.jpg";
-import venueImage from "@/assets/venue-interior.jpg";
+import CountdownTimer from "@/components/events/CountdownTimer";
+
+// Import World Series images
+import worldSeriesHero from "@/assets/world-series-hero.jpg";
+import worldSeriesOhtani from "@/assets/world-series-ohtani.jpg";
+import worldSeriesCelebration from "@/assets/world-series-celebration.jpg";
+import worldSeriesTrophy from "@/assets/world-series-trophy.jpg";
+import worldSeriesGame from "@/assets/world-series-game.jpg";
+import worldSeriesCrowd from "@/assets/world-series-crowd.jpg";
+import worldSeriesAction from "@/assets/world-series-action.jpg";
+import worldSeriesStadium from "@/assets/world-series-stadium.jpg";
+
+// Import Halloween images
+import halloween1 from "@/assets/halloween-party-1.jpg";
+import halloween2 from "@/assets/halloween-party-2.jpg";
+import halloween3 from "@/assets/halloween-party-3.jpg";
+import halloween4 from "@/assets/halloween-party-4.jpg";
 
 const EventDetail = () => {
   const { slug } = useParams();
@@ -13,157 +29,171 @@ const EventDetail = () => {
   if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Event Not Found</h1>
-          <Link to="/events">
-            <Button>Back to Events</Button>
-          </Link>
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold">Event Not Found</h1>
+          <p className="text-muted-foreground">The event you're looking for doesn't exist.</p>
+          <Button asChild>
+            <Link to="/events">Back to Events</Link>
+          </Button>
         </div>
       </div>
     );
   }
 
-  const galleryImages = [
-    { src: venueImage, alt: "Skybox Venue" },
-    { src: foodImage, alt: "Game Night Food" },
-    { src: event.image, alt: event.title },
-  ];
+  // Determine gallery images based on event
+  let galleryImages: Array<{ src: string; alt: string }> = [];
+  
+  if (event.slug === "world-series-2025" || event.slug === "world-series-game-1" || event.slug === "world-series-game-2") {
+    galleryImages = [
+      { src: worldSeriesHero, alt: "World Series 2025 Watch Party" },
+      { src: worldSeriesOhtani, alt: "Shohei Ohtani Dodgers Action" },
+      { src: worldSeriesCelebration, alt: "World Series Celebration" },
+      { src: worldSeriesTrophy, alt: "World Series Trophy" },
+      { src: worldSeriesGame, alt: "World Series Game Action" },
+      { src: worldSeriesCrowd, alt: "World Series Crowd" },
+      { src: worldSeriesAction, alt: "World Series Baseball Action" },
+      { src: worldSeriesStadium, alt: "World Series Stadium" },
+    ];
+  } else if (event.slug === "halloween-party-2025") {
+    galleryImages = [
+      { src: halloween2, alt: "Halloween Party at Skybox" },
+      { src: halloween1, alt: "Halloween Costume Party" },
+      { src: halloween3, alt: "Halloween Party Crowd" },
+      { src: halloween4, alt: "Halloween Party Atmosphere" },
+    ];
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero */}
+    <div className="min-h-screen">
+      {/* Hero Section */}
       <section 
-        className="relative h-[500px] flex items-center justify-center"
+        className="relative h-[60vh] flex items-center justify-center text-center"
         style={{
-          backgroundImage: `url(${event.image})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${event.image})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
-        <div className="relative z-10 container px-4 text-white">
-          <Link to="/events" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors">
-            <ArrowLeft size={20} />
-            <span>Back to Events</span>
-          </Link>
-          <div className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-bold mb-4">
+        <div className="container mx-auto px-4 space-y-6 animate-fade-in">
+          <div className="inline-block bg-accent text-accent-foreground px-4 py-2 rounded-full text-sm font-bold uppercase">
             {event.category}
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">{event.title}</h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-white">{event.title}</h1>
           {event.subtitle && (
-            <p className="text-2xl mb-6 text-white/90">{event.subtitle}</p>
+            <p className="text-2xl md:text-3xl text-white/90">{event.subtitle}</p>
           )}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link to="/reserve">
-              <Button size="lg" className="gradient-primary hover-lift">
-                Reserve Your Seat
-              </Button>
-            </Link>
-            <a href="https://wa.me/573047862834" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" className="bg-whatsapp hover:bg-whatsapp/90 text-white border-0">
+          <div className="flex flex-wrap gap-6 justify-center text-white text-lg">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              <span>{event.date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              <span>{event.time}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5" />
+              <span>{event.location}</span>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-4 justify-center pt-4">
+            <Button size="lg" className="bg-accent hover:bg-accent/90" asChild>
+              <Link to="/reserve">Reserve Your Spot</Link>
+            </Button>
+            <Button size="lg" variant="outline" className="bg-white/10 text-white border-white hover:bg-white/20" asChild>
+              <a href="https://wa.me/573001234567" target="_blank" rel="noopener noreferrer">
                 Chat on WhatsApp
-              </Button>
-            </a>
+              </a>
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Event Info */}
+      {/* Countdown Timer */}
+      {event.date !== "Every Sunday" && (
+        <section className="py-12 bg-dark-section text-dark-section-foreground">
+          <div className="container mx-auto px-4">
+            <CountdownTimer targetDate={event.date} targetTime={event.time} />
+          </div>
+        </section>
+      )}
+
+      {/* Main Content */}
       <section className="py-16">
-        <div className="container px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold mb-4">About This Event</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                {event.description}
-              </p>
-              
-              <div className="bg-card border rounded-lg p-6 mb-8">
-                <h3 className="text-xl font-bold mb-4">What to Expect</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Multiple massive screens with perfect viewing angles</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Game-day food & drink specials</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Electric atmosphere with passionate fans</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-primary font-bold">✓</span>
-                    <span>Premium rooftop seating with city views</span>
-                  </li>
-                </ul>
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Left Column */}
+            <div className="lg:col-span-2 space-y-12">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold">About This Event</h2>
+                <p className="text-lg text-muted-foreground">{event.fullDescription || event.description}</p>
               </div>
 
-              {/* Gallery */}
-              <div>
-                <h3 className="text-2xl font-bold mb-6">🎥 Venue & Atmosphere</h3>
-                <GalleryGrid images={galleryImages} />
-              </div>
+              {event.highlights && (
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-bold">What to Expect</h2>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {event.highlights.map((h, i) => (
+                      <Card key={i}>
+                        <CardContent className="p-6"><p className="flex gap-3"><span className="text-accent">✓</span>{h}</p></CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {event.prizes && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Gift className="w-8 h-8 text-accent" />
+                    <h2 className="text-3xl font-bold">Prizes</h2>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {event.prizes.map((p, i) => (
+                      <Card key={i}><CardContent className="p-6 space-y-2"><h3 className="text-xl font-bold text-accent">{p.title}</h3><p className="text-muted-foreground">{p.description}</p></CardContent></Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {event.specials && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <Utensils className="w-8 h-8 text-accent" />
+                    <h2 className="text-3xl font-bold">Specials</h2>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {event.specials.map((s, i) => (
+                      <Card key={i}><CardContent className="p-6 space-y-2"><div className="flex justify-between"><h3 className="font-bold">{s.name}</h3>{s.price && <span className="text-accent font-bold">{s.price}</span>}</div><p className="text-muted-foreground">{s.description}</p></CardContent></Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {galleryImages.length > 0 && (
+                <div className="space-y-6">
+                  <h2 className="text-3xl font-bold">Gallery</h2>
+                  <GalleryGrid images={galleryImages} />
+                </div>
+              )}
             </div>
 
-            {/* Sidebar */}
+            {/* Right Column */}
             <div className="lg:col-span-1">
-              <div className="bg-card border rounded-lg p-6 sticky top-20">
-                <h3 className="text-2xl font-bold mb-6">Event Details</h3>
-                
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-start gap-3">
-                    <Calendar size={20} className="text-primary mt-1" />
-                    <div>
-                      <p className="font-semibold">Date & Time</p>
-                      <p className="text-muted-foreground">{event.date}</p>
-                      <p className="text-muted-foreground">{event.time}</p>
-                    </div>
+              <Card className="sticky top-24">
+                <CardContent className="p-8 space-y-6">
+                  <h3 className="text-2xl font-bold">Event Details</h3>
+                  <div className="space-y-3">
+                    <div className="flex gap-3"><Calendar className="w-5 h-5 text-accent" /><div><p className="font-semibold">Date</p><p className="text-muted-foreground">{event.date}</p></div></div>
+                    <div className="flex gap-3"><Clock className="w-5 h-5 text-accent" /><div><p className="font-semibold">Time</p><p className="text-muted-foreground">{event.time}</p></div></div>
+                    <div className="flex gap-3"><MapPin className="w-5 h-5 text-accent" /><div><p className="font-semibold">Location</p><p className="text-muted-foreground">{event.location}</p></div></div>
                   </div>
-
-                  <div className="flex items-start gap-3">
-                    <MapPin size={20} className="text-primary mt-1" />
-                    <div>
-                      <p className="font-semibold">Location</p>
-                      <p className="text-muted-foreground">{event.location}</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Calle Santa Fe #39-106<br />
-                        El Poblado, Medellín
-                      </p>
-                    </div>
+                  <div className="space-y-3 pt-6 border-t">
+                    <Button size="lg" className="w-full bg-accent hover:bg-accent/90" asChild><Link to="/reserve">Reserve Now</Link></Button>
+                    <Button size="lg" variant="outline" className="w-full" asChild><a href="https://wa.me/573001234567">WhatsApp</a></Button>
                   </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Link to="/reserve" className="block">
-                    <Button className="w-full gradient-primary hover-lift" size="lg">
-                      Reserve Table
-                    </Button>
-                  </Link>
-                  <a 
-                    href="https://wa.me/573047862834" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <Button 
-                      className="w-full bg-whatsapp hover:bg-whatsapp/90 text-whatsapp-foreground" 
-                      size="lg"
-                    >
-                      WhatsApp Us
-                    </Button>
-                  </a>
-                </div>
-
-                <div className="mt-6 p-4 bg-primary/10 rounded-lg">
-                  <p className="text-sm font-semibold text-primary mb-2">⚡ Limited Seating</p>
-                  <p className="text-sm text-muted-foreground">
-                    Book early to secure the best spots. Prime viewing tables fill up fast!
-                  </p>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

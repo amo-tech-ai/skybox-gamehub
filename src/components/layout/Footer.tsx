@@ -1,6 +1,7 @@
 import { MapPin, Clock, Phone, Mail, Instagram, Facebook } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import skyboxLogo from "@/assets/skybox-logo-new.png";
 
 const Footer = () => {
   return (
@@ -10,10 +11,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <span className="text-2xl font-bold text-white">S</span>
-              </div>
-              <span className="text-2xl font-bold">SKYBOX</span>
+              <img src={skyboxLogo} alt="Skybox Medellín" className="h-12 w-auto" />
             </div>
             <p className="text-sm text-muted-foreground mb-4">
               Medellín's premier rooftop sports bar. Watch live sports on massive screens with the best energy in town.
@@ -106,7 +104,7 @@ const Footer = () => {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  <Button className="w-full bg-whatsapp hover:bg-whatsapp/90 text-whatsapp-foreground">
+                  <Button className="w-full bg-accent hover:bg-accent/90">
                     Chat on WhatsApp
                   </Button>
                 </a>
