@@ -28,7 +28,8 @@ const EventCard = ({
   showCountdown = false,
 }: EventCardProps) => {
   // Convert date and time to ISO format for countdown
-  const eventDateTime = new Date(`${date} ${time}`).toISOString();
+  const eventDate = new Date(`${date} ${time}`);
+  const eventDateTime = !isNaN(eventDate.getTime()) ? eventDate.toISOString() : null;
 
   return (
     <Card className="overflow-hidden hover-lift glow-on-hover group">
@@ -44,7 +45,7 @@ const EventCard = ({
             {category}
           </span>
         </div>
-        {showCountdown && (
+        {showCountdown && eventDateTime && (
           <div className="absolute top-3 right-3">
             <CountdownTimer targetDate={eventDateTime} variant="badge" />
           </div>
