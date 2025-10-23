@@ -111,6 +111,71 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Sports Directory Showcase */}
+      <section className="py-16 bg-background">
+        <div className="container px-4">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
+              EXPLORE ALL SPORTS
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Your Sports Hub in Medellín</h2>
+            <p className="text-xl text-muted-foreground">Watch MLB, NFL, NBA, NHL, Soccer & more on giant screens</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="stagger-item relative overflow-hidden rounded-lg group">
+              <img 
+                src={heroImage} 
+                alt="MLB" 
+                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-end p-6">
+                <div className="text-white">
+                  <h3 className="text-2xl font-bold mb-1">Major League Baseball</h3>
+                  <p className="text-sm text-white/80">Watch every pitch live</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="stagger-item relative overflow-hidden rounded-lg group">
+              <img 
+                src="/src/assets/sports-nfl-action.jpg" 
+                alt="NFL" 
+                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-end p-6">
+                <div className="text-white">
+                  <h3 className="text-2xl font-bold mb-1">National Football League</h3>
+                  <p className="text-sm text-white/80">Every touchdown matters</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="stagger-item relative overflow-hidden rounded-lg group">
+              <img 
+                src="/src/assets/sports-soccer-messi.jpg" 
+                alt="Soccer" 
+                className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-end p-6">
+                <div className="text-white">
+                  <h3 className="text-2xl font-bold mb-1">International Soccer</h3>
+                  <p className="text-sm text-white/80">The beautiful game</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link to="/sports">
+              <Button size="lg" className="gradient-primary hover-lift">
+                Explore All Sports & Leagues
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Why Watch at Skybox */}
       <section className="py-16 bg-dark-section text-dark-foreground">
         <div className="container px-4">

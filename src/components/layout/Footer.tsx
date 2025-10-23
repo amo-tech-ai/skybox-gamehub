@@ -1,11 +1,12 @@
 import { MapPin, Clock, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   return (
     <footer className="bg-dark-section text-dark-foreground">
       <div className="container px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -25,6 +26,43 @@ const Footer = () => {
                 <Facebook size={18} />
               </Button>
             </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/events" className="hover:text-primary transition-colors">
+                  Events
+                </Link>
+              </li>
+              <li>
+                <Link to="/sports" className="hover:text-primary transition-colors">
+                  Sports Directory
+                </Link>
+              </li>
+              <li>
+                <Link to="/menu" className="hover:text-primary transition-colors">
+                  Menu
+                </Link>
+              </li>
+              <li>
+                <Link to="/gallery" className="hover:text-primary transition-colors">
+                  Gallery
+                </Link>
+              </li>
+              <li>
+                <Link to="/reserve" className="hover:text-primary transition-colors">
+                  Reserve
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-primary transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Location */}
