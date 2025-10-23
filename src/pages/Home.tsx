@@ -1,47 +1,83 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Trophy, Tv, Users, Clock } from "lucide-react";
+import { Trophy, Tv, Users, Clock, ArrowUp } from "lucide-react";
 import EventCard from "@/components/events/EventCard";
+import CountdownTimer from "@/components/events/CountdownTimer";
 import { events } from "@/data/events";
 import heroImage from "@/assets/hero-world-series.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const upcomingEvents = events.slice(0, 3);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollY(currentScrollY);
+      setShowBackToTop(currentScrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Parallax effect for hero
+  const parallaxOffset = scrollY * 0.5;
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          className="parallax-hero absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url(${heroImage})`,
+            transform: `translateY(${parallaxOffset}px)`
+          }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40" />
         </div>
         
-        <div className="relative z-10 container px-4 text-center text-white animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 text-balance">
-            Watch the World Series
-            <br />
-            <span className="text-primary">2025 Live at Skybox</span>
-            <br />
-            Medellín!
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-balance max-w-2xl mx-auto">
-            Experience every legendary moment on massive screens at Medellín's premier rooftop sports bar
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/reserve">
-              <Button size="lg" className="gradient-primary hover-lift text-lg px-8">
-                Reserve Your Table
-              </Button>
-            </Link>
-            <a href="https://wa.me/573047862834" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" className="bg-whatsapp hover:bg-whatsapp/90 text-white border-0 text-lg px-8">
-                Chat on WhatsApp
-              </Button>
-            </a>
+        <div className="relative z-10 container px-4 text-center text-white">
+          <div className="animate-fade-in">
+            <div className="trending-badge bg-primary/90 text-primary-foreground px-4 py-2 rounded-full text-sm font-bold mb-6 inline-block">
+              🔥 TRENDING EVENT
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-balance animate-scale-in">
+              Watch the World Series
+              <br />
+              <span className="text-primary">2025 Live at Skybox</span>
+              <br />
+              Medellín!
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 text-balance max-w-2xl mx-auto animate-fade-in-up">
+              Experience every legendary moment on massive screens at Medellín's premier rooftop sports bar
+            </p>
+
+            {/* Countdown Timer */}
+            <div className="mb-8 flex justify-center animate-fade-in-up">
+              <CountdownTimer targetDate="2025-10-24T19:00:00" variant="full" />
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up">
+              <Link to="/reserve">
+                <Button size="lg" className="gradient-primary hover-lift glow-on-hover ripple text-lg px-8">
+                  Reserve Your Table
+                </Button>
+              </Link>
+              <a href="https://wa.me/573047862834" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="outline" className="bg-whatsapp hover:bg-whatsapp/90 text-white border-0 text-lg px-8 ripple">
+                  Chat on WhatsApp
+                </Button>
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -58,8 +94,10 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {upcomingEvents.map((event) => (
-              <EventCard key={event.slug} {...event} image={event.image} />
+            {upcomingEvents.map((event, index) => (
+              <div key={event.slug} className="stagger-item">
+                <EventCard {...event} image={event.image} showCountdown />
+              </div>
             ))}
           </div>
 
@@ -82,8 +120,8 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-6 rounded-lg bg-card hover-lift">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
                 <Tv size={32} className="text-primary" />
               </div>
               <h3 className="text-xl font-bold mb-2">Giant Screens</h3>
@@ -92,8 +130,8 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 rounded-lg bg-card hover-lift">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
                 <Trophy size={32} className="text-primary" />
               </div>
               <h3 className="text-xl font-bold mb-2">Signature Bar</h3>
@@ -102,8 +140,8 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 rounded-lg bg-card hover-lift">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
                 <Users size={32} className="text-primary" />
               </div>
               <h3 className="text-xl font-bold mb-2">Rooftop Vibes</h3>
@@ -112,8 +150,8 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 rounded-lg bg-card hover-lift">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+            <div className="stagger-item text-center p-6 rounded-lg bg-card hover-lift glow-on-hover">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center hover-scale">
                 <Clock size={32} className="text-primary" />
               </div>
               <h3 className="text-xl font-bold mb-2">Epic Game Days</h3>
@@ -208,6 +246,17 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 p-4 bg-primary text-primary-foreground rounded-full shadow-lg hover-lift glow-on-hover animate-fade-in"
+          aria-label="Back to top"
+        >
+          <ArrowUp size={24} />
+        </button>
+      )}
     </div>
   );
 };
