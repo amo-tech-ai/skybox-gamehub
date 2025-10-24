@@ -41,6 +41,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/vip" className="hover:text-primary transition-colors">
+                  VIP Rooftop
+                </Link>
+              </li>
+              <li>
                 <Link to="/menu" className="hover:text-primary transition-colors">
                   Menu
                 </Link>
@@ -53,6 +58,11 @@ const Footer = () => {
               <li>
                 <Link to="/reserve" className="hover:text-primary transition-colors">
                   Reserve
+                </Link>
+              </li>
+              <li>
+                <Link to="/corporate-booking" className="hover:text-primary transition-colors">
+                  Corporate Events
                 </Link>
               </li>
               <li>

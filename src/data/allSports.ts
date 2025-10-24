@@ -4,7 +4,7 @@ import { mlbGames2025 } from './mlb_games_2025';
 import { medellinFootballMatches } from './colombian_football_2025';
 
 export interface SportsGame {
-  league: 'NFL' | 'NHL' | 'MLB' | 'NBA';
+  league: 'NFL' | 'NHL' | 'MLB' | 'NBA' | 'Soccer - Colombia';
   gameId: string;
   date: string;
   time: string;
