@@ -61,8 +61,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/private-events" className="hover:text-primary transition-colors">
+                  Private Events
+                </Link>
+              </li>
+              <li>
                 <Link to="/corporate-booking" className="hover:text-primary transition-colors">
-                  Corporate Events
+                  Corporate Booking
                 </Link>
               </li>
               <li>
