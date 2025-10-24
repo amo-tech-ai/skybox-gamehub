@@ -7,50 +7,91 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
-  Users, 
-  Utensils, 
-  Wifi, 
-  MapPin, 
-  Award, 
-  Sparkles, 
-  Monitor, 
-  Video,
-  Building2,
-  Calendar,
-  MessageSquare,
-  Trophy,
-  PartyPopper,
-  Gift,
-  CheckCircle2
+  CheckCircle2,
+  MessageSquare
 } from "lucide-react";
-import worldSeriesHero from "@/assets/world-series-hero.jpg";
+import privateEventsHero from "@/assets/private-events-hero.jpg";
+import eventCorporate from "@/assets/event-corporate.jpg";
+import eventTeamCelebration from "@/assets/event-team-celebration.jpg";
+import eventWatchParty from "@/assets/event-watch-party.jpg";
+import eventProductLaunch from "@/assets/event-product-launch.jpg";
+import eventBirthday from "@/assets/event-birthday.jpg";
+import serviceSeating from "@/assets/service-seating.jpg";
+import serviceCatering from "@/assets/service-catering.jpg";
+import serviceAvSetup from "@/assets/service-av-setup.jpg";
+import serviceCoordinator from "@/assets/service-coordinator.jpg";
+import serviceStreaming from "@/assets/service-streaming.jpg";
+import skyboxInterior from "@/assets/skybox-interior-lounge.jpg";
+import skyboxRooftop from "@/assets/skybox-rooftop-view.jpg";
 import venueInterior from "@/assets/venue-interior.jpg";
-import foodSpread from "@/assets/food-spread.jpg";
 
 const PrivateEvents = () => {
   const eventTypes = [
-    { icon: Building2, title: "Corporate Parties", description: "Team building and celebrations" },
-    { icon: Users, title: "Team Celebrations", description: "Victory parties and milestones" },
-    { icon: PartyPopper, title: "Birthday Milestones", description: "Unforgettable birthday experiences" },
-    { icon: Trophy, title: "Product Launches", description: "Launch your brand in style" },
-    { icon: Gift, title: "Reunions", description: "Reconnect with loved ones" },
+    { 
+      image: eventCorporate,
+      title: "Corporate Events", 
+      description: "Team building and celebrations",
+      alt: "Corporate business meeting at Skybox Medellín rooftop"
+    },
+    { 
+      image: eventTeamCelebration,
+      title: "Team Celebrations", 
+      description: "Victory parties and milestones",
+      alt: "Sports team celebration party at Skybox"
+    },
+    { 
+      image: eventWatchParty,
+      title: "Watch-Parties", 
+      description: "Epic game day experiences",
+      alt: "Exciting watch party at Skybox rooftop"
+    },
+    { 
+      image: eventProductLaunch,
+      title: "Product Launches", 
+      description: "Launch your brand in style",
+      alt: "Elegant product launch event at Skybox"
+    },
+    { 
+      image: eventBirthday,
+      title: "Birthday & Friends", 
+      description: "Unforgettable celebrations",
+      alt: "Birthday celebration party at Skybox rooftop"
+    },
   ];
 
   const coreFeatures = [
-    { icon: Users, title: "Flexible Seating", description: "Customizable layouts for any group size" },
-    { icon: Utensils, title: "Premium Catering", description: "Chef-curated menus & signature cocktails" },
-    { icon: Monitor, title: "HD Broadcast Setup", description: "Giant screens & premium sound system" },
-    { icon: MapPin, title: "Prime Location", description: "Heart of Medellín, easy access" },
-    { icon: Award, title: "Event Coordinator", description: "Dedicated support from start to finish" },
+    { 
+      image: serviceSeating,
+      title: "Flexible Seating", 
+      description: "Customizable layouts for any group size",
+      alt: "Flexible seating arrangements at Skybox event space"
+    },
+    { 
+      image: serviceCatering,
+      title: "Premium Catering", 
+      description: "Chef-curated menus & signature cocktails",
+      alt: "Premium catering spread at Skybox Medellín"
+    },
+    { 
+      image: serviceAvSetup,
+      title: "HD Broadcast Setup", 
+      description: "Giant screens & premium sound system",
+      alt: "Professional AV and broadcast setup at Skybox"
+    },
+    { 
+      image: serviceCoordinator,
+      title: "Event Coordinator", 
+      description: "Dedicated support from start to finish",
+      alt: "Professional event coordinator at Skybox"
+    },
+    { 
+      image: serviceStreaming,
+      title: "Live Streaming", 
+      description: "Hybrid event support & production",
+      alt: "Live streaming setup for events at Skybox"
+    },
   ];
 
-  const premiumFeatures = [
-    { icon: Sparkles, title: "VIP Lounge Access", description: "Exclusive rooftop bottle service" },
-    { icon: Building2, title: "Custom Branding", description: "Personalized décor & setup" },
-    { icon: Video, title: "Live Streaming", description: "Hybrid event support" },
-    { icon: Wifi, title: "Rooftop Cocktail Hour", description: "Skyline views with signature drinks" },
-    { icon: CheckCircle2, title: "Digital Guest List", description: "QR check-in & management" },
-  ];
 
   const packages = [
     {
@@ -129,22 +170,22 @@ const PrivateEvents = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section 
-        className="relative h-[600px] flex items-center justify-center text-center"
+        className="relative h-[70vh] md:h-[80vh] flex items-center justify-center text-center overflow-hidden"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${worldSeriesHero})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${privateEventsHero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
       >
         <div className="container px-4 z-10">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 uppercase tracking-tight">
             Celebrate Without Limits
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto font-light">
             Rooftop Views, Signature Cocktails & Unforgettable Moments
           </p>
           <Link to="/corporate-booking">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-6">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg hover:shadow-xl transition-all">
               Book Your Event
             </Button>
           </Link>
@@ -172,18 +213,35 @@ const PrivateEvents = () => {
       </section>
 
       {/* Types of Events */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 bg-muted/30">
         <div className="container px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Types of Events We Host</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tight">
+              Types of Events We Host
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              From corporate gatherings to epic watch-parties, we bring the energy
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {eventTypes.map((event, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <event.icon className="w-12 h-12 mx-auto mb-4 text-primary" />
-                  <CardTitle className="text-lg">{event.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{event.description}</CardDescription>
+              <Card key={index} className="group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary/50">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={event.image} 
+                    alt={event.alt}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                    <h3 className="text-xl font-bold mb-1">{event.title}</h3>
+                    <p className="text-sm text-white/90">{event.description}</p>
+                  </div>
+                </div>
+                <CardContent className="pt-4">
+                  <Button variant="ghost" className="w-full text-primary hover:text-primary/80 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Learn More →
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -192,72 +250,99 @@ const PrivateEvents = () => {
       </section>
 
       {/* Core Features */}
-      <section className="py-16 bg-background">
+      <section className="py-20 bg-background">
         <div className="container px-4">
-          <h2 className="text-4xl font-bold text-center mb-4">Everything You Need for an Amazing Event</h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Our comprehensive event services ensure your celebration is seamless from start to finish
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {coreFeatures.map((feature, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <feature.icon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </div>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tight">
+              Everything You Need for an Amazing Event
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Our complete event service covers all the details so you can focus on the moment
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-12">
+            {/* Image Gallery */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2 h-64 rounded-lg overflow-hidden">
+                <img 
+                  src={skyboxRooftop} 
+                  alt="Skybox Medellín rooftop terrace with city views" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
               </div>
-            ))}
+              <div className="h-48 rounded-lg overflow-hidden">
+                <img 
+                  src={skyboxInterior} 
+                  alt="Skybox interior lounge setup" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="h-48 rounded-lg overflow-hidden">
+                <img 
+                  src={venueInterior} 
+                  alt="Venue interior event setup" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Feature List */}
+            <div className="space-y-6">
+              {coreFeatures.map((feature, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="flex items-start gap-4 p-6">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                      <img 
+                        src={feature.image} 
+                        alt={feature.alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                      <p className="text-muted-foreground">{feature.description}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center">
+            <Link to="/corporate-booking">
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-10 py-6 text-lg">
+                See Our Event Packages
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Premium Features */}
-      <section className="py-16 bg-muted/30">
-        <div className="container px-4">
-          <h2 className="text-4xl font-bold text-center mb-4">Make It Extraordinary</h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-            Elevate your event with premium add-ons and VIP experiences
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {premiumFeatures.map((feature, index) => (
-              <Card key={index} className="border-primary/20 hover:border-primary/50 transition-colors">
-                <CardHeader>
-                  <feature.icon className="w-10 h-10 mb-3 text-accent" />
-                  <CardTitle>{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Gallery Showcase */}
-      <section className="py-16 bg-background">
+      <section className="py-20 bg-background">
         <div className="container px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Event Gallery</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tight">
+              Event Gallery
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="h-64 rounded-lg overflow-hidden">
-              <img src={worldSeriesHero} alt="Event celebration" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img src={eventWatchParty} alt="Watch party celebration at Skybox" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="h-64 rounded-lg overflow-hidden">
-              <img src={venueInterior} alt="Venue interior" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img src={skyboxInterior} alt="Skybox interior lounge setup" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="h-64 rounded-lg overflow-hidden">
-              <img src={foodSpread} alt="Food spread" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img src={serviceCatering} alt="Premium catering spread at Skybox" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="h-64 rounded-lg overflow-hidden md:col-span-2">
-              <img src={worldSeriesHero} alt="Rooftop view" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img src={skyboxRooftop} alt="Skybox rooftop terrace with city view" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="h-64 rounded-lg overflow-hidden">
-              <img src={venueInterior} alt="Event setup" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+              <img src={eventCorporate} alt="Corporate event setup at Skybox" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
             </div>
           </div>
         </div>
@@ -325,17 +410,28 @@ const PrivateEvents = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-20 bg-muted/30">
         <div className="container px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">How It Works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 uppercase tracking-tight">
+              How It Works
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {howItWorks.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground text-2xl font-bold flex items-center justify-center mx-auto mb-4">
-                  {step.number}
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
+              <div key={index} className="relative">
+                <Card className="text-center h-full hover:shadow-xl transition-shadow border-2 hover:border-primary/50">
+                  <CardContent className="pt-8 pb-6">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground text-3xl font-bold flex items-center justify-center mx-auto mb-6 shadow-lg">
+                      {step.number}
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 uppercase">{step.title}</h3>
+                    <p className="text-muted-foreground">{step.description}</p>
+                  </CardContent>
+                </Card>
+                {index < howItWorks.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-4 w-8 h-0.5 bg-primary/30" />
+                )}
               </div>
             ))}
           </div>
@@ -343,14 +439,17 @@ const PrivateEvents = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Host Your Next Event at Skybox</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+      <section className="py-20 bg-gradient-to-br from-primary to-primary/90 text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30" />
+        <div className="container px-4 text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 uppercase tracking-tight">
+            Host Your Next Event at Skybox
+          </h2>
+          <p className="text-xl md:text-2xl mb-10 max-w-2xl mx-auto font-light">
             Let our team handle the details — you enjoy the view
           </p>
           <Link to="/corporate-booking">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
+            <Button size="lg" variant="secondary" className="text-lg px-12 py-7 shadow-2xl hover:shadow-xl transition-all hover:scale-105">
               Book Your Event Now
             </Button>
           </Link>
