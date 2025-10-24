@@ -1,0 +1,216 @@
+---
+description: Guidelines for creating Supabase Row Level Security (RLS) policies
+alwaysApply: false
+---
+
+# Database: Row Level Security Policies
+
+You're a Supabase security expert. Generate **secure, granular Row Level Security (RLS) policies** that follow these best practices:
+
+## General Guidelines
+
+1. **Enable RLS on All Tables:**
+   - Always enable RLS on tables with sensitive data.
+   - Default-deny approach: create explicit allow policies.
+
+2. **Use auth.uid() for User-Specific Access:**
+   - Reference `auth.uid()` for the current user's ID.
+   - Use `auth.jwt()` for role and metadata information.
+
+3. **Principle of Least Privilege:**
+   - Grant only necessary permissions.
+   - Separate read, insert, update, delete permissions.
+
+4. **Test All Scenarios:**
+   - Test as authenticated user.
+   - Test as unauthenticated user.
+   - Test as different roles.
+
+## Best Practices
+
+1. **Policy Naming Convention:**
+   - `<action>_<target>_<condition>`
+   - Example: `users_can_read_own_profile`, `admins_can_delete_any_post`
+
+2. **Use Role-Based Access Control:**
+   - Store role in JWT claims or separate role table.
+   - Use `auth.jwt() ->> 'user_role'` or join with roles table.
+
+3. **Combine with Table-Level Permissions:**
+   - Use `GRANT` statements for table-level access.
+   - RLS policies add an additional layer of security.
+
+4. **Document Policy Intent:**
+   - Add comments explaining the security rationale.
+   - Document assumptions about data structure.
+
+## Example Templates
+
+### Read-Only Access for Everyone
+
+```sql
+create policy "Games are readable by everyone"
+on public.games
+for select
+using (true);
+```
+
+### User-Specific Data Access
+
+```sql
+create policy "Users can view own profile"
+on public.users
+for select
+using (auth.uid() = id);
+
+create policy "Users can update own profile"
+on public.users
+for update
+using (auth.uid() = id);
+
+create policy "Users can delete own profile"
+on public.users
+for delete
+using (auth.uid() = id);
+```
+
+### Admin-Only Modification
+
+```sql
+create policy "Only admins can insert games"
+on public.games
+for insert
+with check (auth.jwt() ->> 'user_role' = 'admin');
+
+create policy "Only admins can update games"
+on public.games
+for update
+using (auth.jwt() ->> 'user_role' = 'admin');
+
+create policy "Only admins can delete games"
+on public.games
+for delete
+using (auth.jwt() ->> 'user_role' = 'admin');
+```
+
+### Role-Based Access
+
+```sql
+-- Allow users to read their own reservations
+create policy "Users can view own reservations"
+on public.reservations
+for select
+using (auth.uid() = user_id);
+
+-- Allow users to create reservations
+create policy "Users can create reservations"
+on public.reservations
+for insert
+with check (auth.uid() = user_id);
+
+-- Allow users to cancel their own reservations
+create policy "Users can cancel own reservations"
+on public.reservations
+for update
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id and status = 'cancelled');
+
+-- Only admins can view all reservations
+create policy "Admins can view all reservations"
+on public.reservations
+for select
+using (auth.jwt() ->> 'user_role' = 'admin');
+```
+
+### Time-Based Access
+
+```sql
+create policy "Can only view published posts"
+on public.posts
+for select
+using (published = true and published_at <= now());
+
+create policy "Can only modify recent posts"
+on public.posts
+for update
+using (auth.uid() = author_id and created_at > now() - interval '24 hours');
+```
+
+### Organization-Based Access
+
+```sql
+create policy "Users can view own organization data"
+on public.organization_data
+for select
+using (
+  organization_id in (
+    select organization_id from public.organization_members 
+    where user_id = auth.uid()
+  )
+);
+
+create policy "Organization admins can modify data"
+on public.organization_data
+for all
+using (
+  organization_id in (
+    select organization_id from public.organization_members 
+    where user_id = auth.uid() and role = 'admin'
+  )
+);
+```
+
+## Complete Example: Game Reservations
+
+```sql
+-- Enable RLS
+alter table public.reservations enable row level security;
+
+-- Drop existing policies if needed
+drop policy if exists "Users can view own reservations" on public.reservations;
+drop policy if exists "Users can create reservations" on public.reservations;
+drop policy if exists "Users can cancel own reservations" on public.reservations;
+drop policy if exists "Admins can manage all reservations" on public.reservations;
+
+-- Read: Users see only their own reservations
+create policy "Users can view own reservations"
+on public.reservations
+for select
+using (auth.uid() = user_id or auth.jwt() ->> 'user_role' = 'admin');
+
+-- Create: Users can create reservations for themselves
+create policy "Users can create reservations"
+on public.reservations
+for insert
+with check (auth.uid() = user_id);
+
+-- Update: Users can modify their own, admins can modify any
+create policy "Users can update own reservations"
+on public.reservations
+for update
+using (auth.uid() = user_id or auth.jwt() ->> 'user_role' = 'admin')
+with check (auth.uid() = user_id or auth.jwt() ->> 'user_role' = 'admin');
+
+-- Delete: Only admins can delete
+create policy "Only admins can delete reservations"
+on public.reservations
+for delete
+using (auth.jwt() ->> 'user_role' = 'admin');
+```
+
+## Testing RLS Policies
+
+```sql
+-- Test as authenticated user
+select * from public.games;
+
+-- Test as different user
+select * from public.reservations;
+
+-- Test insert permissions
+insert into public.reservations (user_id, game_id) 
+values (auth.uid(), 1);
+
+-- Test admin access
+select * from public.reservations where user_role = 'admin';
+```

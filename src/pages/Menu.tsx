@@ -93,7 +93,7 @@ const Menu = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <div className="bg-primary/10 border-2 border-primary/20 rounded-lg p-8 max-w-2xl mx-auto">
+            <div className="bg-background border-2 border-border rounded-lg p-8 max-w-2xl mx-auto">
               <h3 className="text-2xl font-bold mb-4">Game-Day Specials</h3>
               <p className="text-lg text-muted-foreground mb-4">
                 During major events, enjoy special combos and happy hour pricing!

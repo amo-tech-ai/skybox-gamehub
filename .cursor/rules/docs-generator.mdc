@@ -1,0 +1,2472 @@
+---
+description: Generate comprehensive technical documentation with deep codebase analysis, architecture diagrams, and progressive complexity disclosure
+globs: mvp/**/*.md, docs/**/*.md, .claude/docs/**/*.md
+alwaysApply: false
+---
+
+# 📚 Technical Documentation Architect
+
+**Comprehensive, long-form documentation generation with deep system analysis**
+
+---
+
+## Core Competencies
+
+### 1. Codebase Analysis
+- **Deep understanding** of code structure, patterns, and architectural decisions
+- **Pattern recognition** across files and modules
+- **Dependency mapping** and integration point identification
+- **Design rationale extraction** from code and commit history
+
+### 2. Technical Writing
+- **Clear explanations** suitable for various technical audiences
+- **Progressive complexity** from overview to implementation details
+- **Both "what" and "why"** documentation
+- **Multiple reading paths** for different roles
+
+### 3. System Thinking
+- **Big picture architecture** while explaining details
+- **Component relationships** and data flows
+- **Design trade-offs** and decision rationale
+- **Evolutionary context** and system history
+
+### 4. Visual Communication
+- **Architecture diagrams** showing system structure
+- **Sequence diagrams** for workflows and interactions
+- **Flowcharts** for decision trees and processes
+- **Data flow diagrams** for information movement
+
+---
+
+## Documentation Modes
+
+### Mode A: Quick MVP Docs (001-009)
+
+**Use when**: Fast documentation for MVP, proof-of-concept, or prototypes  
+**Length**: 500-800 lines per doc (2-3 pages)  
+**Depth**: Essential information only  
+**Audience**: Developers building the MVP
+
+**Structure**: 9 numbered docs (001-009)
+
+---
+
+### Mode B: Comprehensive Technical Docs (Chapters 1-10+)
+
+**Use when**: Production systems, complex architectures, team onboarding  
+**Length**: 10-100+ pages per chapter  
+**Depth**: From bird's-eye view to implementation specifics  
+**Audience**: Developers, architects, operations, stakeholders
+
+**Structure**: Chapter-based with appendices
+
+---
+
+## Mode A: Quick MVP Docs (001-009)
+
+### Standard Structure
+
+| No. | Document | Purpose | Audience |
+|-----|----------|---------|----------|
+| **001-overview.md** | Executive summary, goals, vision | All stakeholders |
+| **002-architecture.md** | System boundaries, components, flows | Architects, Devs |
+| **003-setup-guide.md** | Environment, dependencies, CLI | Developers |
+| **004-core-features.md** | Core logic and implementations | Developers |
+| **005-intermediate-workflows.md** | Automations, triggers, data flow | Developers |
+| **006-advanced-features.md** | AI agents, MCP, advanced integrations | Senior Devs |
+| **007-best-practices.md** | Naming, structure, safety, consistency | All Devs |
+| **008-success-criteria.md** | Performance, reliability goals | QA, DevOps |
+| **009-workflow-checklist.md** | Task steps, testing, tracking | All Devs |
+
+### Required Sections (Each Doc)
+
+1. **Purpose Summary** — What and why
+2. **Key Features/Steps** — Numbered, actionable
+3. **Real-World Example** — Copy-paste ready code
+4. **Flow Diagram** — Mermaid visualization
+5. **Best Practices** — DO/DON'T patterns
+6. **Success Criteria** — Validation checklist
+
+**Template**: See "Quick MVP Template" section below
+
+---
+
+## Mode B: Comprehensive Technical Docs
+
+### Standard Structure (10+ Chapters)
+
+#### Part 1: Overview & Context (Chapters 1-2)
+
+**Chapter 1: Executive Summary**
+- One-page overview for stakeholders
+- Business context and goals
+- High-level architecture diagram
+- Key metrics and success criteria
+- Reading guide for different audiences
+
+**Chapter 2: System Overview**
+- System boundaries and scope
+- Major components and their relationships
+- Technology stack and rationale
+- Design philosophy and principles
+- Evolutionary history (if applicable)
+
+---
+
+#### Part 2: Architecture Deep Dive (Chapters 3-5)
+
+**Chapter 3: Architecture & Design**
+- Architectural patterns used (MVC, microservices, etc.)
+- Component diagrams with detailed descriptions
+- Design decisions and their rationale
+- Trade-offs considered and chosen
+- Alternative approaches rejected (with reasons)
+- System constraints and limitations
+
+**Chapter 4: Data Architecture**
+- Data models and schema design
+- Entity relationships (ERD diagrams)
+- Data flow diagrams
+- Storage strategy (database, cache, file storage)
+- Data lifecycle and retention policies
+
+**Chapter 5: Integration Architecture**
+- External service integrations
+- API design and contracts
+- Event-driven patterns
+- Message queues and async processing
+- Third-party dependencies
+
+---
+
+#### Part 3: Implementation Details (Chapters 6-7)
+
+**Chapter 6: Core Components**
+- Deep dive into each major module/service
+- Code structure and organization
+- Key algorithms and logic
+- Error handling patterns
+- Performance optimizations
+- Code examples with thorough explanations
+
+**Chapter 7: Advanced Features**
+- Complex workflows and orchestrations
+- AI/ML integrations
+- Real-time capabilities
+- Background processing
+- Advanced optimizations
+
+---
+
+#### Part 4: Operations & Quality (Chapters 8-10)
+
+**Chapter 8: Deployment Architecture**
+- Infrastructure overview
+- CI/CD pipelines
+- Environment configurations
+- Scaling strategy
+- Monitoring and observability
+- Disaster recovery
+
+**Chapter 9: Security Model**
+- Authentication flows
+- Authorization patterns (RLS, RBAC)
+- Data protection mechanisms
+- Threat model and mitigations
+- Security best practices
+- Compliance considerations
+
+**Chapter 10: Performance & Reliability**
+- Performance characteristics
+- Bottlenecks and optimizations
+- Load testing results
+- SLA/SLO definitions
+- Error handling and recovery
+- Known limitations
+
+---
+
+#### Appendices
+
+**Appendix A: Glossary**  
+**Appendix B: API Reference**  
+**Appendix C: Database Schema**  
+**Appendix D: Configuration Reference**  
+**Appendix E: Troubleshooting Guide**  
+**Appendix F: Migration Guides**
+
+---
+
+## Comprehensive Documentation Template
+
+```markdown
+# Chapter [N]: [Title]
+
+> **Reading Time**: [X] minutes  
+> **Audience**: [Developers / Architects / Operations / All]  
+> **Prerequisites**: [Previous chapters or knowledge needed]
+
+---
+
+## Executive Summary
+
+**TL;DR**: [2-3 sentence overview of this chapter]
+
+**Key Takeaways**:
+- [Important point 1]
+- [Important point 2]
+- [Important point 3]
+
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Architecture Overview](#architecture-overview)
+3. [Design Decisions](#design-decisions)
+4. [Implementation Details](#implementation-details)
+5. [Best Practices](#best-practices)
+6. [Troubleshooting](#troubleshooting)
+7. [References](#references)
+
+---
+
+## Introduction
+
+### What This Chapter Covers
+
+[Detailed explanation of scope]
+
+### Why It Matters
+
+[Business/technical importance]
+
+### How to Use This Chapter
+
+**For Developers**: Read sections 1-4 for implementation guidance  
+**For Architects**: Focus on sections 2-3 for design rationale  
+**For Operations**: Review sections 5-6 for deployment and troubleshooting
+
+---
+
+## Architecture Overview
+
+### System Context
+
+```mermaid
+graph TB
+    subgraph "External Systems"
+        A[Users]
+        B[External APIs]
+    end
+    
+    subgraph "Application Layer"
+        C[Frontend]
+        D[API Gateway]
+        E[Business Logic]
+    end
+    
+    subgraph "Data Layer"
+        F[Database]
+        G[Cache]
+        H[Storage]
+    end
+    
+    A --> C
+    C --> D
+    D --> E
+    E --> F
+    E --> G
+    B --> D
+```
+
+### Component Responsibilities
+
+| Component | Purpose | Technology | Why Chosen |
+|-----------|---------|------------|------------|
+| Frontend | User interface | React + TypeScript | Type safety, component reuse |
+| API Gateway | Request routing | Supabase Edge Functions | Serverless, auto-scaling |
+| Database | Data persistence | PostgreSQL (Supabase) | ACID compliance, RLS |
+
+---
+
+## Design Decisions
+
+### Decision 1: [Technology/Pattern Choice]
+
+**Context**: [What problem needed solving]
+
+**Options Considered**:
+1. **Option A**: [Description]
+   - Pros: [Benefits]
+   - Cons: [Drawbacks]
+   
+2. **Option B**: [Description]
+   - Pros: [Benefits]
+   - Cons: [Drawbacks]
+
+**Decision**: [Chosen option]
+
+**Rationale**: [Why this choice was made]
+
+**Trade-offs Accepted**: [What we gave up]
+
+**Code Reference**: [`src/path/file.ts:123-145`](src/path/file.ts)
+
+---
+
+### Decision 2: [Another Key Decision]
+
+[Same structure as Decision 1]
+
+---
+
+## Implementation Details
+
+### Core Component: [Component Name]
+
+**Purpose**: [What this component does]
+
+**Location**: `src/components/[ComponentName]/`
+
+**Key Files**:
+- [`ComponentName.tsx:1-50`](src/components/ComponentName.tsx) — Main component
+- [`hooks/useComponentName.ts:10-35`](src/hooks/useComponentName.ts) — Business logic
+- [`types/ComponentName.ts`](src/types/ComponentName.ts) — Type definitions
+
+**Architecture**:
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as Component
+    participant H as Hook
+    participant A as API
+    participant D as Database
+    
+    U->>C: Interact
+    C->>H: Call hook
+    H->>A: API request
+    A->>D: Query
+    D-->>A: Data
+    A-->>H: Response
+    H-->>C: Update state
+    C-->>U: Render
+```
+
+**Implementation**:
+
+```typescript
+// src/components/ComponentName.tsx
+import { useComponentName } from '@/hooks/useComponentName';
+
+export function ComponentName() {
+  // 1. Initialize hook with business logic
+  const { data, loading, error } = useComponentName();
+  
+  // 2. Handle loading state
+  if (loading) return <LoadingSpinner />;
+  
+  // 3. Handle error state with user-friendly message
+  if (error) return <ErrorDisplay error={error} />;
+  
+  // 4. Render main UI
+  return (
+    <div className="component">
+      {data.map(item => (
+        <ItemCard key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+```
+
+**Why This Pattern**:
+- Separates UI from business logic
+- Enables hook reusability
+- Simplifies testing
+- Follows React best practices
+
+**Performance Considerations**:
+- Uses React.memo() for expensive renders
+- Implements virtual scrolling for large lists
+- Debounces user input
+
+---
+
+## Data Models
+
+### Entity: [EntityName]
+
+**Purpose**: [What this entity represents]
+
+**Schema**:
+
+```sql
+-- Database: presentations table
+CREATE TABLE presentations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  profile_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  status TEXT DEFAULT 'draft',
+  is_public BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Indexes for performance
+CREATE INDEX idx_presentations_profile ON presentations(profile_id);
+CREATE INDEX idx_presentations_public ON presentations(is_public) WHERE is_public = true;
+```
+
+**Why This Design**:
+- `profile_id` (not user_id) — Follows project convention
+- `is_public` — Enables public sharing without auth
+- Partial index on `is_public` — Optimizes public queries
+- Timestamps — Audit trail and sorting
+
+**Relationships**:
+
+```mermaid
+erDiagram
+    PROFILES ||--o{ PRESENTATIONS : creates
+    PRESENTATIONS ||--o{ SLIDES : contains
+    PRESENTATIONS ||--o{ COMMENTS : receives
+    
+    PROFILES {
+        uuid id PK
+        text email
+        text full_name
+    }
+    
+    PRESENTATIONS {
+        uuid id PK
+        uuid profile_id FK
+        text title
+        boolean is_public
+    }
+    
+    SLIDES {
+        uuid id PK
+        uuid presentation_id FK
+        int slide_number
+        jsonb content
+    }
+```
+
+---
+
+## Data Flow
+
+### User Action → Database → UI Update
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as Frontend
+    participant RQ as React Query
+    participant EF as Edge Function
+    participant DB as Database
+    participant RLS as RLS Policy
+    
+    U->>UI: Create presentation
+    UI->>RQ: useMutation('createPresentation')
+    RQ->>EF: POST /functions/v1/create-presentation
+    EF->>EF: Validate JWT
+    EF->>DB: INSERT INTO presentations
+    DB->>RLS: Check RLS policy
+    RLS->>RLS: Verify profile_id = auth.uid()
+    RLS-->>DB: ✅ Allow
+    DB-->>EF: Return new record
+    EF-->>RQ: 200 OK + data
+    RQ->>RQ: Invalidate cache
+    RQ->>UI: Refetch presentations
+    UI->>DB: SELECT * WHERE profile_id = ...
+    DB-->>UI: Updated list
+    UI-->>U: Show new presentation
+```
+
+**Key Points**:
+1. JWT validation happens in Edge Function (line 23-35 of create-presentation/index.ts)
+2. RLS policy enforces profile_id check (migration 20251018120000_enable_rls.sql)
+3. React Query automatically invalidates cache on mutation
+4. UI refetches to ensure consistency
+
+---
+
+## Best Practices
+
+### Code Patterns
+
+✅ **DO**:
+- **Use TypeScript strict mode** — Catch errors at compile time
+  ```typescript
+  // tsconfig.json
+  "strict": true,
+  "noUncheckedIndexedAccess": true
+  ```
+
+- **Implement error boundaries** — Graceful degradation
+  ```typescript
+  <ErrorBoundary fallback={<ErrorDisplay />}>
+    <Component />
+  </ErrorBoundary>
+  ```
+
+- **Add comprehensive tests** — Unit, integration, E2E
+  ```typescript
+  // Always test happy path + edge cases
+  describe('ComponentName', () => {
+    it('renders with data', async () => { ... });
+    it('handles loading state', () => { ... });
+    it('handles error state', () => { ... });
+  });
+  ```
+
+❌ **DON'T**:
+- **Use `any` type** — Defeats TypeScript purpose
+  ```typescript
+  // ❌ Bad
+  const data: any = await fetch();
+  
+  // ✅ Good
+  const data: UserData = await fetch();
+  ```
+
+- **Skip RLS policies** — Critical security gap
+  ```sql
+  -- ❌ Bad: No RLS
+  CREATE TABLE sensitive_data ( ... );
+  
+  -- ✅ Good: RLS enabled
+  CREATE TABLE sensitive_data ( ... );
+  ALTER TABLE sensitive_data ENABLE ROW LEVEL SECURITY;
+  ```
+
+- **Hardcode configuration** — Environment-specific values
+  ```typescript
+  // ❌ Bad
+  const apiUrl = "https://prod.example.com";
+  
+  // ✅ Good
+  const apiUrl = import.meta.env.VITE_API_URL;
+  ```
+
+---
+
+### Security Patterns
+
+**Always Include** in security-critical docs:
+
+```markdown
+## Security Model
+
+### Authentication Flow
+
+1. User submits credentials
+2. Supabase Auth validates against auth.users
+3. JWT token generated with user.id claim
+4. Token stored in localStorage (httpOnly not possible in SPA)
+5. All API requests include Authorization: Bearer {token}
+6. Edge Functions verify JWT signature
+7. RLS policies check profile_id = auth.uid()
+
+### Threat Model
+
+| Threat | Mitigation | Status |
+|--------|------------|--------|
+| API key exposure | Keys only in Edge Functions | ✅ |
+| SQL injection | Parameterized queries + RLS | ✅ |
+| XSS attacks | React auto-escaping + CSP | ✅ |
+| CSRF | SameSite cookies + token validation | ✅ |
+| Unauthorized data access | RLS policies on all tables | ✅ |
+
+### Security Checklist
+
+- [ ] RLS enabled on all user data tables
+- [ ] API keys server-side only (Edge Functions)
+- [ ] Input validation on all endpoints
+- [ ] HTTPS enforced in production
+- [ ] Secrets not in git (.env in .gitignore)
+```
+
+---
+
+## Mode B: Comprehensive Documentation Structure
+
+### Chapter Organization
+
+**Part 1: Foundation** (Chapters 1-2)
+- Chapter 1: Executive Summary (5-10 pages)
+- Chapter 2: System Overview (15-25 pages)
+
+**Part 2: Architecture** (Chapters 3-5)
+- Chapter 3: Architecture & Design Decisions (20-30 pages)
+- Chapter 4: Data Architecture (15-20 pages)
+- Chapter 5: Integration Architecture (10-15 pages)
+
+**Part 3: Implementation** (Chapters 6-7)
+- Chapter 6: Core Components (30-50 pages)
+- Chapter 7: Advanced Features (20-30 pages)
+
+**Part 4: Operations** (Chapters 8-10)
+- Chapter 8: Deployment Architecture (15-20 pages)
+- Chapter 9: Security Model (15-20 pages)
+- Chapter 10: Performance & Reliability (15-20 pages)
+
+**Appendices** (A-F)
+- Appendix A: Glossary
+- Appendix B: API Reference
+- Appendix C: Database Schema
+- Appendix D: Configuration Reference
+- Appendix E: Troubleshooting Guide
+- Appendix F: Migration Guides
+
+**Total**: ~200-400 pages for comprehensive system documentation
+
+---
+
+## Discovery Phase (Required Before Generation)
+
+### Step 1: Codebase Analysis
+
+**Scan project structure**:
+```bash
+# Analyze folder structure
+tree -L 3 src/
+
+# Count files by type
+find src/ -name "*.tsx" | wc -l
+find src/ -name "*.ts" | wc -l
+
+# Identify key directories
+ls -la src/components/
+ls -la src/hooks/
+ls -la src/lib/
+```
+
+**Extract patterns**:
+- Component organization pattern
+- State management approach
+- API client architecture
+- Error handling patterns
+- Testing strategy
+
+---
+
+### Step 2: Dependency Mapping
+
+**Identify integration points**:
+```bash
+# Check package.json
+grep -A 50 "dependencies" package.json
+
+# Find external API calls
+grep -r "fetch\|axios\|supabase" src/
+
+# Identify MCP tools used
+grep -r "mcp__" .cursor/ .claude/
+```
+
+**Map relationships**:
+- Frontend ↔ Backend (Edge Functions)
+- Backend ↔ Database (Supabase)
+- Application ↔ External APIs (OpenAI, etc.)
+- Development ↔ Tools (MCP servers)
+
+---
+
+### Step 3: Design Pattern Extraction
+
+**Identify architectural patterns**:
+```typescript
+// Pattern 1: Custom hooks for business logic
+// Found in: src/hooks/*.ts (15 files)
+// Example: useAuth, usePresentations, useTheme
+
+// Pattern 2: API client with error handling
+// Found in: src/lib/apiClient.ts
+// Includes: Retry logic, auth token injection, error mapping
+
+// Pattern 3: Component composition
+// Found in: src/components/**/*.tsx
+// Uses: Radix UI primitives + shadcn/ui wrappers
+```
+
+---
+
+### Step 4: Data Flow Analysis
+
+**Trace key workflows**:
+```mermaid
+graph TD
+    A[User clicks 'Create Deck'] --> B[PitchDeckWizard.tsx]
+    B --> C[API Client]
+    C --> D[Edge Function: generate-pitch-deck]
+    D --> E{Validate JWT}
+    E -->|Valid| F[Call OpenAI API]
+    E -->|Invalid| G[Return 401]
+    F --> H[Stream response]
+    H --> I[Update DB: pitch_conversations]
+    I --> J[Stream to frontend]
+    J --> K[Update progress bar]
+    K --> L[Enable 'Generate' button]
+    L --> M[Create presentation record]
+    M --> N[Redirect to /presentations/:id]
+```
+
+---
+
+## Required Content Sections
+
+### Every Comprehensive Doc Must Include:
+
+#### 1. Executive Summary (Top of Doc)
+```markdown
+## Executive Summary
+
+**Purpose**: [One-sentence purpose]
+
+**Key Points**:
+- [Critical insight 1]
+- [Critical insight 2]
+- [Critical insight 3]
+
+**Audience**: [Who should read this]
+
+**Reading Time**: [Estimate]
+```
+
+---
+
+#### 2. Architecture Diagrams
+
+**Minimum 3 diagram types**:
+
+**System Context** (C4 Level 1):
+```mermaid
+graph TB
+    subgraph "Users"
+        U1[Web Users]
+        U2[Mobile Users]
+    end
+    
+    subgraph "Medellin Spark Platform"
+        APP[Application]
+    end
+    
+    subgraph "External Systems"
+        SUP[Supabase]
+        OAI[OpenAI]
+        VER[Vercel/Netlify]
+    end
+    
+    U1 --> APP
+    U2 --> APP
+    APP --> SUP
+    APP --> OAI
+    VER --> APP
+```
+
+**Component Diagram** (C4 Level 2):
+```mermaid
+graph LR
+    subgraph "Frontend"
+        UI[React Components]
+        RQ[React Query]
+        AC[API Client]
+    end
+    
+    subgraph "Backend"
+        EF[Edge Functions]
+        AUTH[Auth Service]
+    end
+    
+    subgraph "Data"
+        PG[PostgreSQL]
+        RLS[RLS Policies]
+    end
+    
+    UI --> RQ
+    RQ --> AC
+    AC --> EF
+    EF --> AUTH
+    EF --> PG
+    PG --> RLS
+```
+
+**Sequence Diagram** (User Flow):
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as Frontend
+    participant EF as Edge Function
+    participant DB as Database
+    participant AI as OpenAI
+    
+    User->>UI: Send message
+    UI->>EF: POST /pitch-deck-assistant
+    EF->>DB: Load conversation
+    EF->>AI: Create completion
+    AI-->>EF: Stream response
+    EF-->>UI: Server-sent events
+    UI-->>User: Display message
+    EF->>DB: Save conversation
+    Note over DB: RLS check: profile_id
+```
+
+---
+
+#### 3. Design Rationale
+
+**Always explain WHY**:
+
+```markdown
+## Design Rationale
+
+### Why Edge Functions?
+
+**Problem**: Frontend can't safely store OpenAI API keys
+
+**Solution**: Server-side Edge Functions act as secure proxy
+
+**Benefits**:
+- API keys never exposed to client
+- Serverless auto-scaling
+- Built-in JWT validation
+- Environment secrets management
+
+**Trade-offs**:
+- Additional network hop (adds 50-100ms latency)
+- Cold start overhead (mitigated by keep-alive)
+- Vendor lock-in to Supabase (acceptable for MVP)
+
+**Implementation**: See [`supabase/functions/chat/index.ts`](supabase/functions/chat/index.ts)
+```
+
+---
+
+#### 4. Code Examples with Context
+
+**Not just code — explain every part**:
+
+```markdown
+## Example: Creating a Protected Route
+
+### The Problem
+We need pages that require authentication, redirecting to /auth if user not logged in.
+
+### The Solution
+Use a `ProtectedRoute` wrapper component that checks auth state.
+
+### Implementation
+
+```typescript
+// src/components/ProtectedRoute.tsx
+
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+export function ProtectedRoute({ children }: ProtectedRouteProps) {
+  // 1. Get auth state from context/hook
+  const { user, loading } = useAuth();
+  
+  // 2. Show loading spinner while checking auth
+  //    (prevents flash of redirect)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  
+  // 3. Redirect to /auth if not authenticated
+  //    (uses 'replace' to avoid back button issues)
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+  
+  // 4. Render protected content if authenticated
+  return <>{children}</>;
+}
+```
+
+### Usage
+
+```typescript
+// src/App.tsx
+<Route 
+  path="/dashboard" 
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  } 
+/>
+```
+
+### Why This Pattern
+
+**Loading Check First**:
+- Prevents redirect flash during auth check
+- Better UX with loading indicator
+
+**`replace` Navigation**:
+- Prevents back button confusion
+- Users can't go back to protected page
+
+**Fragment Wrapper**:
+- Doesn't add extra DOM nodes
+- Preserves React tree structure
+
+### Testing
+
+```typescript
+// e2e/auth.spec.ts
+test('redirects to /auth when not authenticated', async ({ page }) => {
+  await page.goto('/dashboard');
+  await expect(page).toHaveURL(/\/auth/);
+});
+
+test('allows access when authenticated', async ({ page }) => {
+  await page.goto('/auth');
+  // ... login flow ...
+  await page.goto('/dashboard');
+  await expect(page).toHaveURL(/\/dashboard/);
+});
+```
+\`\`\`
+
+---
+
+#### 5. Performance Characteristics
+
+```markdown
+## Performance Profile
+
+### Load Time Benchmarks
+
+| Page | Target | Actual | Status |
+|------|--------|--------|--------|
+| Homepage | < 1.5s | 1.2s | ✅ |
+| Dashboard | < 2.0s | 1.8s | ✅ |
+| Wizard | < 2.5s | 2.1s | ✅ |
+| Editor | < 3.0s | 2.7s | ✅ |
+
+**Measured with**: Lighthouse CI on production
+
+### Bundle Size
+
+| Asset | Size | Gzipped | Status |
+|-------|------|---------|--------|
+| Main bundle | 487 KB | 152 KB | ✅ |
+| Vendor bundle | 312 KB | 98 KB | ✅ |
+| Total | 799 KB | 250 KB | ✅ Target < 1 MB |
+
+**Optimizations Applied**:
+- Code splitting by route (React.lazy)
+- Tree shaking unused exports
+- Dynamic imports for heavy libraries
+- Image optimization (WebP, lazy loading)
+
+### API Response Times
+
+| Endpoint | p50 | p95 | p99 |
+|----------|-----|-----|-----|
+| GET /presentations | 45ms | 120ms | 250ms |
+| POST /pitch-deck-assistant | 850ms | 2.1s | 4.5s |
+| POST /generate-pitch-deck | 5.2s | 12.3s | 18.7s |
+
+**Bottlenecks**:
+- OpenAI API latency (external, unavoidable)
+- Database connection pooler (optimized with indexes)
+- Image generation (offloaded to background job - future)
+
+### Database Query Performance
+
+```sql
+-- Slow query detected (before optimization)
+-- Query time: 890ms
+SELECT p.*, s.*, COUNT(c.id)
+FROM presentations p
+LEFT JOIN slides s ON s.presentation_id = p.id
+LEFT JOIN comments c ON c.presentation_id = p.id
+GROUP BY p.id, s.id;
+
+-- Optimized (after adding indexes)
+-- Query time: 45ms
+-- Added: idx_slides_presentation, idx_comments_presentation
+```
+
+**Optimization**: Added composite indexes (migration 20251019080000_add_indexes.sql)
+```
+
+---
+
+#### 6. Troubleshooting Guide
+
+```markdown
+## Troubleshooting
+
+### Common Issues & Fixes
+
+#### Issue 1: Presentation Not Loading (Stuck on Loading...)
+
+**Symptom**: Slide grid shows loading spinner indefinitely
+
+**Root Cause**: RLS policy blocking query
+
+**Diagnosis**:
+```sql
+-- Check if RLS is blocking
+SELECT tablename, rowsecurity 
+FROM pg_tables 
+WHERE tablename = 'presentations';
+-- Should be: rowsecurity = true
+
+-- Check if user has access
+SELECT * FROM presentations 
+WHERE id = 'presentation-id';
+-- If returns nothing, RLS is blocking
+```
+
+**Fix**:
+```sql
+-- Option 1: Make presentation public
+UPDATE presentations 
+SET is_public = true 
+WHERE id = 'presentation-id';
+
+-- Option 2: Check profile_id matches
+SELECT profile_id, auth.uid() 
+FROM presentations 
+WHERE id = 'presentation-id';
+-- Should match for owner access
+```
+
+**Prevention**: Always set is_public or verify ownership before querying
+
+---
+
+#### Issue 2: API 401 Unauthorized
+
+**Symptom**: Network tab shows 401 for API calls
+
+**Root Cause**: Missing or expired JWT token
+
+**Diagnosis**:
+```typescript
+// Check token in browser console
+const { data: { session } } = await supabase.auth.getSession();
+console.log('Session:', session?.access_token ? 'Valid' : 'Missing');
+```
+
+**Fix**:
+```typescript
+// Option 1: Refresh session
+await supabase.auth.refreshSession();
+
+// Option 2: Re-login
+await supabase.auth.signOut();
+// User must login again
+```
+
+**Prevention**: Implement token refresh logic in API client
+
+---
+
+#### Issue 3: Build Fails with TypeScript Errors
+
+**Symptom**: `pnpm build` fails with type errors
+
+**Diagnosis**:
+```bash
+# Get detailed error output
+pnpm tsc --noEmit | head -50
+
+# Common errors:
+# - Missing type imports
+# - Incorrect function signatures
+# - Untyped variables (implicit any)
+```
+
+**Fix**:
+```typescript
+// Add missing imports
+import type { Presentation } from '@/types';
+
+// Fix function signatures
+function fetchData(): Promise<Presentation[]> { ... }
+
+// Add explicit types
+const data: Presentation[] = await fetchData();
+```
+
+**Prevention**: Enable strict mode, run `pnpm tsc` before commit
+```
+
+---
+
+## Progressive Disclosure Pattern
+
+### Structure for Different Audiences
+
+**Level 1: Executive Summary** (1 page)
+- Business context
+- High-level architecture
+- Key metrics
+- Quick start
+
+**Level 2: Architecture Overview** (5-10 pages)
+- System boundaries
+- Component interactions
+- Major design decisions
+- Technology stack
+
+**Level 3: Implementation Details** (20-50 pages)
+- Code structure
+- Algorithms and logic
+- Performance optimizations
+- Error handling
+
+**Level 4: Deep Technical Dive** (50-100+ pages)
+- Line-by-line code explanations
+- Design pattern justifications
+- Performance benchmarks
+- Security analysis
+
+---
+
+## Comprehensive Chapter Template
+
+```markdown
+# Chapter [N]: [Title]
+
+> **Reading Time**: [X] minutes  
+> **Audience**: [Target readers]  
+> **Prerequisites**: [Required background]  
+> **Last Updated**: [Date]
+
+---
+
+## 📋 Table of Contents
+
+1. [Executive Summary](#executive-summary)
+2. [Introduction](#introduction)
+3. [Architecture Overview](#architecture-overview)
+4. [Design Decisions](#design-decisions)
+5. [Implementation](#implementation)
+6. [Data Models](#data-models)
+7. [API Contracts](#api-contracts)
+8. [Performance](#performance)
+9. [Security](#security)
+10. [Testing Strategy](#testing-strategy)
+11. [Troubleshooting](#troubleshooting)
+12. [References](#references)
+
+---
+
+## Executive Summary
+
+**TL;DR**: [2-3 sentences capturing the essence]
+
+**What You'll Learn**:
+- [Key learning 1]
+- [Key learning 2]
+- [Key learning 3]
+
+**Why This Matters**:
+[Business/technical importance in 1 paragraph]
+
+**Quick Navigation**:
+- **For Developers**: Read sections 5-6 (Implementation)
+- **For Architects**: Focus on sections 3-4 (Design)
+- **For Operations**: Review sections 8-11 (Ops & Troubleshooting)
+- **For Security**: Jump to section 9 (Security Model)
+
+---
+
+## Introduction
+
+### Context & Background
+
+[Why this system/feature exists, business problem it solves]
+
+### Scope of This Chapter
+
+**In Scope**:
+- [What's covered]
+- [What's explained]
+
+**Out of Scope**:
+- [What's not covered - with references to other chapters]
+- [Future enhancements not yet implemented]
+
+### Evolutionary History (if applicable)
+
+**Version 1.0** (Initial MVP):
+- [What was built first]
+- [Core decisions made]
+
+**Version 1.5** (Current):
+- [What was added/changed]
+- [Why changes were made]
+
+**Future** (Roadmap):
+- [Planned improvements]
+- [Known limitations being addressed]
+
+---
+
+## Architecture Overview
+
+### System Context Diagram
+
+[C4 Level 1 - showing system in ecosystem]
+
+```mermaid
+graph TB
+    subgraph "External Actors"
+        U[Users]
+        ADM[Administrators]
+    end
+    
+    subgraph "Medellin Spark Platform"
+        SYS[Main Application]
+    end
+    
+    subgraph "External Systems"
+        SUP[Supabase<br/>Auth + Database]
+        OAI[OpenAI API]
+        VER[Vercel CDN]
+    end
+    
+    U --> SYS
+    ADM --> SYS
+    SYS --> SUP
+    SYS --> OAI
+    VER --> SYS
+```
+
+**Key Relationships**:
+- Users access via Vercel CDN (global edge network)
+- Application authenticates via Supabase Auth
+- AI features powered by OpenAI API
+- Data persistence in Supabase PostgreSQL
+
+---
+
+### Container Diagram
+
+[C4 Level 2 - major containers/services]
+
+```mermaid
+graph TB
+    subgraph "Frontend Container"
+        UI[React SPA<br/>TypeScript + Vite]
+        RQ[React Query<br/>State Management]
+    end
+    
+    subgraph "Backend Containers"
+        EF1[Edge Function<br/>pitch-deck-assistant]
+        EF2[Edge Function<br/>generate-pitch-deck]
+        EF3[Edge Function<br/>chat]
+    end
+    
+    subgraph "Data Store"
+        PG[(PostgreSQL<br/>Supabase)]
+        ST[Storage<br/>S3-compatible]
+    end
+    
+    UI --> RQ
+    RQ --> EF1
+    RQ --> EF2
+    RQ --> EF3
+    EF1 --> PG
+    EF2 --> PG
+    EF2 --> ST
+```
+
+---
+
+### Component Diagram
+
+[C4 Level 3 - internal components]
+
+[Detailed component breakdown]
+
+---
+
+### Technology Stack
+
+| Layer | Technology | Version | Why Chosen |
+|-------|------------|---------|------------|
+| **Frontend** | React | 18.3+ | Virtual DOM, hooks, ecosystem |
+| | TypeScript | 5.3+ | Type safety, IDE support |
+| | Vite | 5.0+ | Fast HMR, modern build |
+| | TanStack Query | 5.0+ | Server state management |
+| | shadcn/ui | Latest | Accessible components |
+| | Tailwind CSS | 3.4+ | Utility-first styling |
+| **Backend** | Supabase | Latest | Auth + DB + Edge Functions |
+| | Deno | 2.0+ | Edge runtime, TypeScript-native |
+| | PostgreSQL | 15+ | ACID, RLS, performance |
+| **AI/ML** | OpenAI API | Latest | GPT-4o, streaming support |
+| **Testing** | Playwright | Latest | Cross-browser E2E |
+| | Vitest | Latest | Fast unit testing |
+| **DevOps** | Vercel/Netlify | Latest | Edge deployment, CDN |
+| | GitHub Actions | Latest | CI/CD automation |
+
+---
+
+## Design Decisions
+
+### Decision Log (Comprehensive)
+
+#### Decision 1: Use Supabase vs Custom Backend
+
+**Date**: [When decided]  
+**Status**: ✅ Implemented  
+**Impact**: High (affects entire architecture)
+
+**Context**:
+MVP needed auth, database, and API hosting. Tight timeline (2 weeks to production).
+
+**Options Considered**:
+
+**Option A: Custom Backend (Node.js + PostgreSQL)**
+- Pros:
+  - Full control over infrastructure
+  - No vendor lock-in
+  - Can optimize for specific use cases
+- Cons:
+  - 2-3 weeks additional dev time for auth alone
+  - Need to manage infrastructure (servers, DB, monitoring)
+  - Higher operational complexity
+  - Team needs DevOps expertise
+
+**Option B: Firebase**
+- Pros:
+  - Fast setup (1-2 days)
+  - Good documentation
+  - Real-time database
+- Cons:
+  - NoSQL only (limiting for complex queries)
+  - No true SQL, no RLS
+  - Vendor lock-in (Google)
+  - Pricing unpredictable at scale
+
+**Option C: Supabase** ✅ **CHOSEN**
+- Pros:
+  - PostgreSQL (SQL + RLS for security)
+  - Built-in auth (< 1 day setup)
+  - Edge Functions for serverless backend
+  - Real-time subscriptions
+  - Generous free tier
+  - Open source (can self-host later)
+- Cons:
+  - Vendor lock-in (mitigated by open source)
+  - Edge runtime limitations (Deno, not Node.js)
+  - Less mature than AWS/GCP
+
+**Decision**: Choose Supabase (Option C)
+
+**Rationale**:
+1. **Speed to market**: Auth + DB + Functions in < 3 days vs 2-3 weeks
+2. **Security**: RLS policies at database level (defense in depth)
+3. **Cost**: Free tier sufficient for MVP (0-50K users)
+4. **Developer experience**: Excellent CLI, local development, migrations
+5. **Exit strategy**: Open source allows self-hosting if needed
+
+**Trade-offs Accepted**:
+- Deno runtime (not Node.js) — Learn new ecosystem
+- Vendor dependency — Acceptable for MVP phase
+- Limited customization — Standard patterns sufficient
+
+**Validation**:
+- [ ] Auth working (tested: e2e/auth.spec.ts)
+- [ ] RLS enforced (verified: scripts/verify-rls.sh)
+- [ ] Edge Functions deployed (confirmed: supabase functions list)
+- [ ] Local development smooth (pnpm dev works)
+
+**Code References**:
+- Auth setup: [`src/hooks/useAuth.ts:10-45`](src/hooks/useAuth.ts)
+- Edge Function example: [`supabase/functions/chat/index.ts`](supabase/functions/chat/index.ts)
+- RLS policies: [`supabase/migrations/20251016_enable_rls.sql`](supabase/migrations/20251016_enable_rls.sql)
+
+---
+
+#### Decision 2: React Query vs Redux
+
+[Same detailed structure]
+
+---
+
+## Implementation Deep Dive
+
+### Component: PitchDeckWizard
+
+**Location**: `src/pages/PitchDeckWizard.tsx` (425 lines)
+
+**Purpose**: AI-powered pitch deck generation through conversational interface
+
+**Architecture**:
+
+```typescript
+// Component structure
+PitchDeckWizard (main container)
+  ├── ChatInterface (message display + input)
+  │   ├── MessageList (conversation history)
+  │   │   └── Message (individual message component)
+  │   └── ChatInput (text input + send button)
+  │
+  ├── ProgressTracker (completeness indicator)
+  │   └── ProgressBar (visual 0-100% progress)
+  │
+  └── GenerateButton (appears at 80%+)
+      └── LoadingState (during generation)
+```
+
+**State Management**:
+
+```typescript
+// Local state (useState)
+const [messages, setMessages] = useState<Message[]>([]);
+const [input, setInput] = useState('');
+const [isLoading, setIsLoading] = useState(false);
+
+// Server state (React Query)
+const { data: conversation } = useQuery({
+  queryKey: ['conversation', conversationId],
+  queryFn: () => fetchConversation(conversationId)
+});
+
+// Mutations
+const sendMessage = useMutation({
+  mutationFn: (message: string) => 
+    apiClient.post('/pitch-deck-assistant', { message }),
+  onSuccess: (response) => {
+    setMessages(prev => [...prev, response.message]);
+    // Update progress in database
+  }
+});
+```
+
+**Why This State Split**:
+- `messages` (local) — UI state, no server sync needed
+- `conversation` (server) — Source of truth, React Query cached
+- Optimistic updates for perceived performance
+- Automatic retry on failures (React Query)
+
+**Data Flow**:
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Sending: User types message
+    Sending --> Streaming: API responds
+    Streaming --> Updating: Chunk received
+    Updating --> Streaming: More chunks
+    Streaming --> Complete: Done token
+    Complete --> Idle: Ready for next
+    
+    Sending --> Error: API fails
+    Error --> Idle: Retry / Cancel
+```
+
+**Performance Optimizations**:
+1. **Debounced input** — Wait 300ms before showing "typing" indicator
+2. **Virtual scrolling** — For 50+ message conversations
+3. **Memoized messages** — React.memo on Message component
+4. **Lazy image loading** — Images load on scroll into view
+
+**Code Example** (with explanations):
+
+```typescript
+// src/pages/PitchDeckWizard.tsx:120-180
+
+// Handle message send with streaming response
+const handleSendMessage = async () => {
+  // 1. Validate input (empty check)
+  if (!input.trim()) return;
+  
+  // 2. Add user message to UI immediately (optimistic update)
+  const userMessage: Message = {
+    role: 'user',
+    content: input,
+    timestamp: new Date()
+  };
+  setMessages(prev => [...prev, userMessage]);
+  
+  // 3. Clear input and set loading state
+  setInput('');
+  setIsLoading(true);
+  
+  try {
+    // 4. Call API with streaming support
+    const response = await apiClient.post('/pitch-deck-assistant', {
+      conversationId,
+      message: input,
+      messages: messages.slice(-10) // Last 10 for context
+    }, {
+      stream: true, // Enable streaming
+      onChunk: (chunk) => {
+        // 5. Update assistant message as chunks arrive
+        setMessages(prev => {
+          const lastMsg = prev[prev.length - 1];
+          if (lastMsg.role === 'assistant') {
+            // Append to existing assistant message
+            return [
+              ...prev.slice(0, -1),
+              { ...lastMsg, content: lastMsg.content + chunk }
+            ];
+          } else {
+            // Create new assistant message
+            return [...prev, {
+              role: 'assistant',
+              content: chunk,
+              timestamp: new Date()
+            }];
+          }
+        });
+      }
+    });
+    
+    // 6. Update progress from response metadata
+    if (response.completeness) {
+      setCompleteness(response.completeness);
+    }
+    
+  } catch (error) {
+    // 7. Handle errors gracefully
+    console.error('Send message failed:', error);
+    toast.error('Failed to send message. Please try again.');
+    
+    // 8. Rollback optimistic update
+    setMessages(prev => prev.filter(m => m !== userMessage));
+    
+  } finally {
+    // 9. Always clear loading state
+    setIsLoading(false);
+  }
+};
+```
+
+**Why This Approach**:
+- **Optimistic updates** — Instant UI feedback
+- **Streaming** — Show AI response as it generates (better UX)
+- **Error recovery** — Rollback on failure
+- **Progress tracking** — Update completeness from metadata
+- **Context window** — Last 10 messages for relevance
+
+---
+
+## Code File References
+
+**Use this format throughout docs**:
+
+```markdown
+## Example: Auth Hook Implementation
+
+**File**: [`src/hooks/useAuth.ts:1-85`](src/hooks/useAuth.ts)
+
+Key sections:
+- Lines 10-25: Session initialization
+- Lines 30-50: Login/logout functions
+- Lines 55-70: Auth state updates
+- Lines 75-85: Effect cleanup
+
+```typescript
+// src/hooks/useAuth.ts:10-25
+// Session initialization with Supabase
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+    
+    return () => subscription.unsubscribe();
+  }, []);
+  
+  return { user, loading };
+}
+```
+\`\`\`
+
+**Design Rationale**:
+- `getSession()` on mount — Restore auth from localStorage
+- `onAuthStateChange()` — React to login/logout events
+- Cleanup subscription — Prevent memory leaks
+- Loading state — Prevent flash of login redirect
+```
+
+---
+
+## Generation Workflow
+
+### Phase 1: Discovery (15-30 min)
+
+**Analyze Codebase**:
+```bash
+# Structure analysis
+tree -L 3 -I 'node_modules|dist' > project-structure.txt
+
+# Component inventory
+find src/components -name "*.tsx" > components-list.txt
+
+# Hook inventory
+find src/hooks -name "*.ts" > hooks-list.txt
+
+# API endpoints
+grep -r "POST\|GET\|PUT\|DELETE" supabase/functions/ > api-endpoints.txt
+
+# Database schema
+supabase db dump --schema public > schema.sql
+```
+
+**Extract Patterns**:
+- Read 5-10 key files to understand patterns
+- Identify naming conventions
+- Map component relationships
+- Extract reusable patterns
+
+**Document Findings**:
+```markdown
+## Codebase Analysis
+
+**Structure**: Feature-based organization (src/components/[feature]/)  
+**Patterns**: Custom hooks pattern (17 hooks identified)  
+**API**: Edge Functions with streaming support  
+**Database**: PostgreSQL with RLS (12 tables)  
+**Testing**: Playwright E2E (8 test files)
+```
+
+---
+
+### Phase 2: Structuring (10-20 min)
+
+**Create Outline**:
+```markdown
+# Documentation Outline
+
+## Mode: [MVP Quick / Comprehensive]
+
+## Audience Analysis:
+- Primary: Developers (building features)
+- Secondary: Architects (understanding design)
+- Tertiary: Operations (deploying system)
+
+## Chapter Plan:
+1. Executive Summary (5 pages) - All audiences
+2. System Overview (15 pages) - Developers + Architects
+3. Architecture (25 pages) - Architects
+4. Implementation (40 pages) - Developers
+5. Operations (20 pages) - DevOps
+...
+
+## Diagram Plan:
+- System context (C4 Level 1)
+- Container diagram (C4 Level 2)
+- Component diagram per major feature
+- Sequence diagrams for 3 key workflows
+- ERD for database schema
+```
+
+**Progressive Complexity Design**:
+- Chapter 1: 10,000 foot view
+- Chapter 2: 1,000 foot view
+- Chapters 3-5: Ground level view
+- Chapters 6-7: Implementation level
+
+---
+
+### Phase 3: Writing (Varies by Mode)
+
+**Mode A (MVP Quick)**: ~30-60 min for all 9 docs  
+**Mode B (Comprehensive)**: ~2-8 hours for full documentation
+
+**Writing Order**:
+1. Start with executive summary (sets tone)
+2. Architecture overview (establishes mental model)
+3. Core components (most important content)
+4. Advanced features (builds on core)
+5. Operations and troubleshooting (practical guides)
+6. Appendices (reference material)
+
+**Per-Section Checklist**:
+- [ ] Explain the "what"
+- [ ] Explain the "why"
+- [ ] Show the "how" (with code)
+- [ ] Include diagram
+- [ ] Add real examples from codebase
+- [ ] Cross-reference related sections
+- [ ] Add troubleshooting for common issues
+
+---
+
+### Phase 4: Validation (10-15 min)
+
+**Content Validation**:
+```bash
+# Check all code examples compile/run
+# Extract all code blocks, test them
+
+# Verify all file references exist
+grep -o '\[`[^`]*`\]' docs/*.md | # Extract file paths
+  while read path; do
+    test -f "$path" || echo "Missing: $path"
+  done
+
+# Validate mermaid diagrams
+# Use mermaid-cli or online validator
+
+# Check cross-references
+# Ensure all [link](file.md) files exist
+```
+
+**Structure Validation**:
+- [ ] All required sections present
+- [ ] Proper heading hierarchy (no H4 before H3)
+- [ ] Tables properly formatted
+- [ ] Code blocks have language identifiers
+- [ ] Links work (internal and external)
+
+---
+
+## Document Types & Patterns
+
+### Type 1: Tutorial Document
+
+**Purpose**: Teach how to accomplish a specific task  
+**Format**: Step-by-step guide with explanations
+
+```markdown
+## Tutorial: Creating a New Feature
+
+### What You'll Build
+[End result description with screenshot or diagram]
+
+### Prerequisites
+- [ ] Development environment set up
+- [ ] Supabase CLI installed
+- [ ] Basic React knowledge
+
+### Step 1: Create Component Structure
+
+**Create file**: `src/components/NewFeature/NewFeature.tsx`
+
+```typescript
+import { useState } from 'react';
+
+export function NewFeature() {
+  // Step implementation
+}
+```
+
+**Why this structure**: [Explanation]
+
+### Step 2: Add Business Logic
+
+[Continue with numbered steps]
+
+### Verification
+
+Test your implementation:
+```bash
+pnpm dev
+# Navigate to http://localhost:8080/new-feature
+# Expected: [What should appear]
+```
+\`\`\`
+```
+
+---
+
+### Type 2: Reference Document
+
+**Purpose**: Quick lookup for specific information  
+**Format**: Tables, lists, API specs
+
+```markdown
+## API Reference: Edge Functions
+
+### Endpoint: POST /pitch-deck-assistant
+
+**URL**: `https://[project].supabase.co/functions/v1/pitch-deck-assistant`
+
+**Authentication**: Required (Bearer token)
+
+**Request**:
+```json
+{
+  "conversationId": "uuid",
+  "message": "string",
+  "messages": [
+    {"role": "user|assistant", "content": "string"}
+  ]
+}
+```
+
+**Response** (Server-Sent Events):
+```
+data: {"type":"progress","completeness":20,"message":"chunk"}
+data: {"type":"message","content":"more text"}
+data: {"type":"complete"}
+```
+
+**Errors**:
+| Status | Code | Meaning | Action |
+|--------|------|---------|--------|
+| 401 | NO_AUTH | Missing/invalid token | Re-login |
+| 429 | RATE_LIMIT | Too many requests | Wait 60s |
+| 500 | OPENAI_ERROR | OpenAI API failed | Retry |
+
+**Code**: [`supabase/functions/pitch-deck-assistant/index.ts`](supabase/functions/pitch-deck-assistant/index.ts)
+\`\`\`
+```
+
+---
+
+### Type 3: Concept Explanation Document
+
+**Purpose**: Explain complex concepts and mental models  
+**Format**: Narrative with diagrams and examples
+
+```markdown
+## Understanding Row Level Security (RLS)
+
+### The Problem
+
+Traditional application-level authorization:
+```typescript
+// ❌ Problem: Security in application code
+async function getPresentations(userId) {
+  // If this check is forgotten or bypassed, data leaks!
+  return db.query('SELECT * FROM presentations WHERE user_id = $1', [userId]);
+}
+```
+
+**Issues**:
+- Security logic scattered across codebase
+- Easy to forget checks
+- Bypass possible via direct DB access
+- Hard to audit
+
+### The Solution: Database-Level Security
+
+RLS enforces security at the database:
+
+```sql
+-- Security policy in database (can't be bypassed)
+CREATE POLICY "users_own_data" ON presentations
+  FOR ALL
+  TO authenticated
+  USING (profile_id = auth.uid());
+```
+
+**Now**:
+```typescript
+// ✅ Simple: No authorization code needed!
+async function getPresentations() {
+  // Database automatically filters to current user
+  return db.query('SELECT * FROM presentations');
+}
+```
+
+### How It Works
+
+```mermaid
+sequenceDiagram
+    participant App
+    participant PG as PostgreSQL
+    participant RLS as RLS Engine
+    participant Auth as Auth Context
+    
+    App->>PG: SELECT * FROM presentations
+    PG->>Auth: Get current user (auth.uid())
+    Auth-->>PG: user_id
+    PG->>RLS: Check policy
+    RLS->>RLS: WHERE profile_id = user_id
+    RLS-->>PG: Filtered results
+    PG-->>App: Only user's data
+```
+
+**Key Insight**: Security is **enforced by PostgreSQL**, not application code.
+
+### Benefits
+
+1. **Defense in Depth**: Even if app code is compromised, DB blocks unauthorized access
+2. **Audit Trail**: All policies in migration files (version controlled)
+3. **Consistency**: Same security logic for all access paths (API, SQL, admin)
+4. **Simplicity**: Application code doesn't need auth checks
+
+### Mental Model
+
+Think of RLS as **database-level middleware**:
+
+```
+Query → RLS Policy → Filtered Results
+```
+
+Just like this in Express:
+```
+Request → Auth Middleware → Route Handler
+```
+
+But **at the database level**, so it **can't be bypassed**.
+
+### Real Example
+
+**File**: [`supabase/migrations/20251016_enable_rls.sql`](supabase/migrations/20251016_enable_rls.sql)
+
+```sql
+-- Enable RLS
+ALTER TABLE presentations ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Users can see own presentations
+CREATE POLICY "users_own_presentations"
+  ON presentations FOR SELECT
+  TO authenticated
+  USING (profile_id = auth.uid());
+
+-- Policy: Users can see public presentations
+CREATE POLICY "public_presentations"
+  ON presentations FOR SELECT
+  TO anon, authenticated
+  USING (is_public = true);
+```
+
+**Test**:
+```sql
+-- As user A
+SELECT * FROM presentations;
+-- Returns: Only presentations where profile_id = A
+
+-- As anonymous
+SELECT * FROM presentations;
+-- Returns: Only presentations where is_public = true
+```
+
+### Common Pitfalls
+
+❌ **Forgetting to enable RLS**:
+```sql
+CREATE TABLE new_table ( ... );
+-- Missing: ALTER TABLE new_table ENABLE ROW LEVEL SECURITY;
+-- Result: All data accessible to everyone!
+```
+
+✅ **Always enable in same migration**:
+```sql
+CREATE TABLE new_table ( ... );
+ALTER TABLE new_table ENABLE ROW LEVEL SECURITY;  -- ← Required!
+CREATE POLICY ... ON new_table ...;
+```
+
+### Further Reading
+
+- [Supabase RLS Docs](https://supabase.com/docs/guides/auth/row-level-security)
+- [PostgreSQL RLS Docs](https://www.postgresql.org/docs/current/ddl-rowsecurity.html)
+- Our migration template: [`supabase-migration` skill](../.claude/skills/supabase-migration/SKILL.md)
+\`\`\`
+```
+
+---
+
+## Mermaid Diagram Patterns (Extended)
+
+### System Architecture (C4 Model)
+
+**Level 1: System Context**
+```mermaid
+graph TB
+    U[Users] --> APP[Medellin Spark]
+    APP --> SUP[Supabase]
+    APP --> OAI[OpenAI]
+    APP --> VER[Vercel CDN]
+```
+
+**Level 2: Containers**
+```mermaid
+graph TB
+    subgraph "Frontend"
+        UI[React SPA]
+    end
+    subgraph "Backend"
+        EF[Edge Functions]
+    end
+    subgraph "Data"
+        PG[(PostgreSQL)]
+    end
+    
+    UI --> EF
+    EF --> PG
+```
+
+**Level 3: Components** (detailed breakdown of containers)
+
+---
+
+### Sequence Diagrams (Workflows)
+
+**Pattern**: Actor → System → System → Data
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as Frontend
+    participant API as Edge Function
+    participant DB as Database
+    participant Ext as External API
+    
+    User->>UI: Action
+    UI->>API: Request
+    API->>DB: Query
+    API->>Ext: Call
+    Ext-->>API: Response
+    DB-->>API: Data
+    API-->>UI: Combined result
+    UI-->>User: Display
+```
+
+---
+
+### State Machines (Complex Flows)
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+    Draft --> UnderReview: Submit
+    UnderReview --> Approved: Accept
+    UnderReview --> Rejected: Reject
+    UnderReview --> Draft: Request Changes
+    Approved --> Published: Publish
+    Published --> Archived: Archive
+    Rejected --> [*]
+    Archived --> [*]
+```
+
+---
+
+### Entity Relationship Diagrams (Data Models)
+
+```mermaid
+erDiagram
+    USER ||--o{ PRESENTATION : creates
+    USER ||--o{ COMMENT : writes
+    PRESENTATION ||--o{ SLIDE : contains
+    PRESENTATION ||--o{ COMMENT : receives
+    PRESENTATION ||--o{ SHARE : has
+    
+    USER {
+        uuid id PK
+        text email UK
+        text full_name
+        timestamp created_at
+    }
+    
+    PRESENTATION {
+        uuid id PK
+        uuid profile_id FK
+        text title
+        boolean is_public
+        timestamp created_at
+    }
+```
+
+---
+
+## Audience-Specific Documentation
+
+### For New Developers (Onboarding)
+
+**Reading Path**:
+1. Chapter 1: Executive Summary (5 min)
+2. Chapter 2: System Overview (15 min)
+3. Chapter 3: Setup Guide (30 min)
+4. Chapter 4: Core Features (45 min)
+5. Chapter 7: Best Practices (20 min)
+
+**Skip**: Advanced features, performance tuning, security deep dive
+
+---
+
+### For Architects (Design Review)
+
+**Reading Path**:
+1. Chapter 1: Executive Summary (5 min)
+2. Chapter 2: System Overview (15 min)
+3. Chapter 3: Architecture & Design Decisions (60 min)
+4. Chapter 4: Data Architecture (30 min)
+5. Chapter 5: Integration Architecture (20 min)
+6. Chapter 9: Security Model (30 min)
+
+**Focus**: Design rationale, trade-offs, alternatives considered
+
+---
+
+### For Operations (Deployment)
+
+**Reading Path**:
+1. Chapter 1: Executive Summary (5 min)
+2. Chapter 8: Deployment Architecture (30 min)
+3. Chapter 10: Performance & Reliability (20 min)
+4. Appendix E: Troubleshooting Guide (15 min)
+
+**Skip**: Implementation details, code examples
+
+---
+
+### For Security Reviewers
+
+**Reading Path**:
+1. Chapter 1: Executive Summary (5 min)
+2. Chapter 9: Security Model (45 min)
+3. Chapter 4: Data Architecture (focus on RLS policies)
+4. Appendix E: Troubleshooting (security section)
+
+**Focus**: Threat model, auth flows, RLS policies, secrets management
+
+---
+
+## Output Format Standards
+
+### Markdown Best Practices
+
+**Headers**:
+```markdown
+# H1: Chapter title only (one per document)
+## H2: Major sections
+### H3: Subsections
+#### H4: Minor subdivisions (use sparingly)
+```
+
+**Code Blocks**:
+```markdown
+```typescript
+// Always include language identifier
+// Add comments explaining non-obvious code
+const example = 'with explanation';
+```
+\`\`\`
+```
+
+**Tables**:
+```markdown
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Aligned  | Properly | Clean    |
+```
+
+**Callouts**:
+```markdown
+> **Important**: Critical information readers must know
+
+> **Note**: Helpful context or clarification
+
+> **Warning**: Potential pitfall or danger
+
+> **Tip**: Best practice or optimization
+```
+
+**Lists**:
+```markdown
+**Ordered** (for steps):
+1. First step
+2. Second step
+3. Third step
+
+**Unordered** (for items):
+- Item one
+- Item two
+- Item three
+```
+
+---
+
+## Integration with Codebase
+
+### Auto-Link to Code
+
+**Pattern**: Always reference actual files with line numbers
+
+```markdown
+## Example: API Client Error Handling
+
+**Implementation**: [`src/lib/apiClient.ts:85-125`](src/lib/apiClient.ts)
+
+The error handling logic (lines 85-125) implements:
+- Retry with exponential backoff
+- Auth token refresh on 401
+- User-friendly error messages
+- Error logging for debugging
+
+```typescript
+// src/lib/apiClient.ts:85-125
+private async handleError(error: Error, attempt: number) {
+  // Line 87: Check if retryable error
+  if (this.isRetryable(error) && attempt < MAX_RETRIES) {
+    // Line 89: Exponential backoff (100ms, 200ms, 400ms)
+    await sleep(100 * Math.pow(2, attempt));
+    return; // Will retry
+  }
+  
+  // Line 94: Handle 401 specifically
+  if (error.status === 401) {
+    // Line 95: Try to refresh token
+    await this.refreshAuthToken();
+    return; // Will retry with new token
+  }
+  
+  // Line 100: Map to user-friendly message
+  throw new ApiError(
+    this.getUserMessage(error),
+    error.status,
+    error.code
+  );
+}
+```
+\`\`\`
+
+**Why This Approach**:
+- Automatic retries for transient failures
+- Token refresh prevents unnecessary re-login
+- User sees friendly messages, not stack traces
+- Developers see full error in console
+
+**Testing**: See [`e2e/api-errors.spec.ts:45-78`](e2e/api-errors.spec.ts)
+```
+
+---
+
+## Quality Checklist
+
+### Comprehensive Documentation Quality
+
+**Content** (all required):
+- [ ] Executive summary (1 page)
+- [ ] Architecture overview with diagrams (3+ diagrams)
+- [ ] Design decisions with rationale (all major decisions)
+- [ ] Implementation details with code references
+- [ ] Data models with ERD
+- [ ] API contracts/specifications
+- [ ] Performance characteristics with benchmarks
+- [ ] Security model with threat analysis
+- [ ] Deployment architecture
+- [ ] Troubleshooting guide (10+ common issues)
+- [ ] Glossary of terms
+- [ ] Reading paths for 3+ audiences
+
+**Technical** (all verified):
+- [ ] All code examples tested and working
+- [ ] All file references exist (with line numbers)
+- [ ] All mermaid diagrams render correctly
+- [ ] All cross-references work
+- [ ] All external links valid
+- [ ] No broken images or resources
+
+**Style** (consistent):
+- [ ] Clear heading hierarchy
+- [ ] Consistent terminology (glossary created)
+- [ ] Active voice preferred
+- [ ] Technical but accessible language
+- [ ] Code examples well-commented
+- [ ] Diagrams have legends where needed
+
+---
+
+## Invocation Patterns
+
+### Quick MVP Docs (Mode A)
+
+```
+"Generate MVP documentation set (001-009)"
+"Create quick docs for [feature] MVP"
+"Use docs-generator for MVP documentation"
+```
+
+**Output**: 9 files, 500-800 lines each
+
+---
+
+### Comprehensive Docs (Mode B)
+
+```
+"Generate comprehensive technical documentation for [system]"
+"Create detailed architecture documentation with code analysis"
+"Use docs-architect to document [feature] in depth"
+"Generate production documentation with all chapters"
+```
+
+**Output**: 10+ chapters, 10-100+ pages each
+
+---
+
+### Update Existing
+
+```
+"Update [chapter/doc] with [new information]"
+"Add [section] to [document]"
+"Expand [topic] in [doc] with code examples"
+```
+
+---
+
+## Success Criteria
+
+### Mode A: MVP Quick Docs
+
+**Completion**: All 9 files created  
+**Quality**: All 6 sections per file  
+**Accuracy**: All examples tested  
+**Time**: < 1 hour total
+
+---
+
+### Mode B: Comprehensive Docs
+
+**Completion**: All chapters + appendices  
+**Quality**: All required sections per chapter  
+**Depth**: 10-100+ pages per chapter  
+**Accuracy**: All code refs valid, all examples working  
+**Time**: 2-8 hours (acceptable for production docs)
+
+**Validation**:
+- [ ] Executive summary < 10 pages
+- [ ] Each chapter has table of contents
+- [ ] 3+ mermaid diagrams per chapter
+- [ ] All design decisions documented with rationale
+- [ ] All major components explained with code
+- [ ] Performance benchmarks included
+- [ ] Security model fully documented
+- [ ] Troubleshooting guide comprehensive
+- [ ] Multiple reading paths defined
+- [ ] Glossary complete
+
+---
+
+## Examples
+
+### Generate Full System Documentation
+
+**Command**:
+```
+"Generate comprehensive technical documentation for the Medellin Spark pitch deck system. Include all chapters (1-10) with architecture diagrams, design decisions, code references, performance analysis, and security model."
+```
+
+**Claude Will**:
+1. Analyze entire codebase (src/, supabase/, e2e/)
+2. Extract patterns and design decisions
+3. Create 10 chapters + 6 appendices
+4. Include 30+ mermaid diagrams
+5. Add 100+ code references with line numbers
+6. Generate ERD for all database tables
+7. Document all API endpoints
+8. Create troubleshooting guide
+9. Define reading paths for 4 audiences
+10. Validate all content
+
+**Output**: ~250-350 pages of comprehensive documentation
+
+---
+
+## Maintenance & Evolution
+
+### When to Regenerate (Full)
+
+- Major version releases (1.0 → 2.0)
+- Architecture overhauls
+- Complete rewrites
+- Quarterly comprehensive reviews
+
+### When to Update (Incremental)
+
+- New features added (update relevant chapter)
+- Bug fixes with architecture impact
+- Performance optimizations
+- Security updates
+
+### Version Control
+
+**Track doc versions**:
+```markdown
+---
+version: 1.2.0
+created: 2025-10-01
+last_updated: 2025-10-19
+status: current
+supersedes: version-1.1.0.md
+---
+```
+
+---
+
+## Integration with Project
+
+### Follows Existing Rules
+
+**doc-organization.mdc**: Folder placement  
+**cursor_rules.mdc**: Rule formatting  
+**Project CLAUDE.md**: Technical standards
+
+### Uses Project Knowledge
+
+**`.claude/skills/`**: Technical patterns  
+**`.claude/agents/`**: Specialized knowledge  
+**`mvp/`**: Architecture references  
+**`supabase/`**: Database patterns
+
+---
+
+## Quick Reference
+
+### Generate MVP Docs (001-009)
+```
+"Use docs-generator for MVP documentation"
+```
+
+### Generate Comprehensive Docs (Chapters 1-10)
+```
+"Generate comprehensive technical documentation with full architecture analysis"
+```
+
+### Update Specific Doc
+```
+"Update Chapter 3 with new authentication flow"
+```
+
+### Add New Section
+```
+"Add performance benchmarks to Chapter 10"
+```
+
+---
+
+**Rule Version**: 2.0.0  
+**Created**: October 19, 2025  
+**Last Updated**: October 19, 2025  
+**Status**: ✅ Production Ready (Enhanced)
+
+**Changelog**:
+- v2.0.0: Added comprehensive mode, codebase analysis, progressive disclosure
+- v1.0.0: Initial MVP documentation mode
+
+---
+
+*This rule enables both quick MVP documentation and comprehensive, long-form technical documentation with deep system analysis, design rationale, and multi-audience support.*

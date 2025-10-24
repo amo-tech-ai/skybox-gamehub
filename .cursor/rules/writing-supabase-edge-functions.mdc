@@ -1,0 +1,399 @@
+---
+description: Guidelines for writing Supabase Edge Functions
+alwaysApply: false
+---
+
+# Writing Supabase Edge Functions
+
+You're a Supabase Edge Functions expert. Generate **serverless functions** that are secure, performant, and follow best practices:
+
+## Edge Functions Fundamentals
+
+1. **Environment:**
+   - Runs on Deno runtime
+   - Deployed serverless on Supabase
+   - Access to Supabase libraries and APIs
+
+2. **Use Cases:**
+   - Send notifications (email, SMS, WhatsApp)
+   - External API integration
+   - Complex business logic
+   - Scheduled jobs
+   - Webhooks
+
+3. **File Structure:**
+   ```
+   supabase/functions/
+   ├── send-confirmation-email/
+   │   └── index.ts
+   ├── update-game-scores/
+   │   └── index.ts
+   └── deno.json
+   ```
+
+## Best Practices
+
+1. **Use Typed Requests/Responses:**
+   ```typescript
+   import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+   interface RequestPayload {
+     email: string;
+     gameName: string;
+   }
+
+   interface ResponsePayload {
+     success: boolean;
+     message: string;
+   }
+
+   serve(async (req: Request): Promise<Response> => {
+     if (req.method !== "POST") {
+       return new Response("Method not allowed", { status: 405 });
+     }
+
+     const payload: RequestPayload = await req.json();
+     // ... function logic
+     const response: ResponsePayload = { success: true, message: "Email sent" };
+     return new Response(JSON.stringify(response), {
+       headers: { "Content-Type": "application/json" }
+     });
+   });
+   ```
+
+2. **Handle Errors Gracefully:**
+   ```typescript
+   serve(async (req: Request): Promise<Response> => {
+     try {
+       // Function logic
+     } catch (error) {
+       console.error("Error:", error);
+       return new Response(
+         JSON.stringify({ error: error.message }),
+         { status: 500, headers: { "Content-Type": "application/json" } }
+       );
+     }
+   });
+   ```
+
+3. **Use Environment Variables:**
+   ```typescript
+   const apiKey = Deno.env.get("EXTERNAL_API_KEY");
+   const supabaseUrl = Deno.env.get("SUPABASE_URL");
+   const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY");
+
+   if (!apiKey) {
+     throw new Error("EXTERNAL_API_KEY not set");
+   }
+   ```
+
+4. **Add CORS Headers:**
+   ```typescript
+   const headers = {
+     "Content-Type": "application/json",
+     "Access-Control-Allow-Origin": "*",
+     "Access-Control-Allow-Methods": "POST, OPTIONS",
+     "Access-Control-Allow-Headers": "Content-Type, Authorization"
+   };
+
+   if (req.method === "OPTIONS") {
+     return new Response(null, { headers });
+   }
+   ```
+
+5. **Validate Input:**
+   ```typescript
+   function validateEmail(email: string): boolean {
+     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+   }
+
+   if (!validateEmail(payload.email)) {
+     return new Response(
+       JSON.stringify({ error: "Invalid email" }),
+       { status: 400, headers }
+     );
+   }
+   ```
+
+## Common Patterns
+
+### 1. Send Email Notification
+
+```typescript
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const headers = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "*"
+};
+
+serve(async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers });
+  }
+
+  try {
+    const { email, gameName, gameTime } = await req.json();
+
+    // Send email via external service (e.g., SendGrid, Resend)
+    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("SENDGRID_API_KEY")}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        personalizations: [
+          {
+            to: [{ email }],
+            subject: `Reservation Confirmation: ${gameName}`
+          }
+        ],
+        from: {
+          email: "noreply@skybox.com",
+          name: "Skybox Gamehub"
+        },
+        content: [
+          {
+            type: "text/html",
+            value: `
+              <h1>Your reservation is confirmed!</h1>
+              <p>Game: ${gameName}</p>
+              <p>Time: ${gameTime}</p>
+            `
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`SendGrid error: ${response.status}`);
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, message: "Email sent" }),
+      { status: 200, headers }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers }
+    );
+  }
+});
+```
+
+### 2. Update Game Scores from External API
+
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+serve(async (req: Request): Promise<Response> => {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL") || "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""
+  );
+
+  try {
+    // Fetch scores from external API
+    const response = await fetch("https://api.sports-data.com/scores", {
+      headers: {
+        "Authorization": `Bearer ${Deno.env.get("SPORTS_API_KEY")}`
+      }
+    });
+
+    const scores = await response.json();
+
+    // Update game scores in database
+    for (const score of scores) {
+      const { error } = await supabase
+        .from("games")
+        .update({
+          score_home: score.homeScore,
+          score_away: score.awayScore,
+          status: score.isLive ? "live" : "completed"
+        })
+        .eq("id", score.gameId);
+
+      if (error) console.error("Update error:", error);
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, updated: scores.length }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+});
+```
+
+### 3. Process Webhook
+
+```typescript
+serve(async (req: Request): Promise<Response> => {
+  // Verify webhook signature
+  const signature = req.headers.get("x-webhook-signature");
+  const body = await req.text();
+  
+  const expectedSignature = await verifySignature(body, signature);
+  if (!expectedSignature) {
+    return new Response("Invalid signature", { status: 401 });
+  }
+
+  const payload = JSON.parse(body);
+
+  // Process webhook
+  if (payload.event === "reservation.created") {
+    // Handle reservation creation
+    console.log("New reservation:", payload.data);
+  }
+
+  return new Response(
+    JSON.stringify({ success: true }),
+    { status: 200, headers: { "Content-Type": "application/json" } }
+  );
+});
+
+async function verifySignature(
+  body: string,
+  signature: string | null
+): Promise<boolean> {
+  const secret = Deno.env.get("WEBHOOK_SECRET");
+  const encoder = new TextEncoder();
+  const data = encoder.encode(body);
+  const keyData = encoder.encode(secret);
+
+  const key = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const computed = await crypto.subtle.sign("HMAC", key, data);
+  const computedHex = Array.from(new Uint8Array(computed))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return computedHex === signature;
+}
+```
+
+### 4. Generate Featured Games
+
+```typescript
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+serve(async (req: Request): Promise<Response> => {
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL") || "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || ""
+  );
+
+  try {
+    // Get high-interest games
+    const { data: games, error } = await supabase
+      .from("games")
+      .select("id, league_id, home_team_id, away_team_id")
+      .eq("status", "scheduled")
+      .gt("game_datetime", new Date().toISOString())
+      .limit(5);
+
+    if (error) throw error;
+
+    // Mark as featured
+    for (const game of games) {
+      await supabase
+        .from("skybox_featured_games")
+        .insert({
+          game_id: game.id,
+          is_highlight: true,
+          promotion_text: "Don't miss this matchup!"
+        });
+    }
+
+    return new Response(
+      JSON.stringify({ success: true, featured: games.length }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+});
+```
+
+## deno.json Configuration
+
+```json
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.168.0/",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+  }
+}
+```
+
+## Environment Variables
+
+Set in Supabase dashboard under Edge Functions:
+
+```
+SENDGRID_API_KEY=your-key
+SPORTS_API_KEY=your-key
+EXTERNAL_API_KEY=your-key
+WEBHOOK_SECRET=your-secret
+```
+
+## Testing Locally
+
+```bash
+# Start Supabase locally
+supabase start
+
+# Run specific function
+supabase functions serve send-confirmation-email
+
+# Test the function
+curl -X POST http://localhost:54321/functions/v1/send-confirmation-email \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","gameName":"NFL Week 8"}'
+```
+
+## Deployment
+
+```bash
+# Deploy all functions
+supabase functions deploy
+
+# Deploy specific function
+supabase functions deploy send-confirmation-email
+```
+
+## Monitoring
+
+View logs in Supabase dashboard or use:
+
+```bash
+supabase functions logs send-confirmation-email
+```
+
+## Security Best Practices
+
+✅ Always validate input
+✅ Use environment variables for secrets
+✅ Implement rate limiting
+✅ Verify webhook signatures
+✅ Use service role key only for privileged operations
+✅ Set appropriate CORS headers
+✅ Handle errors gracefully
+✅ Log important events
+✅ Monitor function execution time
+✅ Set up alerts for failures

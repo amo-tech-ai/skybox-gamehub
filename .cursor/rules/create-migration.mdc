@@ -1,0 +1,139 @@
+---
+description: Guidelines for creating Supabase migrations
+alwaysApply: false
+---
+
+# Database: Create migrations
+
+You're a Supabase database migration expert. Generate **idempotent, production-safe migrations** that follow these best practices:
+
+## General Guidelines
+
+1. **Always Use IF NOT EXISTS / IF EXISTS:**
+   - Use `CREATE TABLE IF NOT EXISTS`, `DROP TABLE IF EXISTS`, etc.
+   - Prevents errors when migrations are re-run or applied to databases in different states.
+
+2. **Backwards Compatibility:**
+   - Never drop columns or tables without a deprecation period.
+   - Add new columns with DEFAULT values to avoid breaking existing code.
+   - Use `ALTER TABLE ... ADD COLUMN ... DEFAULT` for safe additions.
+
+3. **Idempotent Migrations:**
+   - Migrations must be safe to run multiple times.
+   - Use conditional logic and if-not-exists clauses.
+
+4. **Clear Documentation:**
+   - Add comments explaining the purpose of each migration.
+   - Document any data transformations or breaking changes.
+
+## Best Practices
+
+1. **Use Timestamp-Based Naming:**
+   - Name files: `YYYY-MM-DD-HH-MM-SS_description.sql`
+   - Example: `2024-10-23-14-30-00_create_games_table.sql`
+
+2. **One Migration Per Logical Change:**
+   - Keep migrations focused and atomic.
+   - Split multiple unrelated changes into separate migrations.
+
+3. **Include Rollback Capability:**
+   - Include reverse operations in comments or separate rollback files.
+   - Make it easy to understand how to revert if needed.
+
+4. **Test Migrations:**
+   - Always test in development first.
+   - Verify with real data volume if possible.
+
+## Example Templates
+
+### Create Table Migration
+
+```sql
+-- Migration: 2024-10-23-14-30-00_create_games_table.sql
+-- Purpose: Create games table with proper indexes and constraints
+
+begin;
+
+create table if not exists public.games (
+  id bigint generated always as identity primary key,
+  league_id bigint not null references public.leagues(id) on delete cascade,
+  home_team_id bigint not null references public.teams(id) on delete cascade,
+  away_team_id bigint not null references public.teams(id) on delete cascade,
+  game_datetime timestamp with time zone not null,
+  status text not null default 'scheduled',
+  score_home int,
+  score_away int,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Create indexes for performance
+create index if not exists idx_games_datetime on public.games(game_datetime);
+create index if not exists idx_games_league on public.games(league_id);
+create index if not exists idx_games_status on public.games(status);
+
+-- Enable row level security
+alter table public.games enable row level security;
+
+commit;
+```
+
+### Add Column Migration
+
+```sql
+-- Migration: 2024-10-23-15-00-00_add_broadcast_networks_to_games.sql
+-- Purpose: Add broadcast networks field to games table
+
+begin;
+
+alter table if exists public.games
+add column if not exists broadcast_networks text[] default array[]::text[];
+
+-- Update existing rows
+update public.games set broadcast_networks = array[]::text[] where broadcast_networks is null;
+
+commit;
+```
+
+### Create Index Migration
+
+```sql
+-- Migration: 2024-10-23-15-30-00_add_composite_index_games.sql
+-- Purpose: Add composite index for common game queries
+
+begin;
+
+create index if not exists idx_games_league_datetime 
+on public.games(league_id, game_datetime desc);
+
+commit;
+```
+
+### Add RLS Policy Migration
+
+```sql
+-- Migration: 2024-10-23-16-00-00_add_rls_policies_games.sql
+-- Purpose: Add row level security policies for games table
+
+begin;
+
+-- Allow anyone to read games
+create policy "Games are readable by everyone"
+on public.games for select
+using (true);
+
+-- Only admins can insert/update/delete games
+create policy "Only admins can modify games"
+on public.games for all
+using (auth.jwt() ->> 'role' = 'admin');
+
+commit;
+```
+
+## Rollback Template
+
+```sql
+-- Rollback: 2024-10-23-14-30-00_create_games_table.sql
+-- To rollback, run:
+-- drop table if exists public.games cascade;
+```

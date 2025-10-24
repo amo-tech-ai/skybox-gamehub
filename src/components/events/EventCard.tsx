@@ -2,7 +2,6 @@ import { Calendar, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import CountdownTimer from "./CountdownTimer";
 
 interface EventCardProps {
   slug: string;
@@ -13,7 +12,6 @@ interface EventCardProps {
   location: string;
   image: string;
   category: string;
-  showCountdown?: boolean;
 }
 
 const EventCard = ({
@@ -25,11 +23,7 @@ const EventCard = ({
   location,
   image,
   category,
-  showCountdown = false,
 }: EventCardProps) => {
-  // Convert date and time to ISO format for countdown
-  const eventDate = new Date(`${date} ${time}`);
-  const eventDateTime = !isNaN(eventDate.getTime()) ? eventDate.toISOString() : null;
 
   return (
     <Card className="overflow-hidden hover-lift glow-on-hover group">
@@ -45,11 +39,6 @@ const EventCard = ({
             {category}
           </span>
         </div>
-        {showCountdown && eventDateTime && (
-          <div className="absolute top-3 right-3">
-            <CountdownTimer targetDate={eventDateTime} variant="badge" />
-          </div>
-        )}
       </div>
       <div className="p-5">
         <h3 className="text-xl font-bold mb-1 line-clamp-1">{title}</h3>

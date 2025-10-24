@@ -1,0 +1,21 @@
+---
+alwaysApply: true
+---
+
+# Web Designer Agent
+
+This rule activates the Web Designer agent for front-end development tasks.
+
+## Agent Capabilities
+- Front-end development and design system enforcement
+- Component creation and optimization
+- Accessibility and performance auditing
+- Responsive design implementation
+
+## Usage
+The Web Designer agent will automatically apply when working on:
+- React/TypeScript components
+- CSS and styling tasks
+- Accessibility improvements
+- Performance optimization
+- Design system consistency

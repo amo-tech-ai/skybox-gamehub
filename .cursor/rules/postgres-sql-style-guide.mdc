@@ -1,0 +1,308 @@
+---
+description: PostgreSQL SQL style guide for Supabase
+alwaysApply: false
+---
+
+# PostgreSQL SQL Style Guide
+
+You're a SQL expert for Supabase PostgreSQL databases. Write **clean, readable, and performant SQL** following this style guide:
+
+## Naming Conventions
+
+1. **Tables: snake_case, singular or plural as appropriate**
+   ```sql
+   -- ✅ Good
+   create table public.user;
+   create table public.game_reservations;
+   
+   -- ❌ Bad
+   create table public.User;
+   create table public.GAMES;
+   create table public.tbl_user;
+   ```
+
+2. **Columns: snake_case, descriptive**
+   ```sql
+   -- ✅ Good
+   id, user_id, created_at, is_active
+   
+   -- ❌ Bad
+   ID, userid, created, active
+   ```
+
+3. **Indexes: idx_<table>_<column(s)>**
+   ```sql
+   create index idx_games_league on public.games(league_id);
+   create index idx_games_league_datetime on public.games(league_id, game_datetime);
+   ```
+
+4. **Constraints: <table>_<type>_<column(s)>**
+   ```sql
+   alter table public.games 
+   add constraint games_pk primary key (id);
+   
+   alter table public.games
+   add constraint games_league_id_fk foreign key (league_id) 
+   references public.leagues(id);
+   ```
+
+## Formatting
+
+1. **Indentation: 2 spaces**
+   ```sql
+   select
+     u.id,
+     u.email,
+     u.created_at
+   from public.users u
+   where u.is_active = true;
+   ```
+
+2. **Keywords: UPPERCASE**
+   ```sql
+   SELECT, FROM, WHERE, JOIN, GROUP BY, ORDER BY, LIMIT
+   CREATE TABLE, ALTER TABLE, DROP TABLE
+   INSERT INTO, UPDATE, DELETE
+   ```
+
+3. **Line Breaks: Logical grouping**
+   ```sql
+   select
+     g.id,
+     g.game_datetime,
+     h.name as home_team,
+     a.name as away_team,
+     g.score_home,
+     g.score_away
+   from public.games g
+   left join public.teams h on g.home_team_id = h.id
+   left join public.teams a on g.away_team_id = a.id
+   where g.game_datetime >= now()
+   order by g.game_datetime asc
+   limit 10;
+   ```
+
+## Query Best Practices
+
+1. **Use Specific Columns**
+   ```sql
+   -- ✅ Good
+   select id, name, email from public.users;
+   
+   -- ❌ Bad (avoid SELECT *)
+   select * from public.users;
+   ```
+
+2. **Use Aliases for Clarity**
+   ```sql
+   select
+     u.id,
+     u.name,
+     count(r.id) as reservation_count
+   from public.users u
+   left join public.reservations r on u.id = r.user_id
+   group by u.id;
+   ```
+
+3. **Use Joins Instead of Subqueries**
+   ```sql
+   -- ✅ Better performance
+   select g.*, l.name as league_name
+   from public.games g
+   join public.leagues l on g.league_id = l.id;
+   
+   -- ❌ Less efficient
+   select * from public.games 
+   where league_id in (select id from public.leagues);
+   ```
+
+4. **Use CTEs for Complex Queries**
+   ```sql
+   with upcoming_games as (
+     select g.id, g.game_datetime, l.name as league
+     from public.games g
+     join public.leagues l on g.league_id = l.id
+     where g.game_datetime > now()
+   )
+   select * from upcoming_games
+   where league = 'NFL'
+   order by game_datetime asc;
+   ```
+
+## Data Types
+
+1. **Use Appropriate Types**
+   ```sql
+   -- ✅ Good
+   id bigint,
+   email text,
+   is_active boolean,
+   created_at timestamp with time zone,
+   price numeric(10, 2),
+   tags text[]
+   
+   -- ❌ Avoid
+   id varchar(255),  -- Use bigint for IDs
+   email varchar(255),  -- Use text for strings
+   is_active int,  -- Use boolean
+   price float,  -- Use numeric for money
+   ```
+
+2. **Generated Columns**
+   ```sql
+   id bigint generated always as identity primary key
+   ```
+
+3. **Timestamps**
+   ```sql
+   created_at timestamp with time zone default now(),
+   updated_at timestamp with time zone default now()
+   ```
+
+## Constraints and Validation
+
+1. **NOT NULL Constraints**
+   ```sql
+   create table public.games (
+     id bigint generated always as identity primary key,
+     league_id bigint not null references public.leagues(id),
+     home_team_id bigint not null references public.teams(id),
+     away_team_id bigint not null references public.teams(id),
+     game_datetime timestamp with time zone not null
+   );
+   ```
+
+2. **Foreign Keys with ON DELETE**
+   ```sql
+   league_id bigint not null 
+   references public.leagues(id) on delete cascade,
+   
+   user_id bigint not null 
+   references public.users(id) on delete set null
+   ```
+
+3. **Check Constraints**
+   ```sql
+   alter table public.games
+   add constraint games_scores_valid 
+   check (score_home >= 0 and score_away >= 0);
+   ```
+
+4. **Unique Constraints**
+   ```sql
+   alter table public.leagues
+   add constraint leagues_slug_unique unique (slug);
+   ```
+
+## Performance Optimization
+
+1. **Indexes for Filters**
+   ```sql
+   -- Index columns used in WHERE clauses
+   create index idx_games_datetime on public.games(game_datetime);
+   create index idx_games_status on public.games(status);
+   ```
+
+2. **Composite Indexes**
+   ```sql
+   -- For queries filtering on multiple columns
+   create index idx_games_league_datetime 
+   on public.games(league_id, game_datetime desc);
+   ```
+
+3. **Avoid N+1 Queries**
+   ```sql
+   -- ✅ Use JOIN
+   select g.*, l.name from public.games g
+   join public.leagues l on g.league_id = l.id;
+   
+   -- ❌ Don't load separately
+   select * from public.games;  -- Then loop and query leagues
+   ```
+
+## Comments
+
+1. **Table Comments**
+   ```sql
+   comment on table public.games 
+   is 'Stores sports game information with scores and scheduling';
+   ```
+
+2. **Column Comments**
+   ```sql
+   comment on column public.games.game_datetime 
+   is 'Game start time in UTC timezone';
+   ```
+
+3. **Complex Logic Comments**
+   ```sql
+   -- Only show games that haven't started yet
+   where g.game_datetime > now()
+   ```
+
+## Complete Example
+
+```sql
+-- Create leagues table
+create table if not exists public.leagues (
+  id bigint generated always as identity primary key,
+  name text not null unique,
+  slug text not null unique,
+  icon_url text,
+  created_at timestamp with time zone default now()
+);
+
+comment on table public.leagues 
+is 'Sports leagues (NFL, NHL, MLB, NBA, Soccer)';
+
+-- Create teams table
+create table if not exists public.teams (
+  id bigint generated always as identity primary key,
+  league_id bigint not null references public.leagues(id) on delete cascade,
+  name text not null,
+  city text,
+  nickname text,
+  logo_url text,
+  created_at timestamp with time zone default now(),
+  unique(league_id, name)
+);
+
+-- Create games table
+create table if not exists public.games (
+  id bigint generated always as identity primary key,
+  league_id bigint not null references public.leagues(id) on delete cascade,
+  home_team_id bigint not null references public.teams(id) on delete cascade,
+  away_team_id bigint not null references public.teams(id) on delete cascade,
+  game_datetime timestamp with time zone not null,
+  status text not null default 'scheduled' check (status in ('scheduled', 'live', 'completed', 'postponed')),
+  score_home int,
+  score_away int,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Create indexes
+create index idx_games_datetime on public.games(game_datetime);
+create index idx_games_league on public.games(league_id);
+create index idx_games_status on public.games(status);
+create index idx_games_league_datetime on public.games(league_id, game_datetime desc);
+
+-- Query example
+select
+  g.id,
+  g.game_datetime,
+  l.name as league,
+  h.name as home_team,
+  a.name as away_team,
+  g.score_home,
+  g.score_away,
+  g.status
+from public.games g
+join public.leagues l on g.league_id = l.id
+join public.teams h on g.home_team_id = h.id
+join public.teams a on g.away_team_id = a.id
+where g.game_datetime >= now()
+  and g.status = 'scheduled'
+order by g.game_datetime asc
+limit 20;
+```

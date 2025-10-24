@@ -1,0 +1,84 @@
+---
+description: Prevent documentation clutter in root — enforce folder-based organization
+globs: "*.md"
+alwaysApply: true
+---
+
+# 🗂 Documentation Organization Rules
+
+**Goal:** Keep all documentation organized by topic and prevent `.md` files from being created in the project root.
+
+## ✅ Correct Documentation Locations
+
+### 1. Core & Setup Docs
+**Location:** `docs/core/`
+- Quick starts, environment setup, and onboarding guides  
+- Examples: `01-getting-started.md`, `02-env-setup.md`
+
+### 2. Feature or Module Docs
+**Location:** `docs/features/<feature-name>/`
+- Feature-specific guides and design notes  
+- Examples: `deck-generator/01-overview.md`, `ai-assistant/02-api-integration.md`
+
+### 3. Architecture & System Design
+**Location:** `docs/architecture/`
+- ER diagrams, flowcharts, schemas, architecture overviews  
+- Examples: `01-system-diagram.md`, `02-database-schema.md`
+
+### 4. Testing & QA Documentation
+**Location:** `docs/tests/`
+- Test strategies, E2E results, and QA reports  
+- Examples: `01-auth-tests.md`, `02-performance-report.md`
+
+### 5. Progress & Session Notes
+**Location:** `docs/progress/`
+- Sequential session summaries, completion logs, fix reports  
+- Use numbering like `001-`, `002-`, etc.  
+- Examples: `001-session-summary.md`, `002-bug-fixes.md`
+
+## ❌ Don't Create Docs In
+- ❌ Project root (`/`)
+- ❌ `src/` or `app/` folders (code only)
+- ❌ `dist/` or build output directories
+- ❌ Random feature folders outside `docs/`
+
+## 🔢 Numbering Convention
+- **Chronological logs:** 3-digit numbering (`001-`, `002-`)
+- **Thematic guides:** No numbering required
+- **Feature docs:** Follow feature directory naming (`feature-name/NN-title.md`)
+
+## 🎯 Decision Tree
+
+```
+Is it setup or onboarding? → docs/core/
+Is it feature-specific? → docs/features/<feature-name>/
+Is it about architecture or systems? → docs/architecture/
+Is it about testing or QA? → docs/tests/
+Is it a session summary or progress note? → docs/progress/
+Otherwise → ask team before adding new folder
+```
+
+## ⚙️ Enforcement
+
+If a `.md` file is created in an invalid location:
+1. Move it to the correct `docs/` subfolder.  
+2. Follow numbering and naming conventions.  
+3. Update related indexes if needed.
+
+**Example Violation:**
+```typescript
+// ❌ Wrong
+write("README-temp.md", content)
+
+// ✅ Correct
+write("docs/core/README-temp.md", content)
+```
+
+## ✅ Reminder
+
+Organized documentation ensures:
+- Easier onboarding
+- Consistent file structure
+- Clean repo root
+
+Keep docs modular, versioned, and logically grouped by purpose. 🚀

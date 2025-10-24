@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, Gift, Utensils } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
-import CountdownTimer from "@/components/events/CountdownTimer";
 
 // Import World Series images
 import worldSeriesHero from "@/assets/world-series-hero.jpg";
@@ -109,14 +108,6 @@ const EventDetail = () => {
         </div>
       </section>
 
-      {/* Countdown Timer */}
-      {event.date !== "Every Sunday" && (
-        <section className="py-12 bg-dark-section text-dark-section-foreground">
-          <div className="container mx-auto px-4">
-            <CountdownTimer targetDate={event.date} targetTime={event.time} />
-          </div>
-        </section>
-      )}
 
       {/* Main Content */}
       <section className="py-16">

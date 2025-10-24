@@ -1,0 +1,64 @@
+---
+alwaysApply: true
+---
+
+# Skybox Front-End Standards
+
+## 🎯 Quick Rules
+
+### Naming
+- **Components**: `PascalCase.tsx` (EventCard.tsx)
+- **CSS Classes**: `kebab-case` (event-card, hero-section)
+- **Folders**: Group by feature (`/components/home/`, `/components/events/`)
+
+### Colors (Orange + Green Only)
+```css
+--primary: 220 70% 35%;        /* MLB Blue */
+--secondary: 28 80% 52%;       /* Orange/Amber */
+--whatsapp: 142 70% 49%;      /* Single Green */
+```
+
+### Responsive Design
+- **Mobile-first**: Start with mobile, add `md:` and `lg:` breakpoints
+- **Grid**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
+- **Typography**: `text-4xl md:text-5xl` for headers
+
+### Component Structure
+```tsx
+interface ComponentProps {
+  title: string;
+  className?: string;
+}
+
+export const Component: FC<ComponentProps> = ({ title, className = '' }) => {
+  return (
+    <div className={`base-styles ${className}`}>
+      {/* Content */}
+    </div>
+  );
+};
+```
+
+### Accessibility
+- **Alt text**: All images need descriptive alt text
+- **ARIA**: Use `role="article"`, `aria-labelledby`
+- **Semantic HTML**: Use `<article>`, `<section>`, `<nav>`
+
+### Performance
+- **Images**: Use `loading="lazy"` for below-fold images
+- **Animations**: Use `hover-lift`, `glow-on-hover` classes
+- **TypeScript**: No `any` types, proper interfaces
+
+## 🚨 Common Violations
+- ❌ Hardcoded colors (`bg-blue-500`)
+- ❌ Missing alt text on images
+- ❌ Desktop-first responsive design
+- ❌ Missing TypeScript interfaces
+
+## ✅ Quick Checklist
+- [ ] PascalCase component names
+- [ ] Orange/amber + single green colors only
+- [ ] Mobile-first responsive design
+- [ ] Alt text on all images
+- [ ] TypeScript interfaces defined
+- [ ] Semantic HTML structure

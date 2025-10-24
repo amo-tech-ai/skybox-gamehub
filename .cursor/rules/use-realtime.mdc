@@ -1,0 +1,308 @@
+---
+description: Guidelines for using Supabase Realtime subscriptions
+alwaysApply: false
+---
+
+# Supabase Realtime
+
+You're a Supabase Realtime expert. Generate **efficient, real-time data synchronization** following these best practices:
+
+## Realtime Fundamentals
+
+1. **Enable Realtime on Tables:**
+   ```sql
+   alter table public.games replica identity full;
+   alter publication supabase_realtime add table public.games;
+   ```
+
+2. **Use Subscriptions for Dynamic Data:**
+   - Games, scores, reservations
+   - User activity, notifications
+   - Avoid for large result sets or frequently-changing data
+
+3. **Performance Considerations:**
+   - Realtime uses WebSockets and has bandwidth limits
+   - Filter on the client or server to reduce messages
+   - Use `SELECT` filters to limit data
+
+## Best Practices
+
+1. **Subscribe to Specific Columns:**
+   ```typescript
+   const channel = supabase
+     .channel('public:games')
+     .on(
+       'postgres_changes',
+       {
+         event: '*',
+         schema: 'public',
+         table: 'games',
+         filter: 'league_id=eq.1'  // Filter server-side
+       },
+       (payload) => console.log(payload)
+     )
+     .subscribe();
+   ```
+
+2. **Unsubscribe When Done:**
+   ```typescript
+   useEffect(() => {
+     const channel = supabase.channel('games').subscribe();
+     
+     return () => {
+       supabase.removeChannel(channel);
+     };
+   }, []);
+   ```
+
+3. **Handle Connection States:**
+   ```typescript
+   channel.on('system', { event: 'join' }, () => {
+     console.log('Connected');
+   });
+   
+   channel.on('system', { event: 'leave' }, () => {
+     console.log('Disconnected');
+   });
+   ```
+
+4. **Batch Updates:**
+   - Avoid individual updates for each change
+   - Group updates when possible
+
+## Event Types
+
+1. **INSERT Events**
+   ```typescript
+   .on('postgres_changes', {
+     event: 'INSERT',
+     schema: 'public',
+     table: 'games'
+   }, (payload) => {
+     console.log('New game:', payload.new);
+   })
+   ```
+
+2. **UPDATE Events**
+   ```typescript
+   .on('postgres_changes', {
+     event: 'UPDATE',
+     schema: 'public',
+     table: 'games'
+   }, (payload) => {
+     console.log('Updated:', payload.old, '->', payload.new);
+   })
+   ```
+
+3. **DELETE Events**
+   ```typescript
+   .on('postgres_changes', {
+     event: 'DELETE',
+     schema: 'public',
+     table: 'games'
+   }, (payload) => {
+     console.log('Deleted:', payload.old);
+   })
+   ```
+
+4. **All Events**
+   ```typescript
+   .on('postgres_changes', {
+     event: '*',  // All events
+     schema: 'public',
+     table: 'games'
+   }, (payload) => {
+     // Handle INSERT, UPDATE, DELETE
+   })
+   ```
+
+## React Hook Pattern
+
+```typescript
+import { useEffect, useState } from 'react';
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
+
+export function useRealtimeGames(leagueId: number) {
+  const [games, setGames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let channel: RealtimeChannel;
+
+    const setupRealtime = async () => {
+      try {
+        // Initial fetch
+        const { data, error: fetchError } = await supabase
+          .from('games')
+          .select('*')
+          .eq('league_id', leagueId)
+          .order('game_datetime', { ascending: true });
+
+        if (fetchError) throw fetchError;
+        setGames(data || []);
+
+        // Subscribe to changes
+        channel = supabase
+          .channel(`games:league=${leagueId}`)
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'games',
+              filter: `league_id=eq.${leagueId}`
+            },
+            (payload) => {
+              if (payload.eventType === 'INSERT') {
+                setGames((prev) => [...prev, payload.new]);
+              } else if (payload.eventType === 'UPDATE') {
+                setGames((prev) =>
+                  prev.map((game) =>
+                    game.id === payload.new.id ? payload.new : game
+                  )
+                );
+              } else if (payload.eventType === 'DELETE') {
+                setGames((prev) =>
+                  prev.filter((game) => game.id !== payload.old.id)
+                );
+              }
+            }
+          )
+          .subscribe();
+
+        setIsLoading(false);
+      } catch (err) {
+        setError(err);
+        setIsLoading(false);
+      }
+    };
+
+    setupRealtime();
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [leagueId]);
+
+  return { games, isLoading, error };
+}
+```
+
+## Live Scores Example
+
+```typescript
+// Subscribe to live score updates
+const channel = supabase
+  .channel('live-scores')
+  .on(
+    'postgres_changes',
+    {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'games',
+      filter: 'status=eq.live'
+    },
+    (payload) => {
+      console.log('Score updated:', {
+        gameId: payload.new.id,
+        scoreHome: payload.new.score_home,
+        scoreAway: payload.new.score_away,
+        status: payload.new.status
+      });
+      // Update UI with new scores
+    }
+  )
+  .subscribe();
+```
+
+## Presence Pattern
+
+```typescript
+const channel = supabase.channel('game:1', {
+  config: {
+    presence: {
+      key: userId
+    }
+  }
+})
+  .on('presence', { event: 'sync' }, () => {
+    const state = channel.presenceState();
+    console.log('Active users:', Object.keys(state).length);
+  })
+  .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+    console.log(`${key} joined`);
+  })
+  .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+    console.log(`${key} left`);
+  })
+  .subscribe(async (status) => {
+    if (status === 'SUBSCRIBED') {
+      await channel.track({
+        user_id: userId,
+        viewing_game_id: 1
+      });
+    }
+  });
+```
+
+## Broadcast Pattern
+
+```typescript
+// Send a message to all connected users
+const channel = supabase.channel('game-updates');
+
+channel.subscribe((status) => {
+  if (status === 'SUBSCRIBED') {
+    channel.send({
+      type: 'broadcast',
+      event: 'game-update',
+      payload: {
+        gameId: 1,
+        score_home: 3,
+        score_away: 2
+      }
+    });
+  }
+});
+
+// Listen for broadcasts
+channel.on('broadcast', { event: 'game-update' }, (payload) => {
+  console.log('Received update:', payload.payload);
+});
+```
+
+## Server-Side Filtering
+
+```typescript
+// Database policy to filter realtime events
+create policy "Users see own game reservations in realtime"
+on public.reservations
+as (select)
+for select
+using (auth.uid() = user_id);
+
+-- Now subscriptions automatically respect this policy
+channel = supabase
+  .channel('reservations')
+  .on('postgres_changes', {
+    event: '*',
+    schema: 'public',
+    table: 'reservations'
+  }, (payload) => {
+    // Only receives data for authenticated user
+  })
+  .subscribe();
+```
+
+## Best Practices Summary
+
+✅ Use Realtime for dynamic, frequently-changing data
+✅ Filter data server-side when possible
+✅ Unsubscribe when components unmount
+✅ Handle connection state changes
+✅ Use RLS policies to control access
+✅ Batch updates to reduce message volume
+✅ Implement exponential backoff for reconnects
+✅ Monitor WebSocket connections in production

@@ -14,6 +14,9 @@ import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import Sports from "./pages/Sports";
 import LeagueDetail from "./pages/LeagueDetail";
+import WorldSeries from "./pages/WorldSeries";
+import SportsSchedule from "./pages/SportsSchedule";
+import TopTeams from "./pages/TopTeams";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +32,9 @@ const App = () => (
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/world-series" element={<WorldSeries />} />
+              <Route path="/sports-schedule" element={<SportsSchedule />} />
+              <Route path="/top-teams" element={<TopTeams />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/:slug" element={<EventDetail />} />
               <Route path="/reserve" element={<Reserve />} />

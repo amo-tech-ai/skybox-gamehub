@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Trophy, Tv, Users, Clock, ArrowUp } from "lucide-react";
 import EventCard from "@/components/events/EventCard";
-import CountdownTimer from "@/components/events/CountdownTimer";
 import LiveNowBanner from "@/components/home/LiveNowBanner";
 import PromoBanner from "@/components/home/PromoBanner";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
+import EventBookingCTA from "@/components/home/EventBookingCTA";
 import { events } from "@/data/events";
 import heroImage from "@/assets/hero-world-series.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
@@ -72,10 +72,6 @@ const Home = () => {
               Experience every legendary moment on massive screens at Medellín's premier rooftop sports bar
             </p>
 
-            {/* Countdown Timer */}
-            <div className="mb-8 flex justify-center animate-fade-in-up">
-              <CountdownTimer targetDate="2025-10-24T19:00:00" variant="full" />
-            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up">
               <Link to="/reserve">
@@ -115,7 +111,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {upcomingEvents.map((event, index) => (
               <div key={event.slug} className="stagger-item">
-                <EventCard {...event} image={event.image} showCountdown />
+                <EventCard {...event} image={event.image} />
               </div>
             ))}
           </div>
@@ -330,6 +326,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Event Booking CTA Section */}
+      <EventBookingCTA />
 
       {/* Back to Top Button */}
       {showBackToTop && (

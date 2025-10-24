@@ -145,7 +145,7 @@ const Reserve = () => {
 
             {/* Info Sidebar */}
             <div className="space-y-6">
-              <Card className="p-6 bg-primary/5">
+              <Card className="p-6 bg-background">
                 <h3 className="text-xl font-bold mb-4">Why Reserve?</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">

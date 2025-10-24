@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+skybox-ws-playbook/
+# Exclude directories that should not be committed
+skybox-ws-playbook/
+.claude/
+.playwright-mcp/
+.vscode/
+playwright-report/
+test-results/

@@ -46,7 +46,7 @@ const Gallery = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-primary/5">
+      <section className="py-16 bg-background">
         <div className="container px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Ready to Experience It Live?</h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
