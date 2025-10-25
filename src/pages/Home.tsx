@@ -7,6 +7,7 @@ import PromoBanner from "@/components/home/PromoBanner";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
 import EventBookingCTA from "@/components/home/EventBookingCTA";
+import VideoIntroSection from "@/components/home/VideoIntroSection";
 import { events } from "@/data/events";
 import heroImage from "@/assets/hero-world-series.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
@@ -93,6 +94,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Video Intro Section */}
+      <VideoIntroSection />
 
       {/* Promo Banner */}
       <PromoBanner />
