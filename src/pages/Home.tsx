@@ -7,8 +7,7 @@ import PromoBanner from "@/components/home/PromoBanner";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
 import EventBookingCTA from "@/components/home/EventBookingCTA";
-import VideoIntroSection from "@/components/home/VideoIntroSection";
-import { events } from "@/data/events";
+import { useUpcomingEvents } from "@/hooks/useEvents";
 import heroImage from "@/assets/hero-world-series.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
 import foodSpread from "@/assets/food-spread.jpg";
@@ -18,7 +17,7 @@ import sportsMLB from "@/assets/sports-mlb-dodgers.jpg";
 import { useState, useEffect } from "react";
 
 const Home = () => {
-  const upcomingEvents = events.slice(0, 3);
+  const { data: upcomingEvents, isLoading, error } = useUpcomingEvents(3);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
@@ -95,9 +94,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Video Intro Section */}
-      <VideoIntroSection />
-
       {/* Promo Banner */}
       <PromoBanner />
 
@@ -112,21 +108,49 @@ const Home = () => {
             <p className="text-xl text-muted-foreground">Don't miss this season's epic showdown</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {upcomingEvents.map((event, index) => (
-              <div key={event.slug} className="stagger-item">
-                <EventCard {...event} image={event.image} />
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p className="mt-4 text-muted-foreground">Loading events...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500 mb-4">Failed to load events. Please try again later.</p>
+              <Button onClick={() => window.location.reload()}>Retry</Button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {upcomingEvents && upcomingEvents.length > 0 ? (
+                  upcomingEvents.map((event) => (
+                    <div key={event.id} className="stagger-item">
+                      <EventCard
+                        title={event.title}
+                        date={new Date(event.event_date).toLocaleDateString()}
+                        time={new Date(event.event_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        venue={event.venue}
+                        category={event.category}
+                        image={event.image_url || heroImage}
+                        slug={event.id}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <p className="text-muted-foreground">No upcoming events at the moment. Check back soon!</p>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
 
-          <div className="text-center">
-            <Link to="/events">
-              <Button variant="outline" size="lg" className="hover-lift">
-                View Full Schedule
-              </Button>
-            </Link>
-          </div>
+              <div className="text-center">
+                <Link to="/events">
+                  <Button variant="outline" size="lg" className="hover-lift">
+                    View Full Schedule
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </section>
 

@@ -1,0 +1,532 @@
+# Twenty CRM Integration Rule for Skybox GameHub
+
+## 🎯 Purpose
+This rule provides guidelines for working with Twenty CRM in the Skybox GameHub project, covering setup, development, and integration patterns.
+
+---
+
+## 📦 Installation & Setup
+
+### Docker Deployment (Recommended)
+```bash
+# Location: /home/sk/twenty-installation/twenty/packages/twenty-docker
+cd /home/sk/twenty-installation/twenty/packages/twenty-docker
+
+# Start services
+docker compose up -d
+
+# Access application
+open http://localhost:8080
+```
+
+### Environment Configuration
+```bash
+# .env location
+/home/sk/twenty-installation/twenty/packages/twenty-docker/.env
+
+# Key variables
+TAG=latest
+SERVER_URL=http://localhost:8080
+PG_DATABASE_PASSWORD=twenty_postgres_password_2024
+APP_SECRET=[generated-secret]
+STORAGE_TYPE=local
+```
+
+### Service Management
+```bash
+# Check status
+docker compose ps
+
+# View logs
+docker compose logs -f server
+docker compose logs -f worker
+
+# Restart services
+docker compose restart
+
+# Stop services
+docker compose down
+```
+
+---
+
+## 🏗️ Architecture
+
+### Tech Stack
+- **Frontend**: React 18 + TypeScript + Recoil + Emotion + Vite
+- **Backend**: NestJS + TypeORM + PostgreSQL + Redis + GraphQL
+- **Database**: PostgreSQL (primary) + Redis (cache/sessions) + ClickHouse (analytics)
+- **Deployment**: Docker Compose with persistent volumes
+
+### Key Packages
+```
+packages/
+├── twenty-front/          # React frontend application
+├── twenty-server/         # NestJS backend API
+├── twenty-ui/             # Shared UI components library
+├── twenty-shared/         # Common types and utilities
+├── twenty-emails/         # Email templates with React Email
+├── twenty-website/        # Next.js documentation website
+├── twenty-zapier/         # Zapier integration
+└── twenty-e2e-testing/    # Playwright E2E tests
+```
+
+### Services Architecture
+```
+┌─────────────────────────────────┐
+│     Twenty CRM Stack            │
+├─────────────────────────────────┤
+│  Server (Express) :8080         │
+│  Worker (Background Jobs)       │
+│  ↓                              │
+│  PostgreSQL (Primary DB)        │
+│  Redis (Cache/Sessions)         │
+│  ClickHouse (Analytics)         │
+└─────────────────────────────────┘
+```
+
+---
+
+## 💻 Development
+
+### Local Development Setup
+```bash
+# Navigate to repository
+cd /home/sk/twenty-installation/twenty
+
+# Install dependencies
+yarn install
+
+# Start development environment
+yarn start
+# Or individually:
+npx nx start twenty-front     # Frontend only
+npx nx start twenty-server    # Backend only
+npx nx run twenty-server:worker  # Worker only
+```
+
+### Code Quality
+```bash
+# Linting
+npx nx lint twenty-front
+npx nx lint twenty-server
+npx nx lint --fix
+
+# Type checking
+npx nx typecheck twenty-front
+npx nx typecheck twenty-server
+
+# Format code
+npx nx fmt twenty-front
+npx nx fmt twenty-server
+```
+
+### Database Operations
+```bash
+# Reset database
+npx nx database:reset twenty-server
+
+# Initialize production database
+npx nx run twenty-server:database:init:prod
+
+# Run migrations
+npx nx run twenty-server:database:migrate:prod
+
+# Generate migration
+npx nx run twenty-server:typeorm migration:generate \
+  src/database/typeorm/core/migrations/[name] \
+  -d src/database/typeorm/core/core.datasource.ts
+
+# Sync metadata
+npx nx run twenty-server:command workspace:sync-metadata
+```
+
+### GraphQL Development
+```bash
+# Generate GraphQL types
+npx nx run twenty-front:graphql:generate
+```
+
+---
+
+## 🧪 Testing
+
+### Unit Tests
+```bash
+# Frontend tests
+npx nx test twenty-front
+
+# Backend tests
+npx nx test twenty-server
+```
+
+### Integration Tests
+```bash
+# Integration tests with DB reset
+npx nx run twenty-server:test:integration:with-db-reset
+```
+
+### Storybook
+```bash
+# Build Storybook
+npx nx storybook:build twenty-front
+
+# Run Storybook tests
+npx nx storybook:serve-and-test:static twenty-front
+```
+
+### E2E Testing
+```bash
+# E2E tests with Playwright
+npx nx e2e twenty-e2e-testing
+
+# Note: Use "Continue with Email" with prefilled credentials
+```
+
+---
+
+## 🔗 Skybox Integration
+
+### Custom Objects for Skybox
+```typescript
+// Customer Object (Skybox specific)
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  preferences: string[];
+  vip_status: boolean;
+  total_spent: number;
+  last_visit: Date;
+  created_at: Date;
+}
+
+// Event Object
+interface Event {
+  id: string;
+  title: string;
+  date: Date;
+  time: string;
+  venue: string;
+  capacity: number;
+  booked: number;
+  revenue: number;
+  status: 'scheduled' | 'live' | 'completed';
+}
+
+// Booking Object
+interface Booking {
+  id: string;
+  customer_id: string;
+  event_id: string;
+  table_size: number;
+  special_requests: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  created_at: Date;
+}
+```
+
+### Integration Points
+
+#### 1. Customer Management
+- Track customer data, preferences, booking history
+- Segment by VIP status, spending patterns
+- Integration with Supabase user profiles
+
+#### 2. Event Management
+- Import sports events from Supabase
+- Track attendance and revenue
+- Manage bookings and reservations
+
+#### 3. Sales Pipeline
+- Lead generation from website visitors
+- Opportunity tracking for group bookings
+- Revenue tracking and commission calculation
+
+#### 4. Workflow Automation
+- Automated WhatsApp confirmations
+- Event reminders via email/SMS
+- Follow-up sequences post-event
+
+### API Integration
+```typescript
+// Example: Create customer in Twenty CRM
+const createCustomer = async (customerData: Customer) => {
+  const response = await fetch('http://localhost:8080/api/customers', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(customerData)
+  });
+  return response.json();
+};
+```
+
+---
+
+## 🎨 Code Style Guidelines
+
+### Frontend (React)
+```typescript
+// ✅ Good: Functional component with TypeScript
+export const CustomerCard = ({ customer }: { customer: Customer }) => {
+  return <div>{customer.name}</div>;
+};
+
+// ❌ Bad: Class component
+export class CustomerCard extends Component { ... }
+
+// ✅ Good: Named export
+export { CustomerCard };
+
+// ❌ Bad: Default export
+export default CustomerCard;
+```
+
+### State Management
+```typescript
+// ✅ Use Recoil for global state
+import { useRecoilValue } from 'recoil';
+import { customersState } from '@/states/customers';
+
+const CustomerList = () => {
+  const customers = useRecoilValue(customersState);
+  return <div>{customers.map(c => <div key={c.id}>{c.name}</div>)}</div>;
+};
+
+// ✅ Event handlers over useEffect for state updates
+const handleSubmit = (event: FormEvent) => {
+  event.preventDefault();
+  updateCustomer(data);
+};
+```
+
+### Backend (NestJS)
+```typescript
+// ✅ Use TypeORM for database access
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class CustomerService {
+  constructor(
+    @InjectRepository(Customer)
+    private customerRepository: Repository<Customer>
+  ) {}
+
+  async findAll(): Promise<Customer[]> {
+    return this.customerRepository.find();
+  }
+}
+```
+
+---
+
+## 🔒 Security Best Practices
+
+### Authentication
+```typescript
+// ✅ Always validate JWT tokens
+@UseGuards(JwtAuthGuard)
+@Controller('customers')
+export class CustomerController {
+  @Get()
+  async findAll(@Request() req) {
+    // req.user contains validated user data
+    return this.customerService.findAll();
+  }
+}
+```
+
+### Data Validation
+```typescript
+// ✅ Use DTO validation
+import { IsEmail, IsString, MinLength } from 'class-validator';
+
+export class CreateCustomerDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(2)
+  name: string;
+}
+```
+
+### Environment Variables
+```bash
+# ✅ Never commit .env files
+# Store secrets securely
+APP_SECRET=your-secret-here
+DATABASE_PASSWORD=secure-password
+
+# ❌ Never hardcode secrets
+const secret = "my-secret"; // Bad!
+```
+
+---
+
+## 📊 Performance Optimization
+
+### Database Queries
+```typescript
+// ✅ Use relations to avoid N+1 queries
+const customers = await this.customerRepository.find({
+  relations: ['bookings', 'events']
+});
+
+// ❌ Avoid multiple queries
+const customers = await this.customerRepository.find();
+for (const customer of customers) {
+  customer.bookings = await this.bookingRepository.find({ where: { customerId: customer.id }});
+}
+```
+
+### Caching
+```typescript
+// ✅ Cache frequently accessed data
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+
+@Injectable()
+export class CustomerService {
+  constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
+
+  async findOne(id: string) {
+    const cached = await this.cacheManager.get(`customer:${id}`);
+    if (cached) return cached;
+    
+    const customer = await this.customerRepository.findOne({ where: { id }});
+    await this.cacheManager.set(`customer:${id}`, customer, 3600);
+    return customer;
+  }
+}
+```
+
+---
+
+## 🚨 Troubleshooting
+
+### Service Won't Start
+```bash
+# Check logs
+docker compose logs server
+docker compose logs worker
+
+# Restart services
+docker compose restart
+```
+
+### Database Connection Issues
+```bash
+# Check database health
+docker compose ps db
+
+# Restart database
+docker compose restart db
+
+# Check connection string in .env
+PG_DATABASE_URL=postgres://user:password@db:5432/default
+```
+
+### Port Conflicts
+```bash
+# Check port usage
+lsof -i :8080
+
+# Change port in docker-compose.yml
+ports:
+  - "8081:3000"  # Changed from 8080
+```
+
+### Out of Memory
+```bash
+# Increase Docker memory limit
+# Docker Desktop -> Settings -> Resources -> Memory: 4GB+
+
+# Or limit container memory
+services:
+  server:
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+```
+
+---
+
+## 📚 Documentation References
+
+### Skybox-Specific Docs
+- [Setup Guide](../../docs/twenty/01-twenty-crm-setup-guide.md)
+- [Customer Data Migration](../../docs/twenty/02-customer-data-migration.md)
+- [WhatsApp Integration](../../docs/twenty/03-whatsapp-integration.md)
+- [Booking Workflows](../../docs/twenty/04-booking-workflows.md)
+- [Analytics Dashboard](../../docs/twenty/05-analytics-dashboard.md)
+- [Skybox Integration](../../docs/twenty/06-skybox-integration.md)
+- [Setup Verification](../../docs/twenty/07-setup-verification.md)
+
+### Official Resources
+- [Twenty Documentation](https://twenty.com/developers)
+- [Self-Hosting Guide](https://twenty.com/developers/section/self-hosting)
+- [Local Setup](https://twenty.com/developers/local-setup)
+- [GitHub Repository](https://github.com/twentyhq/twenty)
+- [Discord Community](https://discord.gg/twenty)
+
+---
+
+## ✅ Checklist
+
+### Before Starting Development
+- [ ] Docker services running (`docker compose ps`)
+- [ ] Application accessible at http://localhost:8080
+- [ ] Health check passing (`curl http://localhost:8080/healthz`)
+- [ ] Database connection working
+- [ ] Environment variables configured
+
+### Before Committing
+- [ ] Code passes linting (`npx nx lint`)
+- [ ] Type checking passes (`npx nx typecheck`)
+- [ ] Tests passing (`npx nx test`)
+- [ ] No console.log statements
+- [ ] No TODO/FIXME without issue number
+
+### Before Deployment
+- [ ] All tests passing
+- [ ] Integration tests verified
+- [ ] Database migrations tested
+- [ ] Performance benchmarks met
+- [ ] Security audit completed
+- [ ] Documentation updated
+
+---
+
+## 🎯 Key Development Principles
+
+1. **Functional Components Only** - No class components
+2. **Named Exports Only** - No default exports
+3. **Types Over Interfaces** - Except when extending third-party interfaces
+4. **String Literals Over Enums** - Except for GraphQL enums
+5. **No 'any' Type** - Always use proper TypeScript types
+6. **Event Handlers Preferred** - Over useEffect for state updates
+7. **Security First** - Always validate inputs, authenticate requests
+8. **Performance Matters** - Optimize queries, use caching
+9. **Test Everything** - Unit, integration, and E2E tests
+10. **Document Changes** - Keep docs up to date
+
+---
+
+**Last Updated**: October 25, 2025  
+**Status**: ✅ Production Ready  
+**Version**: 1.0.0
+
+---
+
+*This rule ensures consistent development practices when working with Twenty CRM in the Skybox GameHub project.*
+alwaysApply: true
+
+
+---

@@ -17,10 +17,8 @@ import LeagueDetail from "./pages/LeagueDetail";
 import WorldSeries from "./pages/WorldSeries";
 import SportsSchedule from "./pages/SportsSchedule";
 import TopTeams from "./pages/TopTeams";
-import CorporateBooking from "./pages/CorporateBooking";
-import PrivateEvents from "./pages/PrivateEvents";
-import FriendsgivingEvent from "./pages/FriendsgivingEvent";
 import NotFound from "./pages/NotFound";
+import SupabaseTest from "./pages/SupabaseTest";
 
 const queryClient = new QueryClient();
 
@@ -46,11 +44,9 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/sports" element={<Sports />} />
               <Route path="/sports/:slug" element={<LeagueDetail />} />
-          <Route path="/corporate-booking" element={<CorporateBooking />} />
-          <Route path="/private-events" element={<PrivateEvents />} />
-          <Route path="/friendsgiving" element={<FriendsgivingEvent />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+              <Route path="/supabase-test" element={<SupabaseTest />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />

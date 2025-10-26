@@ -1,0 +1,683 @@
+---
+alwaysApply: true
+---
+
+# Shopify Integration Rule for Skybox GameHub
+
+## 🎯 **Purpose**
+This rule provides comprehensive guidelines for integrating Shopify Storefront Web Components into the Skybox GameHub website, ensuring consistent implementation, performance optimization, and best practices.
+
+---
+
+## 🏗️ **Architecture Overview**
+
+### **Integration Pattern**
+- **Frontend:** React + TypeScript + Vite
+- **Styling:** Tailwind CSS with custom design system
+- **Components:** Shopify Storefront Web Components via CDN
+- **Hosting:** Vercel with global CDN
+- **Database:** Supabase (existing) + Shopify (products)
+
+### **Component Structure**
+```
+src/
+├── components/
+│   ├── shopify/           # Shopify-specific components
+│   │   ├── ProductCard.tsx
+│   │   ├── ShoppingCart.tsx
+│   │   ├── CheckoutButton.tsx
+│   │   └── ProductGrid.tsx
+│   └── ui/               # Base UI components
+├── pages/
+│   ├── shop/             # E-commerce pages
+│   │   ├── ProductPage.tsx
+│   │   ├── CartPage.tsx
+│   │   └── CheckoutPage.tsx
+├── hooks/
+│   ├── useShopify.ts     # Shopify integration hooks
+│   └── useCart.ts        # Cart state management
+└── lib/
+    ├── shopify-config.ts # Shopify configuration
+    └── analytics.ts      # E-commerce analytics
+```
+
+---
+
+## 🔧 **Implementation Standards**
+
+### **Shopify Script Integration**
+```typescript
+// Always include in main layout
+useEffect(() => {
+  // Load Shopify script
+  const script = document.createElement('script');
+  script.src = 'https://cdn.shopify.com/storefront/web-components.js';
+  script.async = true;
+  document.head.appendChild(script);
+  
+  // Initialize store component
+  const storeElement = document.getElementById('skybox-store');
+  if (storeElement) {
+    // Store is ready
+  }
+}, []);
+```
+
+### **Store Component Configuration**
+```html
+<!-- Required in main layout -->
+<shopify-store
+  id="skybox-store"
+  store-domain="https://your-store.myshopify.com"
+  country="US"
+  language="en"
+  public-access-token="your-access-token"
+>
+</shopify-store>
+```
+
+### **Environment Variables**
+```typescript
+// Required environment variables
+export const shopifyConfig = {
+  storeDomain: import.meta.env.VITE_SHOPIFY_STORE_DOMAIN,
+  accessToken: import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+  apiVersion: import.meta.env.VITE_SHOPIFY_API_VERSION || '2023-10',
+};
+
+// Validation
+if (!shopifyConfig.storeDomain || !shopifyConfig.accessToken) {
+  throw new Error('Missing required Shopify environment variables');
+}
+```
+
+---
+
+## 🎨 **Styling Guidelines**
+
+### **Design System Integration**
+```css
+/* Match Skybox GameHub design system */
+:root {
+  --shopify-primary: #F97316;    /* Orange */
+  --shopify-secondary: #10B981;  /* Green */
+  --shopify-accent: #3B82F6;     /* Blue */
+  --shopify-neutral: #6B7280;    /* Gray */
+}
+
+/* Product card styling */
+.product-card {
+  @apply bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-all duration-300;
+  @apply border border-gray-200 hover:border-orange-300;
+}
+
+.product-card:hover {
+  @apply transform -translate-y-1;
+}
+
+/* Button styling */
+.buy-now-button {
+  @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold;
+  @apply py-3 px-6 rounded-md transition-colors duration-200;
+  @apply shadow-md hover:shadow-lg min-h-[44px] min-w-[120px];
+}
+
+.add-to-cart-button {
+  @apply bg-green-500 hover:bg-green-600 text-white font-semibold;
+  @apply py-2 px-4 rounded-md transition-colors duration-200;
+  @apply border border-green-600 hover:border-green-700;
+  @apply min-h-[40px] min-w-[100px];
+}
+```
+
+### **Mobile-First Responsive Design**
+```css
+/* Mobile-first product grid */
+.product-grid {
+  @apply grid grid-cols-1 gap-4;
+}
+
+@media (min-width: 640px) {
+  .product-grid {
+    @apply grid-cols-2 gap-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    @apply grid-cols-3 gap-8;
+  }
+}
+
+@media (min-width: 1280px) {
+  .product-grid {
+    @apply grid-cols-4 gap-8;
+  }
+}
+```
+
+---
+
+## 🛍️ **Component Implementation**
+
+### **Product Display Components**
+```typescript
+// src/components/shopify/ProductCard.tsx
+export function ProductCard({ product }: { product: any }) {
+  return (
+    <div className="product-card">
+      <shopify-context type="product" handle={product.handle}>
+        <template>
+          <div className="product-image">
+            <shopify-media
+              query="product.selectedOrFirstAvailableVariant.image"
+              width="300"
+              height="300"
+            />
+          </div>
+          <div className="product-info">
+            <h3 className="product-title">
+              <shopify-data query="product.title" />
+            </h3>
+            <div className="product-price">
+              <shopify-money
+                query="product.selectedOrFirstAvailableVariant.price"
+                format="money_with_currency"
+              />
+            </div>
+            <AddToCartButton productId={product.id} />
+          </div>
+        </template>
+      </shopify-context>
+    </div>
+  );
+}
+```
+
+### **Shopping Cart Implementation**
+```typescript
+// src/components/shopify/ShoppingCart.tsx
+export function ShoppingCart() {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="shopping-cart">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="cart-trigger"
+      >
+        <ShoppingCartIcon />
+        <span className="cart-count">0</span>
+      </button>
+      
+      {isOpen && (
+        <div className="cart-panel">
+          <shopify-cart>
+            <template>
+              <div className="cart-content">
+                <div className="cart-header">
+                  <h3>Shopping Cart</h3>
+                  <button onClick={() => setIsOpen(false)}>×</button>
+                </div>
+                <div className="cart-items">
+                  {/* Cart items rendered here */}
+                </div>
+                <div className="cart-footer">
+                  <div className="cart-total">
+                    <span>Total: </span>
+                    <shopify-money query="cart.totalPrice" />
+                  </div>
+                  <CheckoutButton />
+                </div>
+              </div>
+            </template>
+          </shopify-cart>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### **Cart State Management**
+```typescript
+// src/hooks/useCart.ts
+export function useCart() {
+  const [cartItems, setCartItems] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [cartTotal, setCartTotal] = useState(0);
+  
+  const addToCart = (productId: string, quantity: number) => {
+    const store = document.getElementById('skybox-store');
+    if (store) {
+      store.addToCart(productId, quantity);
+    }
+  };
+  
+  const removeFromCart = (lineItemId: string) => {
+    const store = document.getElementById('skybox-store');
+    if (store) {
+      store.removeFromCart(lineItemId);
+    }
+  };
+  
+  const updateQuantity = (lineItemId: string, quantity: number) => {
+    const store = document.getElementById('skybox-store');
+    if (store) {
+      store.updateQuantity(lineItemId, quantity);
+    }
+  };
+  
+  return {
+    cartItems,
+    cartCount,
+    cartTotal,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+  };
+}
+```
+
+---
+
+## 🚀 **Performance Optimization**
+
+### **Lazy Loading Implementation**
+```typescript
+// Lazy load Shopify components
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const ShoppingCart = lazy(() => import('./components/ShoppingCart'));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage'));
+
+// Route-based code splitting
+const App = () => (
+  <Suspense fallback={<LoadingSpinner />}>
+    <Routes>
+      <Route path="/shop" element={<ProductPage />} />
+      <Route path="/cart" element={<ShoppingCart />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+    </Routes>
+  </Suspense>
+);
+```
+
+### **Image Optimization**
+```typescript
+// src/components/OptimizedImage.tsx
+export function OptimizedImage({ 
+  src, 
+  alt, 
+  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+}: { 
+  src: string, 
+  alt: string, 
+  sizes?: string 
+}) {
+  return (
+    <picture>
+      <source
+        srcSet={`${src}?width=400&format=webp 400w, ${src}?width=800&format=webp 800w`}
+        sizes={sizes}
+        type="image/webp"
+      />
+      <source
+        srcSet={`${src}?width=400 400w, ${src}?width=800 800w`}
+        sizes={sizes}
+        type="image/jpeg"
+      />
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="product-image"
+      />
+    </picture>
+  );
+}
+```
+
+---
+
+## 📊 **Analytics Integration**
+
+### **E-commerce Tracking**
+```typescript
+// src/lib/analytics.ts
+export const trackProductView = (product: any) => {
+  gtag('event', 'view_item', {
+    currency: 'USD',
+    value: product.price,
+    items: [{
+      item_id: product.id,
+      item_name: product.title,
+      category: product.category,
+      price: product.price,
+      quantity: 1
+    }]
+  });
+};
+
+export const trackAddToCart = (product: any, quantity: number) => {
+  gtag('event', 'add_to_cart', {
+    currency: 'USD',
+    value: product.price * quantity,
+    items: [{
+      item_id: product.id,
+      item_name: product.title,
+      category: product.category,
+      price: product.price,
+      quantity: quantity
+    }]
+  });
+};
+
+export const trackPurchase = (transaction: any) => {
+  gtag('event', 'purchase', {
+    transaction_id: transaction.id,
+    currency: 'USD',
+    value: transaction.total,
+    items: transaction.items
+  });
+};
+```
+
+### **Performance Monitoring**
+```typescript
+// src/lib/performance-monitoring.ts
+export const setupPerformanceMonitoring = () => {
+  // Track Core Web Vitals
+  if ('web-vitals' in window) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(console.log);
+      getFID(console.log);
+      getFCP(console.log);
+      getLCP(console.log);
+      getTTFB(console.log);
+    });
+  }
+  
+  // Track user interactions
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.matches('[data-track]')) {
+      gtag('event', 'user_interaction', {
+        element: target.tagName,
+        action: target.dataset.track,
+        timestamp: Date.now()
+      });
+    }
+  });
+};
+```
+
+---
+
+## 🔒 **Security Best Practices**
+
+### **Environment Variable Security**
+```typescript
+// Never expose sensitive data
+const shopifyConfig = {
+  storeDomain: import.meta.env.VITE_SHOPIFY_STORE_DOMAIN, // Safe to expose
+  accessToken: import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN, // Public token
+  // Never include private keys or secrets
+};
+
+// Validate environment variables
+if (!shopifyConfig.storeDomain || !shopifyConfig.accessToken) {
+  throw new Error('Missing required Shopify environment variables');
+}
+```
+
+### **Input Validation**
+```typescript
+// Validate all user inputs
+export const validateProductInput = (product: any) => {
+  if (!product.id || !product.title) {
+    throw new Error('Invalid product data');
+  }
+  
+  if (product.price < 0) {
+    throw new Error('Invalid price');
+  }
+  
+  return true;
+};
+```
+
+---
+
+## 🧪 **Testing Standards**
+
+### **Component Testing**
+```typescript
+// src/components/__tests__/ProductCard.test.tsx
+describe('ProductCard', () => {
+  it('renders product information correctly', () => {
+    const product = { id: '1', title: 'Test Product', price: 29.99 };
+    render(<ProductCard product={product} />);
+    
+    expect(screen.getByText('Test Product')).toBeInTheDocument();
+    expect(screen.getByText('$29.99')).toBeInTheDocument();
+  });
+  
+  it('handles add to cart functionality', () => {
+    const product = { id: '1', title: 'Test Product', price: 29.99 };
+    render(<ProductCard product={product} />);
+    
+    const addToCartButton = screen.getByText('Add to Cart');
+    fireEvent.click(addToCartButton);
+    
+    // Test cart functionality
+  });
+});
+```
+
+### **Integration Testing**
+```typescript
+// e2e/shopify-integration.spec.ts
+test('complete purchase flow', async ({ page }) => {
+  await page.goto('/shop');
+  await page.click('[data-testid="product-card"]');
+  await page.click('[data-testid="add-to-cart"]');
+  await page.click('[data-testid="checkout-button"]');
+  await expect(page).toHaveURL(/checkout/);
+});
+```
+
+---
+
+## 📱 **Mobile Optimization**
+
+### **Touch-Friendly Design**
+```css
+/* Mobile touch targets */
+.product-card {
+  min-height: 200px; /* Touch-friendly size */
+}
+
+.buy-now-button,
+.add-to-cart-button {
+  min-height: 44px; /* iOS touch target */
+  min-width: 44px;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .product-card {
+    padding: 1rem;
+  }
+  
+  .cart-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: white;
+  }
+}
+```
+
+### **Mobile Performance**
+```typescript
+// Mobile-specific optimizations
+const MobileOptimizations = () => (
+  <>
+    {/* Preload critical resources */}
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="" />
+    <link rel="preload" href="/images/hero-mobile.jpg" as="image" />
+    
+    {/* Mobile viewport */}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    {/* Mobile-specific meta tags */}
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+  </>
+);
+```
+
+---
+
+## 🚨 **Error Handling**
+
+### **Component Error Boundaries**
+```typescript
+// src/components/ErrorBoundary.tsx
+export class ShopifyErrorBoundary extends Component {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+  
+  componentDidCatch(error: Error, errorInfo: any) {
+    console.error('Shopify Component Error:', error, errorInfo);
+    // Send to error tracking service
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="error-fallback">
+          <h2>Something went wrong with the store</h2>
+          <button onClick={() => this.setState({ hasError: false })}>
+            Try again
+          </button>
+        </div>
+      );
+    }
+    
+    return this.props.children;
+  }
+}
+```
+
+### **API Error Handling**
+```typescript
+// src/lib/error-handling.ts
+export const handleShopifyError = (error: Error, context: string) => {
+  console.error(`Shopify Error in ${context}:`, error);
+  
+  // Send to error tracking
+  gtag('event', 'exception', {
+    description: error.message,
+    fatal: false,
+    context: context
+  });
+  
+  // Show user-friendly message
+  toast.error('Store temporarily unavailable. Please try again.');
+};
+```
+
+---
+
+## 📋 **Implementation Checklist**
+
+### **Setup Checklist**
+- [ ] Shopify store created and configured
+- [ ] Environment variables set
+- [ ] Shopify script loaded
+- [ ] Store component initialized
+- [ ] API connectivity tested
+
+### **Component Checklist**
+- [ ] Product display components
+- [ ] Shopping cart functionality
+- [ ] Checkout integration
+- [ ] Mobile optimization
+- [ ] Error handling
+- [ ] Analytics tracking
+
+### **Testing Checklist**
+- [ ] Unit tests for components
+- [ ] Integration tests for flows
+- [ ] E2E tests for user journeys
+- [ ] Performance testing
+- [ ] Mobile device testing
+- [ ] Cross-browser testing
+
+### **Production Checklist**
+- [ ] Performance optimized
+- [ ] Security measures implemented
+- [ ] Analytics tracking active
+- [ ] Error monitoring configured
+- [ ] Documentation complete
+- [ ] Team trained on procedures
+
+---
+
+## 🎯 **Success Criteria**
+
+### **Technical Success**
+- [ ] All Shopify components rendering correctly
+- [ ] Shopping cart functionality working
+- [ ] Checkout process complete
+- [ ] Mobile experience optimized
+- [ ] Performance benchmarks met
+- [ ] Security measures active
+- [ ] Analytics tracking working
+- [ ] Error handling comprehensive
+
+### **Business Success**
+- [ ] Product catalog populated
+- [ ] Payment processing working
+- [ ] Order management functional
+- [ ] Customer experience excellent
+- [ ] Revenue tracking accurate
+- [ ] Conversion optimization active
+- [ ] User feedback positive
+- [ ] Business goals achieved
+
+---
+
+## 📚 **Resources**
+
+### **Documentation**
+- [Shopify Storefront Web Components](https://shopify.dev/docs/api/storefront-web-components)
+- [Getting Started Guide](https://shopify.dev/docs/api/storefront-web-components/getting-started/)
+- [Component Reference](https://shopify.dev/docs/api/storefront-web-components/components/)
+
+### **Internal Resources**
+- [Integration Plan](../shopify/plan/00-master-shopify-integration-plan.md)
+- [Component Guide](../shopify/plan/03-component-embedding.md)
+- [Styling Guide](../shopify/plan/04-styling-theming.md)
+- [Testing Guide](../shopify/plan/07-testing-qa.md)
+
+---
+
+**Rule Version:** 1.0.0  
+**Created:** October 24, 2025  
+**Last Updated:** October 24, 2025  
+**Status:** ✅ Production Ready  
+
+*This rule provides comprehensive guidelines for implementing Shopify Storefront Web Components in the Skybox GameHub website, ensuring consistent, performant, and secure e-commerce functionality.*

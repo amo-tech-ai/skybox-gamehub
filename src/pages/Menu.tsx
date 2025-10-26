@@ -1,67 +1,27 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import MenuCard from "@/components/menu/MenuCard";
+import FilterChips from "@/components/events/FilterChips";
+import { useMenuItems } from "@/hooks/useMenuItems";
+import { useMenuCategories } from "@/hooks/useMenuItems";
 import foodImage from "@/assets/food-spread.jpg";
 
 const Menu = () => {
-  const menuItems = [
-    {
-      name: "Buffalo Wings",
-      description: "Classic buffalo wings with celery sticks and blue cheese dip. Available in mild, medium, or atomic.",
-      price: "$32,000",
-      image: foodImage,
-      category: "Appetizers",
-    },
-    {
-      name: "Skybox Nachos",
-      description: "Loaded with cheese, jalapeños, guacamole, sour cream, and your choice of chicken or beef.",
-      price: "$38,000",
-      image: foodImage,
-      category: "Appetizers",
-    },
-    {
-      name: "Classic Burger",
-      description: "Angus beef patty, lettuce, tomato, pickles, special sauce. Served with fries.",
-      price: "$42,000",
-      image: foodImage,
-      category: "Mains",
-    },
-    {
-      name: "BBQ Pulled Pork Sandwich",
-      description: "Slow-cooked pulled pork with tangy BBQ sauce, coleslaw, on a brioche bun.",
-      price: "$45,000",
-      image: foodImage,
-      category: "Mains",
-    },
-    {
-      name: "Game Day Platter",
-      description: "Perfect for sharing! Wings, nachos, quesadillas, mozzarella sticks, and all the dips.",
-      price: "$85,000",
-      image: foodImage,
-      category: "Shareable",
-    },
-    {
-      name: "Loaded Fries",
-      description: "Crispy fries topped with bacon, cheese sauce, sour cream, and green onions.",
-      price: "$28,000",
-      image: foodImage,
-      category: "Sides",
-    },
-    {
-      name: "Craft Beer Selection",
-      description: "Rotating selection of local and imported craft beers. Ask about today's taps!",
-      price: "$15,000",
-      image: foodImage,
-      category: "Drinks",
-    },
-    {
-      name: "Skybox Margarita",
-      description: "Fresh lime, premium tequila, triple sec. Classic or frozen. The perfect game-day drink!",
-      price: "$22,000",
-      image: foodImage,
-      category: "Drinks",
-    },
-  ];
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const categories = ["All", "Appetizers", "Mains", "Shareable", "Sides", "Drinks"];
+  // Fetch menu items from database
+  const { data: menuItems, isLoading, error } = useMenuItems();
+
+  // Fetch dynamic categories from database
+  const { data: dbCategories } = useMenuCategories();
+
+  // Build categories array with "All" option
+  const categories = ["All", ...(dbCategories || [])];
+
+  // Filter menu items by category
+  const filteredItems = menuItems ? menuItems.filter((item) => {
+    return selectedCategory === "All" || item.category === selectedCategory;
+  }) : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,6 +37,17 @@ const Menu = () => {
         </div>
       </section>
 
+      {/* Filter Chips */}
+      <section className="py-8 bg-background border-b">
+        <div className="container px-4">
+          <FilterChips
+            categories={categories}
+            activeCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+        </div>
+      </section>
+
       {/* Menu Items */}
       <section className="py-16">
         <div className="container px-4">
@@ -86,11 +57,45 @@ const Menu = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-            {menuItems.map((item, index) => (
-              <MenuCard key={index} {...item} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="text-center py-16">
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
+              <p className="text-xl text-muted-foreground">Loading menu...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <p className="text-xl text-red-500 mb-4">Failed to load menu</p>
+              <p className="text-muted-foreground mb-6">{error.message}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          ) : filteredItems.length > 0 ? (
+            <>
+              <div className="mb-6">
+                <p className="text-muted-foreground text-center">
+                  Showing {filteredItems.length} {filteredItems.length === 1 ? "item" : "items"}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                {filteredItems.map((item) => (
+                  <MenuCard
+                    key={item.id}
+                    name={item.name}
+                    description={item.description}
+                    price={`$${item.price.toLocaleString()}`}
+                    image={item.image_url || foodImage}
+                    category={item.category}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-xl text-muted-foreground mb-4">No menu items found in this category</p>
+              <p className="text-muted-foreground">Try selecting a different category</p>
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <div className="bg-background border-2 border-border rounded-lg p-8 max-w-2xl mx-auto">

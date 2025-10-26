@@ -2,25 +2,35 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import EventCard from "@/components/events/EventCard";
 import FilterChips from "@/components/events/FilterChips";
-import { events } from "@/data/events";
+import { useAllEvents } from "@/hooks/useEvents";
+import { useEventCategories } from "@/hooks/useEventCategories";
 import { Search, Calendar } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import foodImage from "@/assets/food-spread.jpg";
 
 const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const categories = ["All", "Baseball", "Soccer", "UFC", "Basketball", "Football"];
+  // Fetch all events from database
+  const { data: events, isLoading, error } = useAllEvents();
 
-  const filteredEvents = events.filter((event) => {
+  // Fetch dynamic categories from database
+  const { data: dbCategories } = useEventCategories();
+
+  // Build categories array with "All" option
+  const categories = ["All", ...(dbCategories || [])];
+
+  // Filter events (only if data is loaded)
+  const filteredEvents = events ? events.filter((event) => {
     const matchesCategory = selectedCategory === "All" || event.category === selectedCategory;
     const matchesSearch =
       searchQuery === "" ||
       event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchQuery.toLowerCase());
+      event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      event.venue?.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  }) : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -64,7 +74,20 @@ const Events = () => {
       {/* Events Grid */}
       <section className="py-12">
         <div className="container px-4">
-          {filteredEvents.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center py-16">
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
+              <p className="text-xl text-muted-foreground">Loading events...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <p className="text-xl text-red-500 mb-4">Failed to load events</p>
+              <p className="text-muted-foreground mb-6">{error.message}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          ) : filteredEvents.length > 0 ? (
             <>
               <div className="mb-6">
                 <p className="text-muted-foreground">
@@ -73,7 +96,17 @@ const Events = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
                 {filteredEvents.map((event) => (
-                  <EventCard key={event.slug} {...event} image={event.image} />
+                  <EventCard
+                    key={event.id}
+                    slug={event.id}
+                    title={event.title}
+                    subtitle={event.description}
+                    date={new Date(event.event_date).toLocaleDateString()}
+                    time={new Date(event.event_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    location={event.venue}
+                    image={event.image_url || foodImage}
+                    category={event.category}
+                  />
                 ))}
               </div>
             </>

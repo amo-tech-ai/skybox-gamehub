@@ -25,9 +25,11 @@ dist-ssr
 skybox-ws-playbook/
 # Exclude directories that should not be committed
 skybox-ws-playbook/
-.claude/
+
 .playwright-mcp/
 .vscode/
 playwright-report/
 test-results/
-.env
+
+# Claude Code settings with sensitive data
+.claude/settings.local.json

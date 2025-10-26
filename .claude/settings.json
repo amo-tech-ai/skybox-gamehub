@@ -1,0 +1,28 @@
+{
+  "allowedTools": [
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "Bash(npm run dev:*)",
+    "Bash(npm run build:*)",
+    "Bash(npm run lint:*)",
+    "Bash(npm run preview:*)",
+    "Bash(npx playwright test:*)",
+    "Bash(npx playwright show-report:*)",
+    "Bash(git status:*)",
+    "Bash(git log:*)",
+    "Bash(git diff:*)",
+    "Bash(git branch:*)",
+    "Bash(lsof -i:*)",
+    "Bash(node --version:*)",
+    "Bash(npm --version:*)",
+    "Bash(tree:*)",
+    "Bash(ls:*)",
+    "Bash(PGPASSWORD='Toronto2025#' psql:*)",
+    "WebFetch",
+    "WebSearch"
+  ],
+  "description": "Safe commands whitelist for Skybox GameHub development. Database writes and git commits require explicit approval."
+}
