@@ -128,7 +128,7 @@ const Home = () => {
                         title={event.title}
                         date={new Date(event.event_date).toLocaleDateString()}
                         time={new Date(event.event_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        venue={event.venue}
+                        location={event.venue}
                         category={event.category}
                         image={event.image_url || heroImage}
                         slug={event.id}
