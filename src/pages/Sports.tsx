@@ -2,20 +2,20 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import LeagueCard from "@/components/sports/LeagueCard";
-import { leagues } from "@/data/leagues";
+import { useLeagues, useFeaturedGames } from "@/hooks/useSports";
 import sportsHero from "@/assets/sports-mlb-dodgers.jpg";
 
 const Sports = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Fetch leagues and featured games from Supabase
+  const { data: leagues, isLoading: leaguesLoading } = useLeagues();
+  const { data: featuredGames, isLoading: gamesLoading } = useFeaturedGames(4);
 
-  const filteredLeagues = leagues.filter((league) =>
+  const filteredLeagues = leagues?.filter((league) =>
     league.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    league.shortName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const featuredBroadcasts = leagues
-    .flatMap((league) => league.broadcasts.filter((b) => b.featured))
-    .slice(0, 4);
+    league.slug.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
 
   return (
     <div className="min-h-screen">
@@ -68,30 +68,42 @@ const Sports = () => {
             <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
               FEATURED GAMES
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">This Week's Top Matchups</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Upcoming Top Matchups</h2>
             <p className="text-xl text-muted-foreground">Don't miss these epic showdowns</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredBroadcasts.map((broadcast, index) => (
-              <div 
-                key={broadcast.id} 
-                className="stagger-item bg-card rounded-lg p-6 border border-border hover-lift glow-on-hover"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="text-center">
-                  <div className="text-sm text-primary font-bold mb-2">{broadcast.network}</div>
-                  <h3 className="font-bold text-lg mb-1">{broadcast.homeTeam}</h3>
-                  <p className="text-sm text-muted-foreground mb-1">vs</p>
-                  <h3 className="font-bold text-lg mb-4">{broadcast.awayTeam}</h3>
-                  <div className="text-sm">
-                    <p className="font-semibold">{new Date(broadcast.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
-                    <p className="text-muted-foreground">{broadcast.time}</p>
+          {gamesLoading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+            </div>
+          ) : featuredGames && featuredGames.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredGames.map((game, index) => (
+                <div 
+                  key={game.id} 
+                  className="stagger-item bg-card rounded-lg p-6 border border-border hover-lift glow-on-hover"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="text-center">
+                    <div className="text-sm text-primary font-bold mb-2">
+                      {game.broadcast_networks || 'TBA'}
+                    </div>
+                    <h3 className="font-bold text-lg mb-1">{game.home_team?.name || game.home_team_id}</h3>
+                    <p className="text-sm text-muted-foreground mb-1">vs</p>
+                    <h3 className="font-bold text-lg mb-4">{game.away_team?.name || game.away_team_id}</h3>
+                    <div className="text-sm">
+                      <p className="font-semibold">{new Date(game.game_datetime).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+                      <p className="text-muted-foreground">{game.game_time}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-xl text-muted-foreground">No featured games scheduled at this time</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -106,7 +118,12 @@ const Sports = () => {
             <p className="text-xl text-muted-foreground">Find your favorite league and never miss a game</p>
           </div>
 
-          {filteredLeagues.length > 0 ? (
+          {leaguesLoading ? (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
+              <p className="text-xl text-muted-foreground">Loading leagues...</p>
+            </div>
+          ) : filteredLeagues.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredLeagues.map((league, index) => (
                 <div 
@@ -114,7 +131,14 @@ const Sports = () => {
                   className="stagger-item"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <LeagueCard {...league} />
+                  <LeagueCard
+                    name={league.name}
+                    shortName={league.name}
+                    slug={league.slug}
+                    tagline={`Watch ${league.name} Live`}
+                    image={sportsHero}
+                    color="#F58634"
+                  />
                 </div>
               ))}
             </div>

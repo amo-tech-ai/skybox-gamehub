@@ -6,16 +6,15 @@ import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateBooking } from "@/hooks/useBookings";
 import { useUpcomingEvents } from "@/hooks/useEvents";
-import { Calendar, Users, Phone, Mail } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Calendar, Users } from "lucide-react";
 
 const Reserve = () => {
   const { toast } = useToast();
+  const { user, loading: authLoading, signInWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
     eventId: "",
-    numTickets: "1",
+    partySize: "2",
     specialRequests: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,38 +25,42 @@ const Reserve = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Sign In Required",
+        description: "Please sign in with Google to make a booking",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Find selected event to calculate total
-      const selectedEvent = upcomingEvents?.find(e => e.id === formData.eventId);
-      const ticketPrice = selectedEvent?.price || 0;
-      const totalAmount = ticketPrice * parseInt(formData.numTickets);
-
       // Create booking in database
       const booking = await createBooking.mutateAsync({
-        event_id: formData.eventId,
-        user_name: formData.name,
-        user_email: formData.email,
-        user_phone: formData.phone,
-        num_tickets: parseInt(formData.numTickets),
-        total_amount: totalAmount,
+        event_id: formData.eventId || '',
+        party_size: parseInt(formData.partySize),
         special_requests: formData.specialRequests || undefined,
       });
 
+      if (!booking) {
+        throw new Error('Booking creation failed');
+      }
+
       // Success!
+      // @ts-ignore - Booking type from mutation
+      const bookingId = booking.id || 'pending';
       toast({
         title: "Booking Confirmed! 🎉",
-        description: `Your booking ID is ${booking.id}. Check your email for details!`,
+        description: `Your booking ID is ${bookingId}. We'll contact you with details!`,
       });
 
       // Reset form
       setFormData({
-        name: "",
-        email: "",
-        phone: "",
         eventId: "",
-        numTickets: "1",
+        partySize: "2",
         specialRequests: "",
       });
     } catch (error) {
@@ -94,6 +97,23 @@ const Reserve = () => {
             {/* Form */}
             <Card className="p-8">
               <h2 className="text-3xl font-bold mb-6">Book Your Experience</h2>
+              
+              {!user && !authLoading && (
+                <div className="mb-6 p-4 bg-primary/10 border border-primary rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-3">
+                    You must be signed in to make a reservation
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={signInWithGoogle}
+                    className="w-full"
+                    variant="default"
+                  >
+                    Sign In with Google
+                  </Button>
+                </div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Event Selection */}
                 <div>
@@ -118,72 +138,26 @@ const Reserve = () => {
                   )}
                 </div>
 
-                {/* Full Name */}
+                {/* Party Size */}
                 <div>
-                  <Label htmlFor="name">Full Name *</Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <Label htmlFor="email">Email *</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="john@example.com"
-                      className="pl-10"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <Label htmlFor="phone">Phone / WhatsApp *</Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+57 304 786 2834"
-                      className="pl-10"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Number of Tickets */}
-                <div>
-                  <Label htmlFor="numTickets">Number of Tickets *</Label>
+                  <Label htmlFor="partySize">Party Size *</Label>
                   <div className="relative">
                     <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                     <Input
-                      id="numTickets"
+                      id="partySize"
                       type="number"
                       min="1"
-                      max="10"
-                      placeholder="1"
+                      max="20"
+                      placeholder="2"
                       className="pl-10"
-                      value={formData.numTickets}
+                      value={formData.partySize}
                       onChange={(e) => {
                         const value = parseInt(e.target.value);
-                        if (value > 10) return;
-                        setFormData({ ...formData, numTickets: e.target.value });
+                        if (value > 20) return;
+                        setFormData({ ...formData, partySize: e.target.value });
                       }}
                       required
+                      disabled={!user}
                     />
                   </div>
                 </div>
@@ -197,6 +171,7 @@ const Reserve = () => {
                     placeholder="Dietary restrictions, accessibility needs, etc."
                     value={formData.specialRequests}
                     onChange={(e) => setFormData({ ...formData, specialRequests: e.target.value })}
+                    disabled={!user}
                   />
                 </div>
 
@@ -204,9 +179,9 @@ const Reserve = () => {
                   type="submit"
                   className="w-full gradient-primary hover-lift"
                   size="lg"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !user}
                 >
-                  {isSubmitting ? "Processing..." : "Book Now"}
+                  {isSubmitting ? "Processing..." : !user ? "Sign In to Book" : "Book Now"}
                 </Button>
 
                 <p className="text-sm text-muted-foreground text-center">

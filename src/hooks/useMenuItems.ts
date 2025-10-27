@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface MenuItem {
   id: string;
@@ -8,61 +9,61 @@ export interface MenuItem {
   price: number;
   category: string;
   image_url?: string;
-  available: boolean;
+  is_available: boolean;
+  currency?: string;
+  tags?: string[];
+  allergens?: string[];
 }
 
-// Mock data until menu_items table is created
-const MOCK_MENU_ITEMS: MenuItem[] = [
-  {
-    id: '1',
-    name: 'Wings Platter',
-    description: 'Crispy chicken wings with your choice of sauce',
-    price: 35000,
-    category: 'Appetizers',
-    available: true,
-  },
-  {
-    id: '2',
-    name: 'Nachos Supreme',
-    description: 'Loaded nachos with cheese, jalapeños, and guacamole',
-    price: 28000,
-    category: 'Appetizers',
-    available: true,
-  },
-  {
-    id: '3',
-    name: 'Skybox Burger',
-    description: 'Premium beef burger with special sauce',
-    price: 42000,
-    category: 'Mains',
-    available: true,
-  },
-];
-
 /**
- * Fetch all available menu items (using mock data for now)
+ * Fetch all available menu items from Supabase
  */
 export const useMenuItems = () => {
   return useQuery({
     queryKey: ['menu-items'],
     queryFn: async () => {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      return MOCK_MENU_ITEMS;
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .eq('is_available', true)
+        .order('display_order', { ascending: true })
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      
+      return data.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description || undefined,
+        price: Number(item.price),
+        category: item.category,
+        image_url: item.image_url || undefined,
+        is_available: item.is_available,
+        currency: item.currency || 'COP',
+        tags: item.tags || [],
+        allergens: item.allergens || [],
+      }));
     },
   });
 };
 
 /**
- * Fetch all distinct menu categories
+ * Fetch all distinct menu categories from Supabase
  */
 export const useMenuCategories = () => {
   return useQuery({
     queryKey: ['menu-categories'],
     queryFn: async () => {
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('category')
+        .eq('is_available', true)
+        .order('category', { ascending: true });
+
+      if (error) throw error;
+      
       const uniqueCategories = Array.from(
-        new Set(MOCK_MENU_ITEMS.map((item) => item.category))
+        new Set(data.map((item) => item.category))
       );
       return uniqueCategories;
     },

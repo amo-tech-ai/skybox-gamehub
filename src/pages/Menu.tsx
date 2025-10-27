@@ -83,7 +83,7 @@ const Menu = () => {
                     key={item.id}
                     name={item.name}
                     description={item.description}
-                    price={`$${item.price.toLocaleString()}`}
+                    price={`$${item.price.toLocaleString()} ${item.currency || 'COP'}`}
                     image={item.image_url || foodImage}
                     category={item.category}
                   />
