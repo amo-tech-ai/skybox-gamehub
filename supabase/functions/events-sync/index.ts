@@ -4,6 +4,7 @@
 // Purpose: Sync events from external sources (future: Shopify, Google Calendar, etc.)
 // Endpoint: POST /functions/v1/events-sync
 // Auth: Service role or API key
+// Updated: 2025-01-28 - Fixed TypeScript error handling
 // ===========================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"

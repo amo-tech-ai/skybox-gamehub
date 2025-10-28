@@ -4,6 +4,7 @@
 // Purpose: Automatically update event status to 'past' after event_datetime
 // Trigger: Scheduled cron job (daily at midnight)
 // Auth: Service role only
+// Updated: 2025-01-28 - Fixed TypeScript error handling
 // ===========================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"

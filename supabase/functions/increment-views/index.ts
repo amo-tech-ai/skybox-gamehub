@@ -4,6 +4,7 @@
 // Purpose: Asynchronously increment view count for events
 // Endpoint: POST /functions/v1/increment-views
 // Auth: Public (rate-limited)
+// Updated: 2025-01-28 - Fixed TypeScript error handling
 // ===========================================================================
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
