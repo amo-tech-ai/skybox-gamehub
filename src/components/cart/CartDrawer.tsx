@@ -29,12 +29,15 @@ export const CartDrawer = () => {
   const handleCheckout = async () => {
     try {
       await createCheckout();
-      const checkoutUrl = useCartStore.getState().checkoutUrl;
-      if (checkoutUrl) {
-        window.open(checkoutUrl, '_blank');
-        setIsOpen(false);
-        toast.success("Redirecting to checkout...");
-      }
+      // Small delay to ensure state is updated
+      setTimeout(() => {
+        const state = useCartStore.getState();
+        if (state.checkoutUrl) {
+          window.open(state.checkoutUrl, '_blank');
+          setIsOpen(false);
+          toast.success("Redirecting to checkout...");
+        }
+      }, 100);
     } catch (error) {
       console.error('Checkout failed:', error);
       toast.error("Failed to create checkout. Please try again.");

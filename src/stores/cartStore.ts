@@ -72,24 +72,24 @@ export const useCartStore = create<CartStore>()(
       setLoading: (isLoading) => set({ isLoading }),
 
       createCheckout: async () => {
-        const { items, setLoading, setCheckoutUrl } = get();
+        const { items } = get();
         if (items.length === 0) return;
 
-        setLoading(true);
+        set({ isLoading: true });
         try {
           const checkoutUrl = await createStorefrontCheckout(items);
-          setCheckoutUrl(checkoutUrl);
+          set({ checkoutUrl, isLoading: false });
         } catch (error) {
           console.error('Failed to create checkout:', error);
+          set({ isLoading: false });
           throw error;
-        } finally {
-          setLoading(false);
         }
       }
     }),
     {
       name: 'shopify-cart',
       storage: createJSONStorage(() => localStorage),
+      skipHydration: false,
     }
   )
 );
