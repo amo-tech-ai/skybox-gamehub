@@ -1,27 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import MenuCard from "@/components/menu/MenuCard";
-import FilterChips from "@/components/events/FilterChips";
-import { useMenuItems } from "@/hooks/useMenuItems";
-import { useMenuCategories } from "@/hooks/useMenuItems";
+import { Card } from "@/components/ui/card";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
+import { useCartStore } from "@/stores/cartStore";
+import { ShoppingCart, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import foodImage from "@/assets/food-spread.jpg";
 
 const Menu = () => {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  // Fetch menu items from database
-  const { data: menuItems, isLoading, error } = useMenuItems();
-
-  // Fetch dynamic categories from database
-  const { data: dbCategories } = useMenuCategories();
-
-  // Build categories array with "All" option
-  const categories = ["All", ...(dbCategories || [])];
-
-  // Filter menu items by category
-  const filteredItems = menuItems ? menuItems.filter((item) => {
-    return selectedCategory === "All" || item.category === selectedCategory;
-  }) : [];
+  const { data: products, isLoading, error } = useShopifyProducts();
+  const addItem = useCartStore(state => state.addItem);
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,68 +20,94 @@ const Menu = () => {
             Game Night Menu
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-in">
-            Fuel your watch party with championship-worthy food and drinks
+            Order directly from our Shopify store - delivered hot and fresh!
           </p>
-        </div>
-      </section>
-
-      {/* Filter Chips */}
-      <section className="py-8 bg-background border-b">
-        <div className="container px-4">
-          <FilterChips
-            categories={categories}
-            activeCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
         </div>
       </section>
 
       {/* Menu Items */}
       <section className="py-16">
         <div className="container px-4">
-          <div className="mb-8 text-center">
-            <p className="text-lg text-muted-foreground">
-              All prices in Colombian Pesos (COP). Order directly via WhatsApp for delivery or pickup!
-            </p>
-          </div>
-
           {isLoading ? (
             <div className="text-center py-16">
               <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-2 border-primary mb-4"></div>
-              <p className="text-xl text-muted-foreground">Loading menu...</p>
+              <p className="text-xl text-muted-foreground">Loading menu from Shopify...</p>
             </div>
           ) : error ? (
             <div className="text-center py-16">
-              <p className="text-xl text-red-500 mb-4">Failed to load menu</p>
-              <p className="text-muted-foreground mb-6">{error.message}</p>
+              <p className="text-xl text-destructive mb-4">Failed to load menu</p>
+              <p className="text-muted-foreground mb-6">{String(error)}</p>
               <Button onClick={() => window.location.reload()}>
                 Try Again
               </Button>
             </div>
-          ) : filteredItems.length > 0 ? (
+          ) : products && products.length > 0 ? (
             <>
               <div className="mb-6">
                 <p className="text-muted-foreground text-center">
-                  Showing {filteredItems.length} {filteredItems.length === 1 ? "item" : "items"}
+                  {products.length} items available • Add to cart for Shopify checkout
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-                {filteredItems.map((item) => (
-                  <MenuCard
-                    key={item.id}
-                    name={item.name}
-                    description={item.description}
-                    price={`$${item.price.toLocaleString()} ${item.currency || 'COP'}`}
-                    image={item.image_url || foodImage}
-                    category={item.category}
-                  />
-                ))}
+                {products.map((product) => {
+                  const variant = product.node.variants.edges[0]?.node;
+                  const image = product.node.images.edges[0]?.node;
+                  
+                  const handleAddToCart = () => {
+                    if (!variant) return;
+                    
+                    addItem({
+                      product,
+                      variantId: variant.id,
+                      variantTitle: variant.title,
+                      price: variant.price,
+                      quantity: 1,
+                      selectedOptions: variant.selectedOptions || []
+                    });
+                    
+                    toast.success(`${product.node.title} added to cart!`, {
+                      position: "top-center",
+                    });
+                  };
+
+                  return (
+                    <Card key={product.node.id} className="overflow-hidden hover-lift group">
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={image?.url || foodImage}
+                          alt={image?.altText || product.node.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="p-5">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="text-lg font-bold">{product.node.title}</h3>
+                          <span className="text-xl font-bold text-primary">
+                            ${parseFloat(variant?.price.amount || '0').toFixed(2)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                          {product.node.description}
+                        </p>
+                        <Button 
+                          onClick={handleAddToCart}
+                          className="w-full"
+                          disabled={!variant?.availableForSale}
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          Add to Cart
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </>
           ) : (
             <div className="text-center py-16">
-              <p className="text-xl text-muted-foreground mb-4">No menu items found in this category</p>
-              <p className="text-muted-foreground">Try selecting a different category</p>
+              <ShoppingCart className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <p className="text-xl text-muted-foreground mb-4">No products found</p>
+              <p className="text-muted-foreground">Check back soon for our menu items!</p>
             </div>
           )}
 
