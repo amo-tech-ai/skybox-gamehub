@@ -18,19 +18,29 @@ export interface Event {
 }
 
 // Transform database event to app event format
-const transformEvent = (dbEvent: any, category?: any, venue?: any): Event => ({
-  id: dbEvent.id,
-  slug: dbEvent.slug,
-  title: dbEvent.title,
-  event_date: dbEvent.event_datetime,
-  venue: venue?.name || 'TBA',
-  status: dbEvent.status,
-  category: category?.name || 'General',
-  description: dbEvent.description,
-  image_url: dbEvent.featured_image || dbEvent.banner_image || dbEvent.thumbnail_image || undefined,
-  price: dbEvent.base_price || undefined,
-  capacity: dbEvent.total_capacity || undefined,
-});
+const transformEvent = (dbEvent: any): Event => {
+  // Extract venue name from relationship
+  const venueName = dbEvent.venue_obj?.name || dbEvent.venue || 'TBA';
+  
+  // Extract first category name from junction table
+  const firstCategory = dbEvent.event_categories?.[0]?.category?.name;
+  const categoryName = firstCategory || dbEvent.category || 'General';
+
+  return {
+    id: dbEvent.id,
+    slug: dbEvent.slug,
+    title: dbEvent.title,
+    event_date: dbEvent.event_date, // Correct column name
+    venue: venueName,
+    status: dbEvent.status,
+    category: categoryName,
+    description: dbEvent.description,
+    image_url: dbEvent.image_url,
+    price: dbEvent.price,
+    capacity: dbEvent.capacity,
+    event_type: dbEvent.event_type,
+  };
+};
 
 /**
  * Fetch upcoming published events
@@ -44,16 +54,19 @@ export const useUpcomingEvents = (limit: number = 10) => {
         .from('events')
         .select(`
           *,
-          category:event_categories(*),
-          venue:venues(*)
+          venue_obj:venues(*),
+          event_categories(
+            *,
+            category:categories(*)
+          )
         `)
         .eq('status', 'published')
-        .gte('event_datetime', new Date().toISOString())
-        .order('event_datetime', { ascending: true })
+        .gte('event_date', new Date().toISOString())
+        .order('event_date', { ascending: true })
         .limit(limit);
 
       if (error) throw error;
-      return data.map(event => transformEvent(event, event.category, event.venue));
+      return data.map(event => transformEvent(event));
     },
   });
 };
@@ -69,14 +82,17 @@ export const useAllEvents = () => {
         .from('events')
         .select(`
           *,
-          category:event_categories(*),
-          venue:venues(*)
+          venue_obj:venues(*),
+          event_categories(
+            *,
+            category:categories(*)
+          )
         `)
         .eq('status', 'published')
-        .order('event_datetime', { ascending: true });
+        .order('event_date', { ascending: true });
 
       if (error) throw error;
-      return data.map(event => transformEvent(event, event.category, event.venue));
+      return data.map(event => transformEvent(event));
     },
   });
 };
@@ -93,15 +109,18 @@ export const useEventsByCategory = (categorySlug: string) => {
         .from('events')
         .select(`
           *,
-          category:event_categories!inner(*),
-          venue:venues(*)
+          venue_obj:venues(*),
+          event_categories!inner(
+            *,
+            category:categories!inner(*)
+          )
         `)
         .eq('status', 'published')
-        .eq('event_categories.slug', categorySlug)
-        .order('event_datetime', { ascending: true });
+        .eq('event_categories.category.slug', categorySlug)
+        .order('event_date', { ascending: true });
 
       if (error) throw error;
-      return data.map(event => transformEvent(event, event.category, event.venue));
+      return data.map(event => transformEvent(event));
     },
     enabled: !!categorySlug,
   });
@@ -119,14 +138,18 @@ export const useEventBySlug = (slug: string) => {
         .from('events')
         .select(`
           *,
-          category:event_categories(*),
-          venue:venues(*)
+          venue_obj:venues(*),
+          event_categories(
+            *,
+            category:categories(*)
+          )
         `)
         .eq('slug', slug)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return transformEvent(data, data.category, data.venue);
+      if (!data) throw new Error('Event not found');
+      return transformEvent(data);
     },
     enabled: !!slug,
   });
@@ -144,14 +167,18 @@ export const useEvent = (eventId: string) => {
         .from('events')
         .select(`
           *,
-          category:event_categories(*),
-          venue:venues(*)
+          venue_obj:venues(*),
+          event_categories(
+            *,
+            category:categories(*)
+          )
         `)
         .eq('id', eventId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return transformEvent(data, data.category, data.venue);
+      if (!data) throw new Error('Event not found');
+      return transformEvent(data);
     },
     enabled: !!eventId,
   });
@@ -183,7 +210,7 @@ export const useEventCategories = () => {
     queryKey: ['event-categories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('event_categories')
+        .from('categories')
         .select('name')
         .order('display_order', { ascending: true });
 
