@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import heroImage from "@/assets/hero-world-series.jpg";
+import heroImage from "@/assets/nfl-stadium-hero.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
 import foodImage from "@/assets/food-spread.jpg";
 import eventNfl from "@/assets/event-nfl.jpg";
@@ -17,17 +17,17 @@ const WorldSeries = () => {
   const upcomingGames = [
     {
       gameNumber: 1,
-      date: "Friday, Oct 24",
-      time: "8:00 PM ET / 7:00 PM COT",
-      teams: "Toronto Blue Jays @ Los Angeles Dodgers",
-      venue: "Dodger Stadium, Los Angeles"
+      date: "Sunday, Feb 9",
+      time: "6:30 PM ET / 5:30 PM COT",
+      teams: "Kansas City Chiefs vs Philadelphia Eagles",
+      venue: "Caesars Superdome, New Orleans"
     },
     {
       gameNumber: 2,
-      date: "Saturday, Oct 25",
-      time: "8:00 PM ET / 7:00 PM COT",
-      teams: "Toronto Blue Jays @ Los Angeles Dodgers",
-      venue: "Dodger Stadium, Los Angeles"
+      date: "Thursday, Sep 5",
+      time: "8:20 PM ET / 7:20 PM COT",
+      teams: "Season Kickoff Game - TBA",
+      venue: "Opening Night Stadium"
     }
   ];
 
@@ -48,14 +48,14 @@ const WorldSeries = () => {
         
         <div className="container mx-auto px-4 relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] drop-shadow-lg">
-              Watch the World Series 2025 Live at Skybox Medellín!
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] drop-shadow-lg uppercase tracking-tight">
+              NFL 2025 Season Watch Parties at Skybox Medellín!
             </h1>
-            <p className="text-xl md:text-2xl text-white/95 font-semibold drop-shadow-md">
-              Toronto Blue Jays vs Los Angeles Dodgers · Oct 24 – Nov 1
+            <p className="text-xl md:text-2xl text-white/95 font-bold drop-shadow-md">
+              Super Bowl LIX · Playoffs · Every Sunday Night Game
             </p>
-            <p className="text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md">
-              Four Wins. One Trophy. Two Cities. Who Reigns? Experience every pitch, every hit, every moment on our giant screens with the best atmosphere in Medellín.
+            <p className="text-lg text-white/90 max-w-2xl mx-auto drop-shadow-md font-medium">
+              Touchdowns. Tackles. Championships. Experience every play, every yard, every electrifying moment on our giant screens with the ultimate game-day atmosphere in Medellín.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
@@ -79,26 +79,26 @@ const WorldSeries = () => {
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              The Ultimate Showdown
+            <h2 className="text-4xl md:text-5xl font-black text-foreground mb-4">
+              Game Day. Every Sunday.
             </h2>
             <p className="text-lg text-muted-foreground">
-              <span className="text-orange-500 font-semibold">Two legendary teams. One championship.</span> History in the making.
+              <span className="text-orange-500 font-bold">32 teams. One goal. Pure Football.</span> Watch it all at Skybox.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto items-center">
-            {/* Blue Jays */}
+            {/* AFC */}
             <div className="relative group overflow-hidden rounded-lg shadow-lg">
               <img 
                 src={foodImage} 
-                alt="Toronto Blue Jays atmosphere"
+                alt="AFC Conference atmosphere"
                 className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-3xl font-bold text-white mb-2">Toronto Blue Jays</h3>
-                <p className="text-sm text-white/80">Canada's Pride Returns to the Fall Classic</p>
+                <h3 className="text-3xl font-black text-white mb-2">AFC</h3>
+                <p className="text-sm text-white/80 font-semibold">Chiefs · Bills · Ravens · Bengals</p>
               </div>
             </div>
 
@@ -106,22 +106,22 @@ const WorldSeries = () => {
             <div className="relative overflow-hidden rounded-lg shadow-lg">
               <img 
                 src={heroImage} 
-                alt="World Series 2025 promotional graphic"
+                alt="NFL 2025 Season promotional graphic"
                 className="w-full h-[400px] object-cover"
               />
             </div>
 
-            {/* Dodgers */}
+            {/* NFC */}
             <div className="relative group overflow-hidden rounded-lg shadow-lg">
               <img 
                 src={venueImage} 
-                alt="LA Dodgers atmosphere"
+                alt="NFC Conference atmosphere"
                 className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-3xl font-bold text-white mb-2">Los Angeles Dodgers</h3>
-                <p className="text-sm text-white/80">Defending Champions Seek Dynasty</p>
+                <h3 className="text-3xl font-black text-white mb-2">NFC</h3>
+                <p className="text-sm text-white/80 font-semibold">Eagles · 49ers · Cowboys · Lions</p>
               </div>
             </div>
           </div>
@@ -132,11 +132,11 @@ const WorldSeries = () => {
       <section className="py-20 bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              📅 Upcoming World Series Watch Parties
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+              🏈 Upcoming NFL Watch Parties
             </h2>
             <p className="text-lg text-white/80">
-              Don't miss the action — <span className="text-orange-500 font-semibold">secure your table now</span>
+              Don't miss kickoff — <span className="text-orange-500 font-bold">reserve your spot now</span>
             </p>
           </div>
 
@@ -177,14 +177,14 @@ const WorldSeries = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
             <div className="order-2 lg:order-1">
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-                Experience Every Moment Live at Skybox
+              <h2 className="text-4xl md:text-5xl font-black text-foreground mb-6">
+                Experience Every Play Live at Skybox
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                When the <span className="text-orange-500 font-semibold">Dodgers</span> clinched the title, the roar was deafening. Now it's your turn to be part of history as <span className="text-orange-500 font-semibold">two titans clash</span> for baseball's ultimate prize.
+                From <span className="text-orange-500 font-bold">kickoff to the final whistle</span>, feel the energy of game day. Every touchdown, every tackle, every heart-stopping moment—<span className="text-orange-500 font-bold">live and loud</span> at Skybox Medellín.
               </p>
               <p className="text-lg text-muted-foreground mb-8">
-                At Skybox, every game is an experience. <span className="text-foreground font-semibold">Giant screens, premium sound, rooftop views</span>, and a crowd that lives every pitch with you.
+                At Skybox, every game is an event. <span className="text-foreground font-semibold">Giant screens, surround sound, rooftop views</span>, and a crowd that celebrates every yard with you.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button asChild size="lg" className="bg-orange-500 hover:bg-orange-600">
@@ -218,11 +218,11 @@ const WorldSeries = () => {
       <section className="py-20 bg-slate-900 relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
               Why Watch at Skybox?
             </h2>
-            <p className="text-lg text-white/80">
-              The ultimate sports viewing experience in Medellín
+            <p className="text-lg text-white/80 font-medium">
+              The ultimate NFL game-day experience in Medellín
             </p>
           </div>
 
@@ -241,9 +241,9 @@ const WorldSeries = () => {
               <div className="w-16 h-16 mx-auto rounded-full bg-orange-500/20 flex items-center justify-center">
                 <Utensils className="w-8 h-8 text-orange-400" />
               </div>
-              <h3 className="text-xl font-bold text-white">Signature BBQ</h3>
+              <h3 className="text-xl font-bold text-white">Game Day Eats</h3>
               <p className="text-sm text-white/80">
-                Game-night combos, wings, and playoff-themed drinks all night
+                Wings, burgers, loaded nachos, and ice-cold beers all game long
               </p>
             </div>
 
@@ -263,7 +263,7 @@ const WorldSeries = () => {
               </div>
               <h3 className="text-xl font-bold text-white">Every Game Live</h3>
               <p className="text-sm text-white/80">
-                All World Series games broadcast live with expert commentary
+                Sunday Night Football, Monday Night, Playoffs & Super Bowl
               </p>
             </div>
           </div>
@@ -274,11 +274,11 @@ const WorldSeries = () => {
       <section className="py-20 bg-slate-900">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
               The Skybox Experience
             </h2>
-            <p className="text-lg text-white/80">
-              <span className="text-orange-500 font-semibold">Giant screens. Epic moments. Your seat.</span>
+            <p className="text-lg text-white/80 font-medium">
+              <span className="text-orange-500 font-bold">Giant screens. Epic plays. Your gameday home.</span>
             </p>
           </div>
 
@@ -364,14 +364,14 @@ const WorldSeries = () => {
       <section className="py-20 bg-slate-50">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="text-4xl md:text-5xl font-bold text-orange-600">
-              Your Seat Is Waiting — Reserve Now!
+            <h2 className="text-4xl md:text-5xl font-black text-orange-600 uppercase">
+              Game Day Awaits — Reserve Your Spot!
             </h2>
-            <p className="text-lg font-semibold text-orange-600">
-              Two teams. One trophy. All the energy in one place.
+            <p className="text-lg font-bold text-orange-600">
+              32 teams. One championship. All the action in one place.
             </p>
-            <p className="text-lg text-muted-foreground">
-              Secure your spot for the <span className="text-orange-500 font-semibold">Fall Classic</span> and feel the stadium vibes in <span className="text-orange-500 font-semibold">Medellín</span>.
+            <p className="text-lg text-muted-foreground font-medium">
+              Secure your table for <span className="text-orange-500 font-bold">NFL Sundays</span> and feel the stadium atmosphere right here in <span className="text-orange-500 font-bold">Medellín</span>.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button asChild size="lg" className="text-lg px-8 py-6 bg-orange-500 hover:bg-orange-600">
