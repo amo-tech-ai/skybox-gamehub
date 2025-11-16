@@ -104,8 +104,8 @@ const Home = () => {
             <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
               UPCOMING EVENTS
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Upcoming World Series Watch Parties</h2>
-            <p className="text-xl text-muted-foreground">Don't miss this season's epic showdown</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Upcoming NFL Watch Parties</h2>
+            <p className="text-xl text-muted-foreground">Don't miss this season's epic games</p>
           </div>
 
           {isLoading ? (
