@@ -8,7 +8,7 @@ import TestimonialSlider from "@/components/home/TestimonialSlider";
 import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
 import EventBookingCTA from "@/components/home/EventBookingCTA";
 import { useUpcomingEvents } from "@/hooks/useEvents";
-import heroImage from "@/assets/hero-world-series.jpg";
+import heroImage from "@/assets/nfl-hero-home.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
 import foodSpread from "@/assets/food-spread.jpg";
 import sportsNFL from "@/assets/sports-nfl-action.jpg";
@@ -59,17 +59,17 @@ const Home = () => {
         <div className="relative z-10 container px-4 text-center text-white">
           <div className="animate-fade-in">
             <div className="trending-badge bg-primary/90 text-primary-foreground px-4 py-2 rounded-full text-sm font-bold mb-6 inline-block">
-              🔥 TRENDING EVENT
+              🏈 GAME DAY HEADQUARTERS
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 text-balance animate-scale-in">
-              Watch the World Series
+            <h1 className="text-5xl md:text-7xl font-black mb-4 text-balance animate-scale-in uppercase tracking-tight">
+              NFL 2025 Season
               <br />
-              <span className="text-primary">2025 Live at Skybox</span>
+              <span className="text-primary">Watch Parties at Skybox</span>
               <br />
               Medellín!
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-balance max-w-2xl mx-auto animate-fade-in-up">
-              Experience every legendary moment on massive screens at Medellín's premier rooftop sports bar
+            <p className="text-xl md:text-2xl mb-8 text-balance max-w-2xl mx-auto animate-fade-in-up font-semibold">
+              Experience every touchdown, tackle, and championship moment on massive screens at Medellín's ultimate game-day destination
             </p>
 
 
