@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet-async";
 import { blogArticles, getBlogCategories } from "@/data/blogArticles";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { Button } from "@/components/ui/button";
+import { NewsletterSignup } from "@/components/newsletter/NewsletterSignup";
 import { useState } from "react";
 
 const Blog = () => {
@@ -83,6 +84,23 @@ const Blog = () => {
                 </p>
               </div>
             )}
+          </div>
+        </section>
+
+        {/* Newsletter Signup Section */}
+        <section className="py-16 bg-accent/10">
+          <div className="container px-4">
+            <div className="max-w-2xl mx-auto text-center space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Stay Updated with Skybox
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Get the latest updates on upcoming events, game schedules, and exclusive offers delivered straight to your WhatsApp.
+              </p>
+              <div className="bg-background p-6 md:p-8 rounded-lg shadow-lg">
+                <NewsletterSignup source="blog_listing" variant="default" />
+              </div>
+            </div>
           </div>
         </section>
       </div>
