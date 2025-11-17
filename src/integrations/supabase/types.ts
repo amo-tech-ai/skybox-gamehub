@@ -510,6 +510,54 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscriptions: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string | null
+          deleted_at: string | null
+          email: string
+          id: string
+          metadata: Json | null
+          name: string | null
+          phone: string
+          source: string | null
+          status: string
+          subscribed_at: string | null
+          unsubscribe_token: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          phone: string
+          source?: string | null
+          status?: string
+          subscribed_at?: string | null
+          unsubscribe_token?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          phone?: string
+          source?: string | null
+          status?: string
+          subscribed_at?: string | null
+          unsubscribe_token?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null

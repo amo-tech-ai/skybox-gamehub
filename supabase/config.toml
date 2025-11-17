@@ -1,1 +1,4 @@
 project_id = "dbocegamkdnsorhtdbni"
+
+[functions.newsletter-confirmation]
+verify_jwt = false

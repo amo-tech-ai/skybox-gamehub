@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import ShareButton from "@/components/events/ShareButton";
 import { Card } from "@/components/ui/card";
+import { NewsletterSignup } from "@/components/newsletter/NewsletterSignup";
 import { generateArticleStructuredData } from "@/utils/structuredData";
 
 const BlogDetail = () => {
@@ -185,6 +186,19 @@ const BlogDetail = () => {
                     Reserve a Table
                   </Button>
                 </Link>
+              </div>
+            </div>
+
+            {/* Newsletter Signup */}
+            <div className="mt-12 p-8 bg-background border rounded-lg">
+              <div className="max-w-md mx-auto space-y-4">
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl font-bold">Never Miss an Update</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Subscribe to get event updates and exclusive offers via WhatsApp
+                  </p>
+                </div>
+                <NewsletterSignup source={`blog_article_${article.slug}`} variant="default" />
               </div>
             </div>
           </div>
