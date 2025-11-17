@@ -270,6 +270,69 @@ export type Database = {
           },
         ]
       }
+      event_confirmations: {
+        Row: {
+          booking_id: string | null
+          created_at: string | null
+          delivered_at: string | null
+          error_message: string | null
+          event_id: string | null
+          id: string
+          message_id: string | null
+          metadata: Json | null
+          name: string
+          phone: string
+          sent_at: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          event_id?: string | null
+          id?: string
+          message_id?: string | null
+          metadata?: Json | null
+          name: string
+          phone: string
+          sent_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          created_at?: string | null
+          delivered_at?: string | null
+          error_message?: string | null
+          event_id?: string | null
+          id?: string
+          message_id?: string | null
+          metadata?: Json | null
+          name?: string
+          phone?: string
+          sent_at?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_confirmations_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_confirmations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           capacity: number | null

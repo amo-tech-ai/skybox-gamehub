@@ -86,6 +86,8 @@ const Reserve = () => {
             eventDate: formattedDate,
             eventTime: formattedTime,
             eventLocation: selectedEvent.venue || 'Skybox Medellín',
+            eventId: selectedEvent.id,
+            bookingId: booking.id,
           });
 
           // Success with WhatsApp
