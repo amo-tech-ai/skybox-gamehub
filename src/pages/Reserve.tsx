@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCreateBooking } from "@/hooks/useBookings";
 import { useUpcomingEvents } from "@/hooks/useEvents";
 import { useAuth } from "@/hooks/useAuth";
+import { sendEventConfirmation } from "@/api/sendEventConfirmation";
 import { Calendar, Users } from "lucide-react";
 
 const Reserve = () => {
@@ -16,6 +17,7 @@ const Reserve = () => {
     eventId: "",
     partySize: "2",
     specialRequests: "",
+    phone: "", // Add phone field for WhatsApp
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -35,6 +37,16 @@ const Reserve = () => {
       return;
     }
 
+    // Validate phone number
+    if (!formData.phone || formData.phone.trim().length < 10) {
+      toast({
+        title: "Phone Number Required",
+        description: "Please enter a valid WhatsApp phone number (e.g., +573001234567)",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -49,19 +61,60 @@ const Reserve = () => {
         throw new Error('Booking creation failed');
       }
 
-      // Success!
-      // @ts-ignore - Booking type from mutation
-      const bookingId = booking.id || 'pending';
-      toast({
-        title: "Booking Confirmed! 🎉",
-        description: `Your booking ID is ${bookingId}. We'll contact you with details!`,
-      });
+      // Find the event details for WhatsApp message
+      const selectedEvent = upcomingEvents?.find(e => e.id === formData.eventId);
+      
+      if (selectedEvent) {
+        // Send WhatsApp confirmation
+        try {
+          const eventDate = new Date(selectedEvent.event_date);
+          const formattedDate = eventDate.toLocaleDateString('es-ES', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+          const formattedTime = eventDate.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+
+          await sendEventConfirmation({
+            name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Cliente',
+            phone: formData.phone,
+            eventName: selectedEvent.title,
+            eventDate: formattedDate,
+            eventTime: formattedTime,
+            eventLocation: selectedEvent.venue || 'Skybox Medellín',
+          });
+
+          // Success with WhatsApp
+          toast({
+            title: "¡Reserva Confirmada! 🎉",
+            description: "Te enviamos la confirmación por WhatsApp. ¡Nos vemos pronto!",
+          });
+        } catch (whatsappError) {
+          console.error('WhatsApp confirmation error:', whatsappError);
+          // Booking succeeded but WhatsApp failed - still show success
+          toast({
+            title: "Reserva Confirmada! 🎉",
+            description: "Tu reserva está confirmada. Revisa tu correo para más detalles.",
+          });
+        }
+      } else {
+        // No event found but booking succeeded
+        toast({
+          title: "Booking Confirmed! 🎉",
+          description: "Your booking is confirmed. Check your email for details!",
+        });
+      }
 
       // Reset form
       setFormData({
         eventId: "",
         partySize: "2",
         specialRequests: "",
+        phone: "",
       });
     } catch (error) {
       // Error handling
@@ -162,6 +215,23 @@ const Reserve = () => {
                   </div>
                 </div>
 
+                {/* WhatsApp Phone */}
+                <div>
+                  <Label htmlFor="phone">WhatsApp Number *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+573001234567"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    required
+                    disabled={!user}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Include country code (e.g., +57 for Colombia)
+                  </p>
+                </div>
+
                 {/* Special Requests */}
                 <div>
                   <Label htmlFor="specialRequests">Special Requests (Optional)</Label>
@@ -184,9 +254,11 @@ const Reserve = () => {
                   {isSubmitting ? "Processing..." : !user ? "Sign In to Book" : "Book Now"}
                 </Button>
 
-                <p className="text-sm text-muted-foreground text-center">
-                  You'll receive a confirmation email with booking details
-                </p>
+                {user && (
+                  <p className="text-xs text-center text-muted-foreground">
+                    📱 You'll receive instant WhatsApp confirmation after booking
+                  </p>
+                )}
               </form>
             </Card>
 
@@ -195,6 +267,10 @@ const Reserve = () => {
               <Card className="p-6 bg-background">
                 <h3 className="text-xl font-bold mb-4">Why Reserve?</h3>
                 <ul className="space-y-3">
+                  <li className="flex items-start gap-2">
+                    <span className="text-primary font-bold">✓</span>
+                    <span>Instant WhatsApp confirmation with event details</span>
+                  </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary font-bold">✓</span>
                     <span>Guaranteed seating for big games</span>
