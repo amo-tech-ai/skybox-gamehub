@@ -1,4 +1,5 @@
 import { Event } from "@/hooks/useEvents";
+import { BlogArticle } from "@/data/blogArticles";
 
 /**
  * Generate JSON-LD structured data for an event
@@ -72,4 +73,43 @@ export const generateOrganizationStructuredData = () => {
       // "https://twitter.com/skyboxmedellin"
     ]
   };
+};
+
+/**
+ * Generate JSON-LD structured data for a blog article
+ * Following schema.org Article specification
+ * @see https://schema.org/Article
+ */
+export const generateArticleStructuredData = (article: BlogArticle) => {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": article.title,
+    "description": article.excerpt,
+    "image": article.image,
+    "datePublished": article.publishedDate,
+    "dateModified": article.publishedDate,
+    "author": {
+      "@type": "Person",
+      "name": article.author.name,
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Skybox Medellín",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://lovable.dev/opengraph-image-p98pqg.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://skyboxmedellin.com/blog/${article.slug}`
+    },
+    "articleSection": article.category,
+    "keywords": article.tags.join(", "),
+    "wordCount": article.content.split(/\s+/).length,
+    "timeRequired": article.readTime,
+  };
+
+  return JSON.parse(JSON.stringify(structuredData));
 };
