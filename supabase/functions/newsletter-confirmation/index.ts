@@ -21,18 +21,29 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Newsletter confirmation requested for:", { name, phone });
 
-    // TODO: Add WhatsApp API integration here
-    // Once you provide your WhatsApp provider credentials (Twilio, etc.),
-    // this section will be implemented to send the confirmation message
-    
-    // Example for Twilio (uncomment and configure once credentials are added):
-    /*
+    // Get Twilio credentials from environment
     const twilioAccountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
     const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const twilioWhatsAppFrom = Deno.env.get('TWILIO_WHATSAPP_FROM');
 
-    const message = `¡Hola ${name}! 👋\n\nGracias por suscribirte al newsletter de Skybox Medellín.\n\nRecibirás actualizaciones sobre:\n✅ Próximos eventos deportivos\n🎉 Ofertas exclusivas\n📺 Horarios de partidos\n\n¡Nos vemos en Skybox! 🍻`;
+    if (!twilioAccountSid || !twilioAuthToken || !twilioWhatsAppFrom) {
+      console.error('Missing Twilio credentials');
+      throw new Error('WhatsApp service not configured');
+    }
 
+    // Create WhatsApp confirmation message
+    const message = `¡Hola ${name}! 👋
+
+Gracias por suscribirte al newsletter de Skybox Medellín.
+
+Recibirás actualizaciones sobre:
+✅ Próximos eventos deportivos
+🎉 Ofertas exclusivas
+📺 Horarios de partidos
+
+¡Nos vemos en Skybox! 🍻`;
+
+    // Send WhatsApp message via Twilio
     const response = await fetch(
       `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`,
       {
@@ -57,15 +68,11 @@ const handler = async (req: Request): Promise<Response> => {
 
     const result = await response.json();
     console.log('WhatsApp message sent successfully:', result.sid);
-    */
-
-    // For now, just log success
-    console.log("Newsletter confirmation logged (WhatsApp integration pending)");
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: "Confirmation logged. Configure WhatsApp credentials to enable messaging."
+        message: "WhatsApp confirmation sent successfully!"
       }),
       {
         status: 200,
