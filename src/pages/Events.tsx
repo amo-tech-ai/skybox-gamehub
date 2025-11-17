@@ -97,7 +97,7 @@ const Events = () => {
                 {filteredEvents.map((event) => (
                   <EventCard
                     key={event.id}
-                    slug={event.id}
+                    slug={event.slug || event.id}
                     title={event.title}
                     subtitle={event.description}
                     date={new Date(event.event_date).toLocaleDateString()}
