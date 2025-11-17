@@ -4,7 +4,7 @@
 
 ### 1. Edge Function Created ✓
 - **File:** `supabase/functions/event-confirmation/index.ts`
-- **Status:** Deployed and running
+- **Status:** Deployed and running with rate limiting + tracking
 - **Endpoint:** `https://dbocegamkdnsorhtdbni.supabase.co/functions/v1/event-confirmation`
 - **Features:**
   - Input validation (name, phone, eventName, eventDate required)
@@ -12,6 +12,9 @@
   - Spanish message formatting
   - Error handling and logging
   - CORS enabled
+  - **NEW:** Rate limiting (max 1 per phone per event)
+  - **NEW:** Database tracking of all confirmations
+  - **NEW:** Status tracking (pending, sent, failed)
 
 ### 2. Configuration Updated ✓
 - **File:** `supabase/config.toml`
@@ -41,7 +44,25 @@
   - `docs/WHATSAPP_EVENT_CONFIRMATION_PLAN.md` - Complete implementation plan
   - `docs/TESTING_GUIDE.md` - Comprehensive testing procedures
   - `docs/CURL_TEST_COMMAND.md` - Quick test commands
+  - `docs/RATE_LIMITING_GUIDE.md` - Rate limiting & tracking guide
   - `docs/IMPLEMENTATION_STATUS.md` - This file
+
+### 6. Database Table Created ✓
+- **Table:** `event_confirmations`
+- **Features:**
+  - Tracks all WhatsApp confirmations
+  - Links to bookings and events
+  - Stores status (pending, sent, failed)
+  - Records Twilio message IDs
+  - Stores error messages for failed sends
+  - Includes metadata (JSON) for event details
+  - RLS policies for security
+
+### 7. Rate Limiting Implemented ✓
+- **Rule:** Max 1 confirmation per phone per event
+- **How:** Checks database before sending
+- **Result:** Prevents spam and duplicate messages
+- **Tracking:** All attempts logged in database
 
 ---
 

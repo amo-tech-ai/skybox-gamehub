@@ -10,6 +10,8 @@ export interface EventConfirmationPayload {
   eventDate: string;
   eventTime?: string;
   eventLocation?: string;
+  eventId?: string;
+  bookingId?: string;
 }
 
 /**

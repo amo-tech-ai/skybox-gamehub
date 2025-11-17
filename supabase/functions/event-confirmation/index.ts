@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,6 +13,8 @@ interface EventConfirmationRequest {
   eventDate: string;
   eventTime?: string;
   eventLocation?: string;
+  eventId?: string;
+  bookingId?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,7 +25,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const body = await req.json() as EventConfirmationRequest;
-    const { name, phone, eventName, eventDate, eventTime, eventLocation } = body;
+    const { name, phone, eventName, eventDate, eventTime, eventLocation, eventId, bookingId } = body;
 
     // Validate required fields
     if (!name || !phone || !eventName || !eventDate) {
@@ -36,7 +39,39 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log('Event confirmation requested for:', { name, phone, eventName, eventDate });
+    console.log('Event confirmation requested for:', { name, phone, eventName, eventDate, eventId, bookingId });
+
+    // Initialize Supabase client with service role key for admin access
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // RATE LIMITING: Check if confirmation already sent for this phone + event
+    if (eventId) {
+      const { data: existingConfirmation } = await supabase
+        .from('event_confirmations')
+        .select('id, sent_at, status')
+        .eq('phone', phone)
+        .eq('event_id', eventId)
+        .eq('status', 'sent')
+        .maybeSingle();
+
+      if (existingConfirmation) {
+        console.log('Rate limit: Confirmation already sent:', existingConfirmation);
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: 'Confirmation already sent for this event',
+            rateLimited: true,
+            existingConfirmation
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', ...corsHeaders },
+          }
+        );
+      }
+    }
 
     // Get Twilio credentials from environment
     const twilioAccountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
@@ -72,6 +107,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Sending WhatsApp message:', { to: phone, messagePreview: message.substring(0, 100) });
 
+    // Create confirmation record BEFORE sending (status: pending)
+    const { data: confirmationRecord, error: insertError } = await supabase
+      .from('event_confirmations')
+      .insert({
+        booking_id: bookingId || null,
+        event_id: eventId || null,
+        phone,
+        name,
+        status: 'pending',
+        metadata: {
+          eventName,
+          eventDate,
+          eventTime,
+          eventLocation
+        }
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Error creating confirmation record:', insertError);
+      // Continue anyway - don't block on DB insert
+    }
+
     // Send WhatsApp message via Twilio
     const twilioResponse = await fetch(
       `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`,
@@ -92,17 +151,42 @@ const handler = async (req: Request): Promise<Response> => {
     if (!twilioResponse.ok) {
       const errorText = await twilioResponse.text();
       console.error('Twilio API error:', errorText);
+
+      // Update confirmation record with error
+      if (confirmationRecord) {
+        await supabase
+          .from('event_confirmations')
+          .update({
+            status: 'failed',
+            error_message: errorText.substring(0, 500)
+          })
+          .eq('id', confirmationRecord.id);
+      }
+
       throw new Error('Failed to send WhatsApp message');
     }
 
     const result = await twilioResponse.json();
     console.log('WhatsApp event confirmation sent successfully:', result.sid);
 
+    // Update confirmation record with success
+    if (confirmationRecord) {
+      await supabase
+        .from('event_confirmations')
+        .update({
+          status: 'sent',
+          message_id: result.sid,
+          sent_at: new Date().toISOString()
+        })
+        .eq('id', confirmationRecord.id);
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
         message: 'WhatsApp event confirmation sent successfully!',
-        messageId: result.sid
+        messageId: result.sid,
+        confirmationId: confirmationRecord?.id
       }),
       {
         status: 200,
