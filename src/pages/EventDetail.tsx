@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useEventBySlug } from "@/hooks/useEvents";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, Gift, Utensils } from "lucide-react";
@@ -89,8 +90,33 @@ const EventDetail = () => {
     ];
   }
 
+  // Generate Open Graph meta data
+  const pageTitle = `${event.title} | Skybox Medellín`;
+  const pageDescription = event.description || `Join us at Skybox Medellín for ${event.title}. ${formattedDate} at ${formattedTime}`;
+  const pageImage = event.image_url || 'https://lovable.dev/opengraph-image-p98pqg.png';
+  const pageUrl = `https://skyboxmedellin.com/events/${event.slug}`;
+
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="event" />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:image" content={pageImage} />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={pageUrl} />
+        <meta property="twitter:title" content={pageTitle} />
+        <meta property="twitter:description" content={pageDescription} />
+        <meta property="twitter:image" content={pageImage} />
+      </Helmet>
+
       {/* Hero Section */}
       <section
         className="relative h-[60vh] flex items-center justify-center text-center"
