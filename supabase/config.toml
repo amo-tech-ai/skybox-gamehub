@@ -5,3 +5,26 @@ verify_jwt = false
 
 [functions.event-confirmation]
 verify_jwt = false
+
+[functions.vip-broadcast]
+verify_jwt = false
+
+[functions.event-registration-check]
+verify_jwt = false
+
+[functions.twilio-status-webhook]
+verify_jwt = false
+
+[functions.event-analytics-daily]
+verify_jwt = false
+schedule = "0 3 * * *"
+
+[functions.event-feedback-request]
+verify_jwt = false
+
+[functions.loyalty-points-update]
+verify_jwt = false
+
+[functions.sports-video-sync]
+verify_jwt = false
+schedule = "0 */4 * * *"
