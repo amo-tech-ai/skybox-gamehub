@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
@@ -26,9 +27,10 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
+    <HelmetProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
       <div className="flex flex-col min-h-screen">
         <Header />
         <main className="flex-1">
@@ -56,6 +58,7 @@ const App = () => (
         <Footer />
       </div>
     </BrowserRouter>
+    </HelmetProvider>
   </QueryClientProvider>
 );
 
