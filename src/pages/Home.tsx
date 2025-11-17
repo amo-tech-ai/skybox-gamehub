@@ -131,7 +131,7 @@ const Home = () => {
                         location={event.venue}
                         category={event.category}
                         image={event.image_url || heroImage}
-                        slug={event.id}
+                        slug={event.slug || event.id}
                       />
                     </div>
                   ))
