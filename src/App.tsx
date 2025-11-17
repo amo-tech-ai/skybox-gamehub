@@ -21,6 +21,7 @@ import VIPRooftop from "./pages/VIPRooftop";
 import FriendsgivingEvent from "./pages/FriendsgivingEvent";
 import PrivateEvents from "./pages/PrivateEvents";
 import CorporateBooking from "./pages/CorporateBooking";
+import Sitemap from "./pages/Sitemap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
             <Route path="/friendsgiving" element={<FriendsgivingEvent />} />
             <Route path="/private-events" element={<PrivateEvents />} />
             <Route path="/corporate-booking" element={<CorporateBooking />} />
+            <Route path="/sitemap" element={<Sitemap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

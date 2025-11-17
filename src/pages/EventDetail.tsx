@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, Gift, Utensils } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
+import ShareButton from "@/components/events/ShareButton";
 import { Loader2 } from "lucide-react";
+import { generateEventStructuredData } from "@/utils/structuredData";
 
 // Import World Series images
 import worldSeriesHero from "@/assets/world-series-hero.jpg";
@@ -96,6 +98,9 @@ const EventDetail = () => {
   const pageImage = event.image_url || 'https://lovable.dev/opengraph-image-p98pqg.png';
   const pageUrl = `https://skyboxmedellin.com/events/${event.slug}`;
 
+  // Generate JSON-LD structured data
+  const structuredData = generateEventStructuredData(event);
+
   return (
     <div className="min-h-screen">
       <Helmet>
@@ -115,6 +120,11 @@ const EventDetail = () => {
         <meta property="twitter:title" content={pageTitle} />
         <meta property="twitter:description" content={pageDescription} />
         <meta property="twitter:image" content={pageImage} />
+        
+        {/* JSON-LD Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
       </Helmet>
 
       {/* Hero Section */}
@@ -160,6 +170,11 @@ const EventDetail = () => {
                 Chat on WhatsApp
               </a>
             </Button>
+            <ShareButton
+              title={event.title}
+              description={pageDescription}
+              url={pageUrl}
+            />
           </div>
         </div>
       </section>
