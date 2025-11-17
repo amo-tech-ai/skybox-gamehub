@@ -22,6 +22,8 @@ import FriendsgivingEvent from "./pages/FriendsgivingEvent";
 import PrivateEvents from "./pages/PrivateEvents";
 import CorporateBooking from "./pages/CorporateBooking";
 import Sitemap from "./pages/Sitemap";
+import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +55,8 @@ const App = () => (
             <Route path="/private-events" element={<PrivateEvents />} />
             <Route path="/corporate-booking" element={<CorporateBooking />} />
             <Route path="/sitemap" element={<Sitemap />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
