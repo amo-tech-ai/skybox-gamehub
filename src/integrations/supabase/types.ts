@@ -333,6 +333,47 @@ export type Database = {
           },
         ]
       }
+      event_stats_daily: {
+        Row: {
+          checkins: number | null
+          created_at: string | null
+          date: string
+          event_id: string | null
+          id: number
+          registrations: number | null
+          updated_at: string | null
+          views: number | null
+        }
+        Insert: {
+          checkins?: number | null
+          created_at?: string | null
+          date: string
+          event_id?: string | null
+          id?: number
+          registrations?: number | null
+          updated_at?: string | null
+          views?: number | null
+        }
+        Update: {
+          checkins?: number | null
+          created_at?: string | null
+          date?: string
+          event_id?: string | null
+          id?: number
+          registrations?: number | null
+          updated_at?: string | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_stats_daily_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           capacity: number | null
@@ -515,6 +556,38 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      loyalty_history: {
+        Row: {
+          created_at: string | null
+          customer_id: string | null
+          id: number
+          points: number
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id?: string | null
+          id?: number
+          points: number
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string | null
+          id?: number
+          points?: number
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_history_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       menu_items: {
         Row: {
@@ -997,6 +1070,45 @@ export type Database = {
           created_at?: string | null
           id?: string
           name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      videos: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          is_goat: boolean | null
+          source: string
+          source_id: string
+          sport: string | null
+          thumbnail_url: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_goat?: boolean | null
+          source: string
+          source_id: string
+          sport?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_goat?: boolean | null
+          source?: string
+          source_id?: string
+          sport?: string | null
+          thumbnail_url?: string | null
+          title?: string | null
           updated_at?: string | null
         }
         Relationships: []
