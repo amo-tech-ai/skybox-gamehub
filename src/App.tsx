@@ -25,6 +25,7 @@ import Sitemap from "./pages/Sitemap";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/world-series" element={<WorldSeries />} />
             <Route path="/sports-schedule" element={<SportsSchedule />} />
             <Route path="/top-teams" element={<TopTeams />} />
