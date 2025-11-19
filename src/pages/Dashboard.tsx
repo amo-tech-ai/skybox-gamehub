@@ -1,8 +1,10 @@
 import { Helmet } from "react-helmet-async";
-import { Search, Bell, MoreVertical } from "lucide-react";
+import { Search, Bell } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import StatsCard from "@/components/dashboard/StatsCard";
 import LineChartCard from "@/components/dashboard/LineChartCard";
 import BarChartCard from "@/components/dashboard/BarChartCard";
@@ -19,37 +21,44 @@ export default function Dashboard() {
         <title>Dashboard - Skybox Medellín Admin</title>
       </Helmet>
 
-      <div className="min-h-screen bg-background">
-        {/* Top Bar */}
-        <header className="sticky top-0 z-10 border-b bg-card px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Hola, bienvenido a Skybox</p>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="relative hidden md:block">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar..."
-                  className="w-64 pl-10"
-                />
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-background">
+          <DashboardSidebar />
+          
+          <div className="flex-1 flex flex-col">
+            {/* Top Bar */}
+            <header className="sticky top-0 z-10 border-b bg-card px-4 lg:px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger />
+                  <div>
+                    <h1 className="text-xl lg:text-2xl font-bold text-foreground">Dashboard</h1>
+                    <p className="text-xs lg:text-sm text-muted-foreground hidden sm:block">Hola, bienvenido a Skybox</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 lg:gap-4">
+                  <div className="relative hidden lg:block">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar..."
+                      className="w-48 xl:w-64 pl-10"
+                    />
+                  </div>
+                  
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Bell className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </Button>
+                  
+                  <Avatar className="h-8 w-8 lg:h-10 lg:w-10">
+                    <AvatarFallback>AD</AvatarFallback>
+                  </Avatar>
+                </div>
               </div>
-              
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-              </Button>
-              
-              <Avatar>
-                <AvatarFallback>AD</AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        </header>
+            </header>
 
-        {/* Main Content */}
-        <main className="p-6">
+            {/* Main Content */}
+            <main className="flex-1 p-4 lg:p-6 overflow-auto">
           <div className="mx-auto max-w-7xl space-y-6">
             {/* KPI Cards Row */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -112,9 +121,11 @@ export default function Dashboard() {
               activity={activity}
               loading={loading}
             />
-          </div>
-        </main>
+            </div>
+          </main>
+        </div>
       </div>
+      </SidebarProvider>
     </>
   );
 }

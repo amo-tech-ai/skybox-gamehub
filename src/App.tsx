@@ -26,6 +26,11 @@ import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import DashboardEvents from "./pages/DashboardEvents";
+import DashboardReservations from "./pages/DashboardReservations";
+import DashboardCustomers from "./pages/DashboardCustomers";
+import DashboardWhatsApp from "./pages/DashboardWhatsApp";
+import DashboardSettings from "./pages/DashboardSettings";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +46,11 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/events" element={<DashboardEvents />} />
+            <Route path="/dashboard/reservations" element={<DashboardReservations />} />
+            <Route path="/dashboard/customers" element={<DashboardCustomers />} />
+            <Route path="/dashboard/whatsapp" element={<DashboardWhatsApp />} />
+            <Route path="/dashboard/settings" element={<DashboardSettings />} />
             <Route path="/world-series" element={<WorldSeries />} />
             <Route path="/sports-schedule" element={<SportsSchedule />} />
             <Route path="/top-teams" element={<TopTeams />} />
