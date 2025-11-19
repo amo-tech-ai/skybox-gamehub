@@ -7,6 +7,7 @@ import PromoBanner from "@/components/home/PromoBanner";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import FeaturePhotoCard from "@/components/home/FeaturePhotoCard";
 import EventBookingCTA from "@/components/home/EventBookingCTA";
+import { YouTubePlayer } from "@/components/video/YouTubePlayer";
 import { useUpcomingEvents } from "@/hooks/useEvents";
 import heroImage from "@/assets/nfl-hero-home.jpg";
 import venueImage from "@/assets/venue-interior.jpg";
@@ -96,6 +97,28 @@ const Home = () => {
 
       {/* Promo Banner */}
       <PromoBanner />
+
+      {/* The Goats Muhammad Ali Video Section */}
+      <section className="py-16 bg-background">
+        <div className="container px-4">
+          <div className="text-center mb-8">
+            <div className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
+              LEGENDARY MOMENTS
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">The Goats Muhammad Ali</h2>
+            <p className="text-xl text-muted-foreground">Witness greatness in action</p>
+          </div>
+          
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
+              <YouTubePlayer 
+                videoId="1LSewbS5eQI"
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Upcoming Events */}
       <section className="py-16 bg-background">

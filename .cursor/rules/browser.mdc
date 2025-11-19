@@ -1,0 +1,213 @@
+# Cursor Browser Agent Rule
+
+**Purpose**: Guide for using Cursor Browser tools to interact with websites, test applications, and preview local development servers.
+
+---
+
+## 🧭 What Cursor Browser Does
+
+Cursor Browser lets the AI Agent **see and interact with websites directly** inside your editor:
+- Open and navigate web pages
+- Click, scroll, and type
+- Capture screenshots
+- Read console logs and network traffic
+- Run accessibility checks
+- Test responsive designs
+
+**No extra setup needed** - works out of the box.
+
+---
+
+## ⚙️ Opening the Browser
+
+### Inline Pane (Recommended for Preview)
+Runs inside Cursor - best for quick previews of local dev servers.
+
+```
+@browser open http://localhost:4200
+```
+
+### External Chrome Window (Recommended for Testing)
+Full Chrome session - great for comprehensive web testing.
+
+```
+@browser open --chrome http://localhost:4200
+```
+
+---
+
+## 🖱️ Main Browser Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `@browser navigate <url>` | Open a webpage | `@browser navigate https://google.com` |
+| `@browser click <selector>` | Click button/link | `@browser click #login` |
+| `@browser type <selector> <text>` | Type in field | `@browser type input[name=email] test@example.com` |
+| `@browser scroll <direction>` | Scroll page | `@browser scroll down` |
+| `@browser screenshot` | Capture current screen | `@browser screenshot` |
+| `@browser console` | Read console logs | `@browser console` |
+| `@browser network` | Check network requests | `@browser network` |
+
+---
+
+## 🧠 Smart Features
+
+- **Auto-detects local servers**: Knows if dev apps are running (e.g., `localhost:3000`, `localhost:4200`)
+- **Efficient logs**: Reads only relevant lines (saves tokens)
+- **Visual feedback**: Uses screenshots to "see" UI and detect issues
+- **Accessibility checks**: Test contrast, ARIA labels, alt text
+
+---
+
+## 🧰 Common Use Cases for This Project
+
+### Testing Local Development Servers
+
+**Postiz Development**:
+```
+@browser open --chrome http://localhost:4200
+@browser screenshot
+@browser console
+```
+
+**Skybox Application**:
+```
+@browser navigate http://localhost:5173
+@browser check accessibility
+```
+
+### UI Testing & Debugging
+
+```
+@browser open http://localhost:4200
+@browser screenshot
+@browser click button#login
+@browser type input#email "test@example.com"
+@browser screenshot
+```
+
+### Accessibility Auditing
+
+```
+@browser check accessibility
+@browser analyze design
+```
+
+---
+
+## 🔒 Security & Approval Settings
+
+**Recommended**: Keep **Manual Approval** mode ON for safety.
+
+Browser actions require approval by default. Configure in:
+- **Cursor Settings** → **Chat** → **Auto-Run**
+
+**Available modes**:
+- **Manual approval** (recommended): Review each action
+- **Allow-listed actions**: Auto-run trusted actions
+- **Auto-run**: All actions execute immediately (use with caution)
+
+**⚠️ Never use auto-run with untrusted code or unfamiliar websites.**
+
+---
+
+## 💡 Best Practices
+
+1. **For Local Dev**: Use inline pane for quick previews
+   ```
+   @browser open http://localhost:4200
+   ```
+
+2. **For Testing**: Use external Chrome for full testing
+   ```
+   @browser open --chrome http://localhost:4200
+   ```
+
+3. **Always screenshot after actions** to verify results:
+   ```
+   @browser click #submit
+   @browser screenshot
+   ```
+
+4. **Check console for errors** when debugging:
+   ```
+   @browser console
+   ```
+
+5. **Monitor network requests** for API calls:
+   ```
+   @browser network
+   ```
+
+---
+
+## ⚡ Quick Examples
+
+### Preview Local Postiz Server
+```bash
+@browser open http://localhost:4200
+@browser screenshot
+```
+
+### Test Form Submission
+```bash
+@browser open http://localhost:4200/login
+@browser type input[name=email] "test@example.com"
+@browser type input[name=password] "password123"
+@browser click button[type=submit]
+@browser screenshot
+```
+
+### Accessibility Check
+```bash
+@browser open http://localhost:4200
+@browser check accessibility
+```
+
+### Responsive Design Test
+```bash
+@browser open http://localhost:4200
+@browser resize mobile
+@browser screenshot
+```
+
+---
+
+## 📋 When to Use Browser Tools
+
+✅ **Use Browser Tools When**:
+- Testing local development servers
+- Verifying UI changes and designs
+- Running accessibility audits
+- Debugging frontend issues
+- Testing form submissions
+- Checking responsive designs
+- Validating API integrations
+
+❌ **Don't Use Browser Tools For**:
+- Production deployments (use staging instead)
+- Untrusted websites (security risk)
+- Sensitive operations without approval
+- Automated production testing
+
+---
+
+## 🎯 Recommended Models
+
+For best browser performance:
+- **GPT-5**
+- **Claude Sonnet 4.5**
+- **Auto Mode** (lets Cursor pick the best model)
+
+---
+
+## 📚 References
+
+- [Cursor Browser Documentation](https://cursor.com/docs/agent/browser)
+- Local Development: See `postiz-docs/03-POSTIZ-LOCALHOST-QUICKSTART.md`
+- Deployment: See `postiz-docs/02-POSTIZ-DEPLOYMENT-INTEGRATION-PLAN.md`
+
+---
+
+**Last Updated**: October 30, 2025  
+**Rule Version**: 1.0

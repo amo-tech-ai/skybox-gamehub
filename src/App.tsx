@@ -24,6 +24,7 @@ import CorporateBooking from "./pages/CorporateBooking";
 import Sitemap from "./pages/Sitemap";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import YouTubeVideos from "./pages/YouTubeVideos";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import DashboardEvents from "./pages/DashboardEvents";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/sitemap" element={<Sitemap />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route path="/videos" element={<YouTubeVideos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

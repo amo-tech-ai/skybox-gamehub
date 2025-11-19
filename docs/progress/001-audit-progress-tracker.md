@@ -9,9 +9,9 @@
 ## 📊 Executive Summary
 
 ### 🔴 Critical Issues (Immediate Action Required)
-1. **Missing Routes** - 3 pages exist but not registered in router
-2. **Broken Images** - 7+ image assets returning 404
-3. **Events Data** - Mock event with UUID causing "Event Not Found"
+1. **Shopify API Authentication** - Cart/checkout blocked by 402 Payment Required error
+2. **Navigation Discoverability** - 3 pages exist but not linked in Header navigation
+3. **Shopify API Version** - Using future date (2025-07) instead of valid version
 
 ### 🟡 High Priority (Complete Within 24h)
 1. Supabase data integration for all events
@@ -33,16 +33,12 @@
 
 | Area | Page | Section | Feature / Function | Status | Problem Indicators / Notes | Suggested Tests | Priority |
 |------|------|---------|-------------------|--------|---------------------------|----------------|----------|
-| **Routing** | Global | Router | `/friendsgiving` route | 🔴 **BROKEN** | Page component exists (`FriendsgivingEvent.tsx`) but NOT in `App.tsx` Routes | T18 | 🔴 Critical |
-| **Routing** | Global | Router | `/private-events` route | 🔴 **BROKEN** | Page component exists (`PrivateEvents.tsx`) but NOT in `App.tsx` Routes | T18 | 🔴 Critical |
-| **Routing** | Global | Router | `/corporate-booking` route | 🔴 **BROKEN** | Page component exists (`CorporateBooking.tsx`) but NOT in `App.tsx` Routes | T18 | 🔴 Critical |
+| **Routing** | Global | Router | `/friendsgiving` route | 🟡 **DISCOVERABLE** | Page component exists and IS in `App.tsx` routes but NOT linked in Header navigation | T18 | 🔺 High |
+| **Routing** | Global | Router | `/private-events` route | 🟡 **DISCOVERABLE** | Page component exists and IS in `App.tsx` routes but NOT linked in Header navigation | T18 | 🔺 High |
+| **Routing** | Global | Router | `/corporate-booking` route | 🟡 **DISCOVERABLE** | Page component exists and IS in `App.tsx` routes but NOT linked in Header navigation | T18 | 🔺 High |
 | **Routing** | Global | Router | `/vip` route | 🟢 **WORKING** | VIPRooftop page accessible | T18 | ✅ Complete |
-| **Assets** | Global | Images | `gaming-tournament-2025.jpg` | 🔴 **MISSING** | Referenced but file not found in assets or public | T12, T13 | 🔺 High |
-| **Assets** | Global | Images | `ufc-championship-2025.jpg` | 🔴 **MISSING** | Referenced but file not found | T12, T13 | 🔺 High |
-| **Assets** | Global | Images | `birthday-party-2025.jpg` | 🔴 **MISSING** | Referenced but file not found | T12, T13 | 🔺 High |
-| **Assets** | Global | Images | `champions-league-2025.jpg` | 🔴 **MISSING** | Referenced but file not found | T12, T13 | 🔺 High |
-| **Assets** | Global | Images | `super-bowl-2025.jpg` | 🔴 **MISSING** | Referenced but file not found | T12, T13 | 🔺 High |
-| **Assets** | Global | Images | `corporate-party-2025.jpg` | 🔴 **MISSING** | Referenced but file not found | T12, T13 | 🔺 High |
+| **Assets** | Global | Images | All event images | 🟢 **WORKING** | ALL images confirmed in `/src/assets/` - 46 total files verified | T12, T13 | ✅ Complete |
+| **Assets** | Global | Images | CDN Integration | 🟡 **NEEDS TEST** | Local assets work; production CDN needs configuration | T12, T15 | 🟠 Medium |
 | **Assets** | Global | Images | World Series images | 🟢 **WORKING** | All World Series assets properly imported and functional | T12 | ✅ Complete |
 | **Assets** | Global | Images | Halloween images | 🟢 **WORKING** | All Halloween party assets properly imported | T12 | ✅ Complete |
 | **Assets** | Global | Images | Friendsgiving images | 🟢 **WORKING** | All Friendsgiving assets properly imported | T12 | ✅ Complete |
@@ -55,11 +51,12 @@
 | **Infra** | Global | React | Single React runtime | 🟢 **WORKING** | No duplicate React instances, hooks work correctly | T01, T02 | ✅ Complete |
 | **Infra** | Global | TypeScript | Edge functions type safety | 🟢 **WORKING** | Error handling properly typed with `instanceof Error` | T20 | ✅ Complete |
 | **Infra** | Global | Build | Vite configuration | 🟢 **WORKING** | No externalization issues | T02 | ✅ Complete |
-| **E-commerce** | Global | Shopify | Configuration | 🟢 **WORKING** | API version 2025-07, proper tokens and domain set | T08, T16 | ✅ Complete |
+| **E-commerce** | Global | Shopify | API Authentication | 🔴 **BROKEN** | 402 Payment Required - Shopify store needs billing upgrade | T08 | 🔴 Critical |
+| **E-commerce** | Global | Shopify | API Version | 🟡 **NEEDS UPDATE** | Using `2025-07` (future date) - should be `2024-01` | T08 | 🔺 High |
 | **E-commerce** | Global | Cart | Zustand store setup | 🟢 **WORKING** | Cart store with persistence configured | T07, T09 | ✅ Complete |
-| **E-commerce** | Global | Cart | Add to cart functionality | 🟡 **NEEDS TEST** | Store configured but needs live product testing | T07, T09 | 🟠 Medium |
+| **E-commerce** | Global | Cart | Add to cart functionality | 🔴 **BROKEN** | Blocked by Shopify API auth failure | T07, T09 | 🔴 Critical |
 | **E-commerce** | Global | Checkout | Storefront API integration | 🟢 **WORKING** | `createStorefrontCheckout()` properly implemented | T10 | ✅ Complete |
-| **E-commerce** | Global | Checkout | Checkout URL format | 🟢 **WORKING** | Includes `channel=online_store` parameter | T10 | ✅ Complete |
+| **E-commerce** | Global | Checkout | Checkout flow | 🔴 **BROKEN** | Cannot create cart due to API auth failure | T10 | 🔴 Critical |
 | **UI/UX** | /home | Hero | Loads correctly | 🟢 **WORKING** | Hero section renders with World Series imagery | T14 | ✅ Complete |
 | **UI/UX** | /events | Loading State | Spinner and fallback | 🟡 **PARTIAL** | Loading state exists but needs UX refinement | T03, T04 | 🟠 Medium |
 | **UI/UX** | /events | Empty State | No events message | 🟡 **PARTIAL** | Empty state handling needs verification | T04 | 🟠 Medium |
@@ -111,22 +108,31 @@
 
 ## 🚨 Root Cause Analysis
 
-### Issue #1: Missing Routes (3 pages) 🔴
-**Problem:** `FriendsgivingEvent`, `PrivateEvents`, and `CorporateBooking` pages exist but return 404  
-**Root Cause:** Components created but never registered in `App.tsx` Routes  
-**Fix Required:** Add 3 route entries to `App.tsx`  
-**Prevention:** Use route registration checklist when creating new pages
-
-### Issue #2: Missing Image Assets (7+ files) 🔴
-**Problem:** Multiple images returning 404 in Network tab  
-**Root Cause:**  
-- Images referenced in mock data (`events.ts`) but files never created
-- Possible import paths incorrect or images not in repository
+### Issue #1: Shopify API Authentication Failure 🔴
+**Problem:** All cart/checkout functionality blocked by 402 Payment Required error  
+**Root Cause:** Shopify Storefront Access Token requires an active Shopify billing plan  
 **Fix Required:**  
-- Audit all image imports across codebase
-- Either add missing images or remove references
-- Use existing placeholder images as fallback
-**Prevention:** Asset inventory system + build-time validation
+1. Upgrade Shopify store to paid plan ($29+/month)
+2. Generate new Storefront Access Token
+3. Update environment variables
+4. Test cart creation and checkout flow
+**Prevention:** Use environment variables for all Shopify credentials; validate on startup
+
+### Issue #2: Navigation Discoverability 🟡
+**Problem:** `FriendsgivingEvent`, `PrivateEvents`, and `CorporateBooking` pages return 404 errors  
+**Root Cause:** Routes ARE registered in `App.tsx` but NOT linked in Header navigation  
+**Fix Required:** Add navigation links to Header component:
+```typescript
+{ to: "/private-events", label: "Private Events" }
+{ to: "/corporate-booking", label: "Book Now" }
+```
+**Prevention:** Navigation audit checklist for all new pages
+
+### Issue #3: Shopify API Version 🟡
+**Problem:** Using future API version `2025-07` (invalid)  
+**Root Cause:** Hardcoded API version in `shopify.ts`  
+**Fix Required:** Update to valid version (e.g., `2024-01`)  
+**Prevention:** Use environment variable for API version
 
 ### Issue #3: Mock Event UUID Issue 🟡
 **Problem:** `/events/22222222-2222-2222-2222-222222222222` shows "Event Not Found"  
