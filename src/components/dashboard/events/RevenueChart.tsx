@@ -3,23 +3,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
-const data = [
-  { month: "Jan", revenue: 45000000, tickets: 820 },
-  { month: "Feb", revenue: 52000000, tickets: 950 },
-  { month: "Mar", revenue: 48000000, tickets: 880 },
-  { month: "Apr", revenue: 61000000, tickets: 1100 },
-  { month: "May", revenue: 58320000, tickets: 1050 },
-  { month: "Jun", revenue: 55000000, tickets: 990 },
-];
+interface RevenueChartProps {
+  data: Array<{
+    month: string;
+    revenue: number;
+  }>;
+}
 
-export default function RevenueChart() {
+export default function RevenueChart({ data }: RevenueChartProps) {
   const [view, setView] = useState<"revenue" | "tickets">("revenue");
 
   const formatCurrency = (value: number) => {
     return `$${(value / 1000000).toFixed(1)}M`;
   };
 
-  const currentMonth = data[data.length - 1];
+  const currentMonth = data.length > 0 ? data[data.length - 1] : { month: "", revenue: 0 };
 
   return (
     <Card>
@@ -36,10 +34,7 @@ export default function RevenueChart() {
         <div className="mt-4">
           <p className="text-sm text-muted-foreground">This month</p>
           <p className="text-2xl font-bold">
-            {view === "revenue" 
-              ? `$ ${currentMonth.revenue.toLocaleString()} COP`
-              : `${currentMonth.tickets.toLocaleString()} tickets`
-            }
+            $ {currentMonth.revenue.toLocaleString()} COP
           </p>
         </div>
       </CardHeader>
@@ -53,14 +48,10 @@ export default function RevenueChart() {
             />
             <YAxis 
               className="text-xs text-muted-foreground"
-              tickFormatter={view === "revenue" ? formatCurrency : undefined}
+              tickFormatter={formatCurrency}
             />
             <Tooltip 
-              formatter={(value: number) => 
-                view === "revenue" 
-                  ? `$ ${value.toLocaleString()} COP`
-                  : `${value} tickets`
-              }
+              formatter={(value: number) => `$ ${value.toLocaleString()} COP`}
               contentStyle={{
                 backgroundColor: "hsl(var(--card))",
                 border: "1px solid hsl(var(--border))",
@@ -68,7 +59,7 @@ export default function RevenueChart() {
               }}
             />
             <Bar 
-              dataKey={view === "revenue" ? "revenue" : "tickets"} 
+              dataKey="revenue" 
               fill="hsl(var(--primary))" 
               radius={[8, 8, 0, 0]}
             />

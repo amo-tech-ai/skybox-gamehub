@@ -1,14 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Sold Out", value: 1234, color: "#ef4444" },
-  { name: "Fully Booked", value: 892, color: "#f59e0b" },
-  { name: "Available", value: 654, color: "#10b981" },
-];
+interface TicketSalesChartProps {
+  data: {
+    soldOut: number;
+    fullyBooked: number;
+    available: number;
+  };
+}
 
-export default function TicketSalesChart() {
-  const total = data.reduce((sum, item) => sum + item.value, 0);
+export default function TicketSalesChart({ data }: TicketSalesChartProps) {
+  const chartData = [
+    { name: "Sold Out", value: data.soldOut, color: "#ef4444" },
+    { name: "Fully Booked", value: data.fullyBooked, color: "#f59e0b" },
+    { name: "Available", value: data.available, color: "#10b981" },
+  ];
+
+  const total = chartData.reduce((sum, item) => sum + item.value, 0);
 
   return (
     <Card>
@@ -21,7 +29,7 @@ export default function TicketSalesChart() {
             <ResponsiveContainer width={200} height={200}>
               <PieChart>
                 <Pie
-                  data={data}
+                  data={chartData}
                   cx="50%"
                   cy="50%"
                   innerRadius={60}
@@ -29,7 +37,7 @@ export default function TicketSalesChart() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {data.map((entry, index) => (
+                  {chartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -44,7 +52,7 @@ export default function TicketSalesChart() {
           </div>
 
           <div className="flex-1 space-y-3 w-full">
-            {data.map((item) => (
+            {chartData.map((item) => (
               <div key={item.name} className="space-y-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -55,14 +63,14 @@ export default function TicketSalesChart() {
                     <span className="text-sm font-medium">{item.name}</span>
                   </div>
                   <span className="text-sm font-medium">
-                    {((item.value / total) * 100).toFixed(1)}%
+                    {total > 0 ? ((item.value / total) * 100).toFixed(1) : 0}%
                   </span>
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full transition-all"
                     style={{
-                      width: `${(item.value / total) * 100}%`,
+                      width: total > 0 ? `${(item.value / total) * 100}%` : "0%",
                       backgroundColor: item.color,
                     }}
                   />
