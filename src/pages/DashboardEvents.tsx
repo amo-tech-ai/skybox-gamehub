@@ -11,10 +11,29 @@ import EventCalendar from "@/components/dashboard/events/EventCalendar";
 import AllEventsGrid from "@/components/dashboard/events/AllEventsGrid";
 import RecentBookingsTable from "@/components/dashboard/events/RecentBookingsTable";
 import ActivityFeed from "@/components/dashboard/events/ActivityFeed";
+import { useDashboardEvents } from "@/hooks/useDashboardEvents";
 
 export default function DashboardEvents() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [searchQuery, setSearchQuery] = useState("");
+  const { 
+    loading, 
+    stats, 
+    ticketSales, 
+    revenueSeries, 
+    featuredEvent, 
+    allEvents, 
+    recentBookings, 
+    activity 
+  } = useDashboardEvents();
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -59,28 +78,28 @@ export default function DashboardEvents() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <EventKpiCard
             title="Upcoming Events"
-            value="24"
+            value={stats.upcomingEvents.toString()}
             subtitle="Next 30 days"
             gradient="from-blue-50 to-blue-100"
             iconColor="text-blue-600"
           />
           <EventKpiCard
             title="Total Bookings"
-            value="1,847"
-            subtitle="+12% vs last month"
+            value={stats.totalBookings.toLocaleString()}
+            subtitle="Last 30 days"
             gradient="from-green-50 to-green-100"
             iconColor="text-green-600"
           />
           <EventKpiCard
             title="Tickets Sold"
-            value="2,780"
-            subtitle="85% capacity"
+            value={stats.ticketsSold.toLocaleString()}
+            subtitle="Last 30 days"
             gradient="from-purple-50 to-purple-100"
             iconColor="text-purple-600"
           />
           <EventKpiCard
             title="Revenue"
-            value="$ 348.805.000"
+            value={`$ ${stats.revenue.toLocaleString()}`}
             subtitle="COP"
             gradient="from-orange-50 to-orange-100"
             iconColor="text-orange-600"
@@ -89,33 +108,34 @@ export default function DashboardEvents() {
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <TicketSalesChart />
-          <RevenueChart />
+          <TicketSalesChart data={ticketSales} />
+          <RevenueChart data={revenueSeries} />
         </div>
 
         {/* Featured Event + Calendar */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <FeaturedEventCard />
+            {featuredEvent && <FeaturedEventCard event={featuredEvent} />}
           </div>
           <div>
             <EventCalendar
               selectedDate={selectedDate}
               onSelectDate={setSelectedDate}
+              events={allEvents}
             />
           </div>
         </div>
 
         {/* All Events */}
-        <AllEventsGrid />
+        <AllEventsGrid events={allEvents} />
 
         {/* Bottom Row: Bookings + Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <RecentBookingsTable />
+            <RecentBookingsTable bookings={recentBookings} />
           </div>
           <div>
-            <ActivityFeed />
+            <ActivityFeed activity={activity} />
           </div>
         </div>
       </div>
