@@ -194,3 +194,119 @@ export function useCustomerActivity(customerId: string) {
 
   return { activity, loading };
 }
+
+export function useCustomerInsights() {
+  const [signupTrends, setSignupTrends] = useState<{ date: string; count: number }[]>([]);
+  const [retentionRate, setRetentionRate] = useState<number>(0);
+  const [topSpenders, setTopSpenders] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInsights = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch signup trends (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const { data: signupData, error: signupError } = await supabase
+          .from('profiles')
+          .select('created_at')
+          .gte('created_at', thirtyDaysAgo.toISOString())
+          .order('created_at', { ascending: true });
+
+        if (signupError) throw signupError;
+
+        // Group signups by date
+        const signupsByDate: { [key: string]: number } = {};
+        signupData?.forEach((profile) => {
+          const date = new Date(profile.created_at!).toLocaleDateString('es-CO');
+          signupsByDate[date] = (signupsByDate[date] || 0) + 1;
+        });
+
+        const trends = Object.entries(signupsByDate).map(([date, count]) => ({ date, count }));
+        setSignupTrends(trends);
+
+        // Calculate retention rate (customers with more than 1 booking)
+        const { data: allCustomers, error: customersError } = await supabase
+          .from('profiles')
+          .select(`
+            id,
+            bookings:bookings(count)
+          `);
+
+        if (customersError) throw customersError;
+
+        const totalCustomers = allCustomers?.length || 0;
+        const repeatCustomers = allCustomers?.filter((c: any) => c.bookings[0]?.count > 1).length || 0;
+        const retention = totalCustomers > 0 ? (repeatCustomers / totalCustomers) * 100 : 0;
+        setRetentionRate(Math.round(retention));
+
+        // Fetch top 5 spenders
+        const { data: topSpendersData, error: topSpendersError } = await supabase
+          .from('profiles')
+          .select(`
+            id,
+            user_id,
+            full_name,
+            phone,
+            role,
+            whatsapp_opt_in,
+            metadata,
+            created_at,
+            bookings!inner(
+              total_amount,
+              status
+            )
+          `)
+          .eq('bookings.status', 'confirmed')
+          .order('created_at', { ascending: false })
+          .limit(100);
+
+        if (topSpendersError) throw topSpendersError;
+
+        // Calculate total spent per customer
+        const customersWithSpending = topSpendersData?.map((customer: any) => {
+          const totalSpent = customer.bookings.reduce(
+            (sum: number, booking: any) => sum + Number(booking.total_amount),
+            0
+          );
+          const totalBookings = customer.bookings.length;
+
+          return {
+            id: customer.id,
+            user_id: customer.user_id,
+            full_name: customer.full_name,
+            phone: customer.phone,
+            avatar_url: null,
+            role: customer.role,
+            metadata: customer.metadata,
+            created_at: customer.created_at,
+            last_seen_at: null,
+            whatsapp_opt_in: customer.whatsapp_opt_in,
+            email_notifications: null,
+            loyalty_points: customer.metadata?.loyalty_points || 0,
+            total_bookings: totalBookings,
+            total_spent: totalSpent,
+          };
+        }) || [];
+
+        // Sort by total spent and get top 5
+        const top5 = customersWithSpending
+          .sort((a, b) => b.total_spent - a.total_spent)
+          .slice(0, 5);
+
+        setTopSpenders(top5);
+      } catch (err) {
+        console.error('Error fetching customer insights:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInsights();
+  }, []);
+
+  return { signupTrends, retentionRate, topSpenders, loading };
+}

@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async";
 import { useState } from "react";
-import { useCustomers, useCustomerActivity } from "@/hooks/useCustomers";
+import { useCustomers, useCustomerActivity, useCustomerInsights } from "@/hooks/useCustomers";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,8 +8,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, Users, TrendingUp, DollarSign, Award } from "lucide-react";
+import { Search, Users, TrendingUp, DollarSign, Award, UserPlus, Repeat } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 export default function DashboardCustomers() {
   const [roleFilter, setRoleFilter] = useState<string>("all");
@@ -18,6 +20,7 @@ export default function DashboardCustomers() {
 
   const { customers, loading, error } = useCustomers(roleFilter, searchQuery);
   const { activity, loading: activityLoading } = useCustomerActivity(selectedCustomerId || "");
+  const { signupTrends, retentionRate, topSpenders, loading: insightsLoading } = useCustomerInsights();
 
   const totalCustomers = customers.length;
   const totalLoyaltyPoints = customers.reduce((sum, c) => sum + c.loyalty_points, 0);
@@ -85,6 +88,131 @@ export default function DashboardCustomers() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Insights Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Signup Trends Chart */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5" />
+                Customer Signup Trends
+              </CardTitle>
+              <CardDescription>New customer registrations over the last 30 days</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {insightsLoading ? (
+                <Skeleton className="h-[200px] w-full" />
+              ) : signupTrends.length === 0 ? (
+                <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+                  No signup data available
+                </div>
+              ) : (
+                <ChartContainer
+                  config={{
+                    count: {
+                      label: "New Customers",
+                      color: "hsl(var(--primary))",
+                    },
+                  }}
+                  className="h-[200px]"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={signupTrends}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="date" 
+                        tick={{ fontSize: 12 }}
+                        angle={-45}
+                        textAnchor="end"
+                        height={80}
+                      />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Line 
+                        type="monotone" 
+                        dataKey="count" 
+                        stroke="hsl(var(--primary))" 
+                        strokeWidth={2}
+                        dot={{ fill: "hsl(var(--primary))" }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Retention Rate */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Repeat className="h-5 w-5" />
+                Retention Rate
+              </CardTitle>
+              <CardDescription>Customers with repeat bookings</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {insightsLoading ? (
+                <Skeleton className="h-[200px] w-full" />
+              ) : (
+                <div className="flex flex-col items-center justify-center h-[200px]">
+                  <div className="text-6xl font-bold text-primary mb-2">{retentionRate}%</div>
+                  <p className="text-sm text-muted-foreground">of customers return</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Top Spenders Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="h-5 w-5" />
+              Top Spenders
+            </CardTitle>
+            <CardDescription>Customers with highest total spending</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {insightsLoading ? (
+              <Skeleton className="h-[300px] w-full" />
+            ) : topSpenders.length === 0 ? (
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                No spending data available
+              </div>
+            ) : (
+              <ChartContainer
+                config={{
+                  total_spent: {
+                    label: "Total Spent",
+                    color: "hsl(var(--primary))",
+                  },
+                }}
+                className="h-[300px]"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topSpenders} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis 
+                      dataKey="full_name" 
+                      type="category" 
+                      width={150}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar 
+                      dataKey="total_spent" 
+                      fill="hsl(var(--primary))"
+                      radius={[0, 4, 4, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Filters */}
         <Card>
