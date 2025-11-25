@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, Users, TrendingUp, DollarSign, Award, UserPlus, Repeat } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 export default function DashboardCustomers() {
@@ -20,7 +20,7 @@ export default function DashboardCustomers() {
 
   const { customers, loading, error } = useCustomers(roleFilter, searchQuery);
   const { activity, loading: activityLoading } = useCustomerActivity(selectedCustomerId || "");
-  const { signupTrends, retentionRate, topSpenders, loading: insightsLoading } = useCustomerInsights();
+  const { signupTrends, retentionRate, topSpenders, segmentation, loading: insightsLoading } = useCustomerInsights();
 
   const totalCustomers = customers.length;
   const totalLoyaltyPoints = customers.reduce((sum, c) => sum + c.loyalty_points, 0);
@@ -90,9 +90,9 @@ export default function DashboardCustomers() {
         </div>
 
         {/* Insights Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Signup Trends Chart */}
-          <Card className="lg:col-span-2">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserPlus className="h-5 w-5" />
@@ -143,6 +143,70 @@ export default function DashboardCustomers() {
             </CardContent>
           </Card>
 
+          {/* Customer Segmentation */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Award className="h-5 w-5" />
+                Customer Segmentation
+              </CardTitle>
+              <CardDescription>Distribution by loyalty tier</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {insightsLoading ? (
+                <Skeleton className="h-[200px] w-full" />
+              ) : segmentation.length === 0 ? (
+                <div className="h-[200px] flex items-center justify-center text-muted-foreground">
+                  No segmentation data available
+                </div>
+              ) : (
+                <ChartContainer
+                  config={{
+                    bronze: {
+                      label: "Bronze",
+                      color: "hsl(var(--chart-1))",
+                    },
+                    silver: {
+                      label: "Silver",
+                      color: "hsl(var(--chart-2))",
+                    },
+                    gold: {
+                      label: "Gold",
+                      color: "hsl(var(--chart-3))",
+                    },
+                    platinum: {
+                      label: "Platinum",
+                      color: "hsl(var(--chart-4))",
+                    },
+                  }}
+                  className="h-[200px]"
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={segmentation}
+                        dataKey="count"
+                        nameKey="tier"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        label={({ tier, percentage }) => `${tier}: ${percentage}%`}
+                      >
+                        {segmentation.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Second Row: Retention & Top Spenders */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Retention Rate */}
           <Card>
             <CardHeader>
@@ -163,18 +227,17 @@ export default function DashboardCustomers() {
               )}
             </CardContent>
           </Card>
-        </div>
 
-        {/* Top Spenders Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
-              Top Spenders
-            </CardTitle>
-            <CardDescription>Customers with highest total spending</CardDescription>
-          </CardHeader>
-          <CardContent>
+          {/* Top Spenders Chart */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5" />
+                Top Spenders
+              </CardTitle>
+              <CardDescription>Customers with highest total spending</CardDescription>
+            </CardHeader>
+            <CardContent>
             {insightsLoading ? (
               <Skeleton className="h-[300px] w-full" />
             ) : topSpenders.length === 0 ? (
@@ -211,8 +274,9 @@ export default function DashboardCustomers() {
                 </ResponsiveContainer>
               </ChartContainer>
             )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Filters */}
         <Card>

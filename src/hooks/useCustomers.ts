@@ -195,10 +195,18 @@ export function useCustomerActivity(customerId: string) {
   return { activity, loading };
 }
 
+export interface CustomerSegment {
+  tier: string;
+  count: number;
+  percentage: number;
+  color: string;
+}
+
 export function useCustomerInsights() {
   const [signupTrends, setSignupTrends] = useState<{ date: string; count: number }[]>([]);
   const [retentionRate, setRetentionRate] = useState<number>(0);
   const [topSpenders, setTopSpenders] = useState<Customer[]>([]);
+  const [segmentation, setSegmentation] = useState<CustomerSegment[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -298,6 +306,59 @@ export function useCustomerInsights() {
           .slice(0, 5);
 
         setTopSpenders(top5);
+
+        // Customer segmentation by loyalty tier
+        const { data: allCustomersForSegmentation } = await supabase
+          .from('profiles')
+          .select('metadata')
+          .eq('role', 'customer');
+
+        if (allCustomersForSegmentation) {
+          const tierCounts = {
+            bronze: 0,
+            silver: 0,
+            gold: 0,
+            platinum: 0,
+          };
+
+          allCustomersForSegmentation.forEach(profile => {
+            const points = (profile.metadata as any)?.loyalty_points || 0;
+            if (points < 1000) tierCounts.bronze++;
+            else if (points < 3000) tierCounts.silver++;
+            else if (points < 5000) tierCounts.gold++;
+            else tierCounts.platinum++;
+          });
+
+          const total = allCustomersForSegmentation.length;
+          const segments: CustomerSegment[] = [
+            {
+              tier: 'Bronze',
+              count: tierCounts.bronze,
+              percentage: total > 0 ? Math.round((tierCounts.bronze / total) * 100) : 0,
+              color: 'hsl(var(--chart-1))',
+            },
+            {
+              tier: 'Silver',
+              count: tierCounts.silver,
+              percentage: total > 0 ? Math.round((tierCounts.silver / total) * 100) : 0,
+              color: 'hsl(var(--chart-2))',
+            },
+            {
+              tier: 'Gold',
+              count: tierCounts.gold,
+              percentage: total > 0 ? Math.round((tierCounts.gold / total) * 100) : 0,
+              color: 'hsl(var(--chart-3))',
+            },
+            {
+              tier: 'Platinum',
+              count: tierCounts.platinum,
+              percentage: total > 0 ? Math.round((tierCounts.platinum / total) * 100) : 0,
+              color: 'hsl(var(--chart-4))',
+            },
+          ].filter(seg => seg.count > 0);
+
+          setSegmentation(segments);
+        }
       } catch (err) {
         console.error('Error fetching customer insights:', err);
       } finally {
@@ -308,5 +369,5 @@ export function useCustomerInsights() {
     fetchInsights();
   }, []);
 
-  return { signupTrends, retentionRate, topSpenders, loading };
+  return { signupTrends, retentionRate, topSpenders, segmentation, loading };
 }
